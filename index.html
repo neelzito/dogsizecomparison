@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dog Size Comparison</title>
+  <meta name="description" content="Compare the size of 200+ dog breeds side by side, to scale. Male and female heights, weights and ranges in cm/kg or in/lb." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <h1>Dog Size Comparison</h1>
+      <p class="lede">Put up to 10 breeds side by side, drawn to scale. Pick male, female or both, and see the full height and weight ranges.</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- Compare panel -->
+    <section class="panel" aria-label="Selected breeds and settings">
+      <div class="add-row">
+        <div class="search-box">
+          <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.5 3a7.5 7.5 0 0 1 5.9 12.13l4.24 4.23-1.42 1.42-4.23-4.24A7.5 7.5 0 1 1 10.5 3Zm0 2a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11Z"/></svg>
+          <input id="quick-search" type="search" placeholder="Add a breed… (e.g. Labrador, Corgi)" autocomplete="off" aria-autocomplete="list" aria-controls="quick-results" />
+          <ul id="quick-results" class="quick-results" role="listbox" hidden></ul>
+        </div>
+        <div class="presets" id="presets"></div>
+      </div>
+
+      <ul id="chips" class="chips" aria-label="Breeds being compared"></ul>
+
+      <div class="controls">
+        <div class="control">
+          <span class="control-label">Sex (all)</span>
+          <div class="seg" id="sex-all" role="group" aria-label="Sex for all breeds">
+            <button data-v="m">♂ Male</button><button data-v="f">♀ Female</button><button data-v="both">Both</button>
+          </div>
+        </div>
+        <div class="control">
+          <span class="control-label">Units</span>
+          <div class="seg" id="units" role="group" aria-label="Units">
+            <button data-v="metric">cm · kg</button><button data-v="imperial">in · lb</button>
+          </div>
+        </div>
+        <div class="control">
+          <span class="control-label">Draw at</span>
+          <div class="seg" id="size-mode" role="group" aria-label="Which size to draw">
+            <button data-v="min">Min</button><button data-v="avg">Average</button><button data-v="max">Max</button>
+          </div>
+        </div>
+        <div class="control">
+          <span class="control-label">Human reference</span>
+          <div class="human-ctl">
+            <label class="switch"><input type="checkbox" id="human-on" /><span></span></label>
+            <input type="range" id="human-h" min="90" max="210" step="1" aria-label="Human height" />
+            <output id="human-h-out"></output>
+          </div>
+        </div>
+        <div class="control">
+          <span class="control-label">Range markers</span>
+          <label class="switch"><input type="checkbox" id="ranges-on" /><span></span></label>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stage -->
+    <section class="stage-card" aria-label="Size visualisation">
+      <div id="stage" class="stage"></div>
+      <p class="stage-note">Each dog is scaled by its height at the withers (top of the shoulder). Heads and ears rise above that line, as on a real dog. Illustrations show a typical coat and colour for the breed; the line under each dog matches its number.</p>
+    </section>
+
+    <section id="insight" class="insight" aria-live="polite"></section>
+
+    <!-- Data -->
+    <section class="data-grid">
+      <div class="card">
+        <h2>Height at withers</h2>
+        <div id="height-bars" class="bars"></div>
+      </div>
+      <div class="card">
+        <h2>Weight</h2>
+        <div id="weight-bars" class="bars"></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-head">
+        <h2>All the numbers</h2>
+        <button id="copy-link" class="btn-ghost">Copy link to this comparison</button>
+      </div>
+      <div class="table-scroll">
+        <table id="data-table" class="data-table"></table>
+      </div>
+    </section>
+
+    <!-- Library -->
+    <section class="card library" aria-label="Breed library">
+      <div class="card-head">
+        <h2>Breed library <span id="lib-count" class="muted"></span></h2>
+      </div>
+      <div class="lib-filters">
+        <input id="lib-search" type="search" placeholder="Filter breeds…" />
+        <select id="lib-group" aria-label="Group"></select>
+        <select id="lib-sort" aria-label="Sort">
+          <option value="name">Sort: A–Z</option>
+          <option value="h-desc">Tallest first</option>
+          <option value="h-asc">Smallest first</option>
+          <option value="w-desc">Heaviest first</option>
+          <option value="w-asc">Lightest first</option>
+        </select>
+        <select id="lib-cabin" aria-label="Airplane cabin">
+          <option value="">Airplane: any</option>
+          <option value="yes">✈ Airplane friendly</option>
+          <option value="some">✈ Airplane friendly (incl. some)</option>
+        </select>
+      </div>
+      <p id="cabin-rule" class="cabin-rule"></p>
+      <div class="size-chips" id="lib-size"></div>
+      <div id="lib-list" class="lib-list"></div>
+    </section>
+
+    <footer class="foot">
+      <p>Figures come from the American Kennel Club breed pages (226 breeds), with FCI, UKC and breed-club standards for breeds the AKC doesn’t list. Where a standard gives a single value (e.g. “27 inches”) the range shows that one value; where it gives none (e.g. “females slightly smaller”) a typical figure is shown and marked ⚠ in the table. Designer/mixed breeds have no standard and their ranges are typical. Individual dogs can fall outside every range shown here. Last checked November 2026.</p>
+    </footer>
+  </main>
+
+  <script src="js/breeds.js"></script>
+  <script src="js/dog-renderer.js"></script>
+  <script src="js/dog-images.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Dog image review</title>
+<style>
+body{font:12px/1.3 system-ui,sans-serif;margin:8px;background:#ece9e2;color:#222}
+h1{font-size:16px;margin:4px 0 8px}
+.grid{display:grid;grid-template-columns:repeat(var(--cols,6),1fr);gap:4px}
+figure{margin:0;background:#fff;border-radius:6px;padding:2px;position:relative}
+figure img{width:100%;display:block;aspect-ratio:4/3;object-fit:contain}
+figcaption{text-align:center;font-size:11px;padding:1px 2px 3px}
+.n{position:absolute;top:2px;left:4px;color:#999;font-size:10px}
+.missing img{visibility:hidden}.missing{background:#f6d5d5}
+</style></head><body>
+<h1>Generated breed images <span id="count"></span></h1>
+<div class="grid" id="grid"></div>
+<script src="../../js/breeds.js"></script>
+<script>
+const slug = (s) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+const q = new URLSearchParams(location.search);
+if (q.get("cols")) document.body.style.setProperty("--cols", q.get("cols"));
+const rows = window.BREED_ROWS, from = +(q.get("from") || 0), to = +(q.get("to") || rows.length);
+const g = document.getElementById("grid");
+rows.slice(from, to).forEach((r, i) => {
+  const f = document.createElement("figure");
+  f.innerHTML = `<span class="n">${from + i + 1}</span><img src="${slug(r[0])}.png?${Date.now()}" loading="eager"><figcaption>${r[0]}</figcaption>`;
+  f.querySelector("img").onerror = () => f.classList.add("missing");
+  g.appendChild(f);
+});
+document.getElementById("count").textContent = `(${from + 1}–${Math.min(to, rows.length)} of ${rows.length})`;
+</script>
+</body></html>
