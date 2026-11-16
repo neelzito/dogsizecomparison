@@ -35,6 +35,25 @@
     return { img: `img/dogs/web/${id}.webp`, minX: 0, maxX: w, maxY: h, withersX: wx * w };
   };
   const shapeCache = {};
+
+  // ---------- your own dog ----------
+  const MY_ID = "my-dog";
+  const MY_TYPES = [
+    ["retriever", "Retriever / Labrador"], ["shepherd", "Shepherd"], ["terrier", "Terrier"], ["spitz", "Spitz / Pomeranian"],
+    ["toy", "Toy / Chihuahua"], ["longcoat", "Long coat / Shih Tzu"], ["poodle", "Poodle / doodle"], ["spaniel", "Spaniel"],
+    ["scenthound", "Hound / Beagle"], ["sighthound", "Greyhound / Whippet"], ["bully", "Bull breed / Staffie"], ["brachy", "Pug / French Bulldog"],
+    ["longlow", "Dachshund"], ["corgi", "Corgi"], ["nordic", "Husky"], ["mountain", "Mountain dog"], ["mastiff", "Mastiff"], ["shaggy", "Shaggy / sheepdog"],
+  ];
+  function setMyDog(my) {
+    delete shapeCache[MY_ID];
+    if (!my) { delete BY_ID[MY_ID]; return; }
+    const w = my.w;
+    BY_ID[MY_ID] = {
+      id: MY_ID, name: my.name || "My dog", group: "Your dog", origin: "—", type: my.type, custom: true,
+      m: { h: [my.h, my.h], w: [w, w] }, f: { h: [my.h, my.h], w: [w, w] }, life: null, ov: null,
+      size: w < 5 ? "Toy" : w < 10 ? "Small" : w < 25 ? "Medium" : w < 45 ? "Large" : "Giant", hAvg: my.h, wAvg: w,
+    };
+  }
   const shapeOf = (b) => (shapeCache[b.id] ||= DOG_IMAGES[b.id] ? imageShape(b.id) : DogRenderer.build(b.type, b.ov));
 
   // ---------- state ----------
@@ -47,6 +66,7 @@
     humanH: 175,
     ranges: true,
     lib: { q: "", group: "", size: "", sort: "name", cabin: "" },
+    my: null, // { name, h (cm), w (kg), type }
   };
 
   const PRESETS = [
@@ -71,7 +91,7 @@
   }
   const fmtHR = (r) => (fmtH(r[0]) === fmtH(r[1]) ? fmtH(r[0]) : `${fmtH(r[0], false)}–${fmtH(r[1])}`);
   const fmtWR = (r) => (fmtW(r[0]) === fmtW(r[1]) ? fmtW(r[0]) : `${fmtW(r[0], false)}–${fmtW(r[1])}`);
-  const fmtLife = (r) => (r[0] === r[1] ? `${r[0]} yrs` : `${r[0]}–${r[1]} yrs`);
+  const fmtLife = (r) => (!r ? "—" : r[0] === r[1] ? `${r[0]} yrs` : `${r[0]}–${r[1]} yrs`);
 
   // ---------- airplane cabin ----------
   // Strictest common airline rule: dog + carrier ≤ 8 kg (Lufthansa, KLM, Air France, Turkish Airlines).
@@ -100,6 +120,7 @@
   const SOURCES = window.BREED_SOURCES || {};
   const SRC_LABEL = { AKC: "AKC", FCI: "FCI", UKC: "UKC", PTCA: "PTCA", Typical: "Typical (no standard)" };
   function sourceInfo(b, sex) {
+    if (b.custom) return { label: "Your measurements", warn: false, notes: "" };
     const s = SOURCES[b.name] || { src: "Unverified" };
     const flagged = (s.unverified || []).filter((f) => f.startsWith(sex === "m" ? "male" : "female"));
     const notes = [];
@@ -123,7 +144,7 @@
     state.entries.forEach((e, i) => {
       const b = BY_ID[e.id];
       if (!b) return;
-      const sexes = e.sex === "both" ? ["m", "f"] : [e.sex];
+      const sexes = b.custom ? ["m"] : e.sex === "both" ? ["m", "f"] : [e.sex];
       for (const s of sexes) out.push({ b, sex: s, idx: i, color: colorFor(i), h: b[s].h, w: b[s].w });
     });
     return out;
@@ -138,6 +159,7 @@
   }
   function removeBreed(id) {
     state.entries = state.entries.filter((e) => e.id !== id);
+    if (id === MY_ID) { state.my = null; setMyDog(null); }
     update();
   }
   function toggleBreed(id) {
@@ -263,7 +285,7 @@
         while (labelSlots.some((sl) => sl.row === row && Math.abs(sl.x - lx) < (sl.w + estW) / 2 + 6)) row++;
         labelSlots.push({ x: lx, w: estW, row });
         const ly = groundY + 17 + row * 30;
-        labels += `<text class="label-name" x="${lx}" y="${ly}" text-anchor="middle">${esc(name)} <tspan fill="${it.sex === "m" ? "var(--male)" : "var(--female)"}">${sexSym[it.sex]}</tspan></text>`;
+        labels += `<text class="label-name" x="${lx}" y="${ly}" text-anchor="middle">${esc(name)}${it.b.custom ? "" : ` <tspan fill="${it.sex === "m" ? "var(--male)" : "var(--female)"}">${sexSym[it.sex]}</tspan>`}</text>`;
         labels += `<text class="label-sub" x="${lx}" y="${ly + 13}" text-anchor="middle">${fmtH(o.hCm)} · ${fmtW(pick(it.w))}</text>`;
       }
       x += o.wCm * k;
@@ -293,7 +315,7 @@
     const row = (it, r, max, fmt) => {
       const l = (r[0] / max) * 100, w = ((r[1] - r[0]) / max) * 100, a = (avg(r) / max) * 100;
       return `<div class="bar-row">
-        <div class="lbl"><span class="dot" style="background:${it.color}"></span><span>${esc(it.b.name)} <span class="sex-${it.sex}">${sexSym[it.sex]}</span></span></div>
+        <div class="lbl"><span class="dot" style="background:${it.color}"></span><span>${esc(it.b.name)}${it.b.custom ? "" : ` <span class="sex-${it.sex}">${sexSym[it.sex]}</span>`}</span></div>
         <div class="bar-track" title="${esc(it.b.name)} ${sexWord[it.sex]}: ${fmt(r)}">
           <div class="bar-range" style="left:${l}%;width:${Math.max(w, 0.6)}%;background:${it.color}"></div>
           <div class="bar-avg" style="left:${a}%;background:${it.color}"></div>
@@ -323,8 +345,8 @@
       const same = it === ref;
       const tr = `<tr class="${it.idx !== prev && prev !== -1 ? "group-start" : ""}">
         <td><span class="dot" style="background:${it.color};display:inline-block"></span> ${it.idx + 1}</td>
-        <td class="breed">${esc(it.b.name)}</td>
-        <td class="sex-${it.sex}">${sexSym[it.sex]} ${sexWord[it.sex]}</td>
+        <td class="breed">${it.b.custom ? esc(it.b.name) : `<a href="/breeds/${it.b.id}/">${esc(it.b.name)}</a>`}</td>
+        <td class="sex-${it.sex}">${it.b.custom ? "—" : `${sexSym[it.sex]} ${sexWord[it.sex]}`}</td>
         <td>${fmtHR(it.h)}</td><td>${fmtH(avg(it.h))}</td>
         <td>${fmtWR(it.w)}</td><td>${fmtW(avg(it.w))}</td>
         <td class="rel">${same ? "—" : round(hRel, 2) + "×"}</td>
@@ -363,7 +385,7 @@
       return `<li class="chip" data-id="${e.id}">
         <span class="num" style="background:${colorFor(i)}">${i + 1}</span>
         <span class="name" title="${esc(b.name)}">${esc(b.name)}</span>
-        <span class="mini-seg">${btn("m", "♂", "Male")}${btn("f", "♀", "Female")}${btn("both", "♂♀", "Male and female")}</span>
+        ${b.custom ? "" : `<span class="mini-seg">${btn("m", "♂", "Male")}${btn("f", "♀", "Female")}${btn("both", "♂♀", "Male and female")}</span>`}
         <button class="x" aria-label="Remove ${esc(b.name)}">×</button></li>`;
     }).join("");
   }
@@ -371,7 +393,7 @@
   // ---------- library ----------
   function miniSvg(b) {
     const s = shapeOf(b);
-    if (s.img) return `<img class="lib-thumb" src="${s.img}" alt="" loading="lazy" decoding="async">`;
+    if (s.img) return `<img class="lib-thumb" src="${s.img}" alt="${esc(b.name)}" loading="lazy" decoding="async" width="64" height="44">`;
     const w = s.maxX - s.minX, h = s.maxY;
     return `<svg viewBox="${s.minX} ${-h} ${w} ${h}" preserveAspectRatio="xMidYMax meet" aria-hidden="true"><g transform="scale(1 -1)">${s.markup}</g></svg>`;
   }
@@ -423,11 +445,16 @@
     if (state.sizeMode !== "avg") p.set("s", state.sizeMode);
     if (!state.human) p.set("h", "0"); else if (state.humanH !== 175) p.set("h", state.humanH);
     if (!state.ranges) p.set("r", "0");
+    if (state.my && state.entries.some((e) => e.id === MY_ID)) p.set("my", [state.my.name, state.my.h, state.my.w, state.my.type].join("~"));
     const h = p.toString();
     history.replaceState(null, "", h ? `#${h}` : location.pathname + location.search);
   }
   function readHash() {
     const p = new URLSearchParams(location.hash.slice(1));
+    if (p.has("my")) {
+      const [name, h, w, type] = p.get("my").split("~");
+      if (+h > 0 && +w > 0) { state.my = { name: (name || "My dog").slice(0, 24), h: Math.min(120, +h), w: Math.min(120, +w), type: MY_TYPES.some((t) => t[0] === type) ? type : "retriever" }; setMyDog(state.my); }
+    }
     if (p.has("b")) {
       state.entries = p.get("b").split(",").map((s) => { const [id, sex] = s.split(":"); return { id, sex: ["m", "f", "both"].includes(sex) ? sex : "m" }; })
         .filter((e) => BY_ID[e.id]).slice(0, MAX);
@@ -480,6 +507,107 @@
       e.preventDefault(); addBreed(li.dataset.id); input.value = ""; close(); input.focus();
     });
     input.addEventListener("blur", () => setTimeout(close, 100));
+  }
+
+  // ---------- "add your own dog" form ----------
+  function setupMyDog() {
+    const form = $("#mydog-form"), toggle = $("#mydog-toggle");
+    form.elements.type.innerHTML = MY_TYPES.map(([v, l]) => `<option value="${v}">${l}</option>`).join("");
+    const open = (on) => {
+      form.hidden = !on; toggle.setAttribute("aria-expanded", String(on));
+      if (!on) return;
+      const metric = state.units === "metric";
+      $(".mydog-hu").textContent = metric ? "cm" : "in";
+      $(".mydog-wu").textContent = metric ? "kg" : "lb";
+      const m = state.my;
+      form.elements.name.value = m ? m.name : "";
+      form.elements.h.value = m ? round(metric ? m.h : cm2in(m.h), 1) : "";
+      form.elements.w.value = m ? round(metric ? m.w : kg2lb(m.w), 1) : "";
+      if (m) form.elements.type.value = m.type;
+      form.elements.h.focus();
+    };
+    toggle.addEventListener("click", () => open(form.hidden));
+    $("#mydog-cancel").addEventListener("click", () => open(false));
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const metric = state.units === "metric";
+      const h = +form.elements.h.value, w = +form.elements.w.value;
+      if (!(h > 0) || !(w > 0)) return;
+      state.my = { name: form.elements.name.value.trim().slice(0, 24) || "My dog", h: metric ? h : h * 2.54, w: metric ? w : w / 2.20462, type: form.elements.type.value };
+      setMyDog(state.my);
+      if (!state.entries.some((x) => x.id === MY_ID)) {
+        if (state.entries.length >= MAX) state.entries.pop();
+        state.entries.unshift({ id: MY_ID, sex: "m" });
+      }
+      open(false);
+      update();
+    });
+  }
+
+  // ---------- download / share the drawing as a PNG ----------
+  const dataUrlCache = {};
+  async function toDataUrl(url) {
+    if (dataUrlCache[url]) return dataUrlCache[url];
+    const blob = await fetch(url).then((r) => r.blob());
+    return (dataUrlCache[url] = await new Promise((res) => { const fr = new FileReader(); fr.onload = () => res(fr.result); fr.readAsDataURL(blob); }));
+  }
+  async function renderPng() {
+    const svg = $("#stage svg");
+    if (!svg) throw new Error("nothing to export");
+    const vb = svg.viewBox.baseVal, W = vb.width, H = vb.height;
+    const cs = getComputedStyle(document.documentElement), v = (n) => cs.getPropertyValue(n).trim();
+    const font = "Inter, Helvetica, Arial, sans-serif";
+    const clone = svg.cloneNode(true);
+    clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    clone.setAttribute("width", W); clone.setAttribute("height", H);
+    await Promise.all([...clone.querySelectorAll("image")].map(async (im) => im.setAttribute("href", await toDataUrl(im.getAttribute("href")))));
+    const style = document.createElementNS("http://www.w3.org/2000/svg", "style");
+    style.textContent = `.grid-line{stroke:${v("--grid")}}.grid-label{fill:${v("--ink-3")};font:11px ${font}}.ground{stroke:${v("--ink-3")};stroke-width:1.5}
+      .human{color:${v("--ink-3")};opacity:.45}.dog .far,.dog .ear{filter:brightness(.72)}.dog .eye{fill:${v("--surface")};opacity:.9}.dog.female{opacity:.78}.dog-img.female{opacity:1}
+      .dog-key{stroke-width:3;stroke-linecap:round}.dog-key.female{stroke-dasharray:6 4}.label-name{fill:${v("--ink")};font:600 12.5px ${font}}
+      .label-sub{fill:${v("--ink-3")};font:11.5px ${font}}.badge-text{fill:#fff;font:700 11px ${font}}.range-bar{stroke:${v("--ink")};stroke-width:2}
+      .range-halo{stroke:${v("--surface")};stroke-width:5;opacity:.85}.withers-line{stroke:${v("--ink-2")};stroke-width:1;stroke-dasharray:3 3;opacity:.7}`;
+    clone.insertBefore(style, clone.firstChild);
+    const xml = new XMLSerializer().serializeToString(clone).replace(/var\(--male\)/g, v("--male")).replace(/var\(--female\)/g, v("--female"));
+    const url = URL.createObjectURL(new Blob([xml], { type: "image/svg+xml" }));
+    const img = new Image();
+    img.src = url;
+    await img.decode();
+    const scale = 2, head = 64, foot = 34;
+    const canvas = document.createElement("canvas");
+    canvas.width = W * scale; canvas.height = (H + head + foot) * scale;
+    const ctx = canvas.getContext("2d");
+    ctx.scale(scale, scale);
+    ctx.fillStyle = v("--surface"); ctx.fillRect(0, 0, W, H + head + foot);
+    const names = [...new Set(items().map((it) => it.b.name))];
+    let title = names.join(" vs ");
+    if (title.length > 70) title = `${names.length} dog breeds compared`;
+    ctx.fillStyle = v("--ink"); ctx.font = `700 22px Fraunces, Georgia, serif`; ctx.fillText(title, 20, 36);
+    ctx.fillStyle = v("--ink-3"); ctx.font = `13px ${font}`; ctx.fillText(`Drawn to scale by height at the shoulder · ${state.units === "metric" ? "cm / kg" : "in / lb"}`, 20, 56);
+    ctx.drawImage(img, 0, head, W, H);
+    ctx.fillStyle = v("--accent"); ctx.font = `600 13px ${font}`; ctx.textAlign = "right"; ctx.fillText("dogsizecomparison.com", W - 18, H + head + 22);
+    URL.revokeObjectURL(url);
+    return new Promise((res) => canvas.toBlob(res, "image/png"));
+  }
+  const fileName = () => `dog-size-comparison-${state.entries.slice(0, 3).map((e) => e.id).join("-") || "chart"}.png`;
+  function setupExport() {
+    $("#dl-png").addEventListener("click", async () => {
+      try {
+        const blob = await renderPng();
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob); a.download = fileName();
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+      } catch (err) { console.error(err); toast("Couldn't create the image"); }
+    });
+    const share = $("#share-png");
+    try { share.hidden = !(navigator.canShare && navigator.canShare({ files: [new File([""], "a.png", { type: "image/png" })] })); } catch { share.hidden = true; }
+    share.addEventListener("click", async () => {
+      try {
+        const blob = await renderPng();
+        await navigator.share({ files: [new File([blob], fileName(), { type: "image/png" })], title: "Dog size comparison", url: location.href });
+      } catch (err) { if (err.name !== "AbortError") toast("Sharing isn't available here"); }
+    });
   }
 
   // ---------- wire up ----------
@@ -544,6 +672,8 @@
     });
 
     setupQuickSearch();
+    setupMyDog();
+    setupExport();
 
     if (!readHash()) {
       state.entries = ["chihuahua", "beagle", "labrador-retriever", "great-dane"].map((id) => ({ id, sex: "m" }));

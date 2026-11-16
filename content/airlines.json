@@ -1,0 +1,21 @@
+{
+  "reviewed": "November 2026",
+  "airlines": [
+    { "name": "Lufthansa", "cabin": true, "limitKg": 8, "includesCarrier": true, "carrier": "55 × 40 × 23 cm, soft-sided", "notes": "Up to 2 animals per passenger", "verified": true, "source": "https://www.lufthansa.com/lu/en/register-animals-cabin" },
+    { "name": "Swiss", "cabin": true, "limitKg": 8, "includesCarrier": true, "carrier": "55 × 40 × 23 cm", "notes": "Dogs and cats only", "verified": true, "source": "https://www.swiss.com/us/en/prepare/special-care/animals-travelling" },
+    { "name": "Austrian Airlines", "cabin": true, "limitKg": 8, "includesCarrier": true, "carrier": "55 × 40 × 23 cm, soft-sided", "notes": "Dogs and cats only", "verified": true, "source": "https://www.austrian.com/es/en/plan/special-requirements/travelling-with-animals" },
+    { "name": "KLM", "cabin": true, "limitKg": 8, "includesCarrier": true, "carrier": "46 × 28 × 24 cm", "notes": "Economy, or Business within Europe", "verified": true, "source": "https://www.klm.com/information/pets/reservation" },
+    { "name": "Air France", "cabin": true, "limitKg": 8, "includesCarrier": true, "carrier": "Must fit under the seat", "notes": "", "verified": true, "source": "https://wwws.airfrance.us/information/passagers/voyager-avec-son-animal-chien-chat" },
+    { "name": "Turkish Airlines", "cabin": true, "limitKg": 8, "includesCarrier": true, "carrier": "40 × 30 × 23 cm, soft-sided", "notes": "One carrier per passenger", "verified": true, "source": "https://www.turkishairlines.com/en-int/any-questions/traveling-with-pets/all-terms-and-conditions" },
+    { "name": "Air Canada", "cabin": true, "limitKg": null, "carrier": "Soft-sided only; size depends on aircraft (e.g. 43 × 40 × 20 cm)", "notes": "The carrier size, not weight, is the real limit", "verified": true, "source": "https://www.aircanada.com/ca/en/aco/home/plan/special-assistance/pets.html" },
+    { "name": "American Airlines", "cabin": true, "limitKg": 9.07, "includesCarrier": true, "carrier": "Must fit under the seat; size depends on aircraft", "notes": "20 lb incl. carrier", "verified": true, "source": "https://www.aa.com/i18n/travel-info/special-assistance/pets.jsp" },
+    { "name": "Delta", "cabin": true, "limitKg": null, "carrier": "Must fit under the seat", "notes": "Dog must stand and turn around in the carrier", "verified": true, "source": "https://www.delta.com/us/en/pet-travel/overview" },
+    { "name": "United", "cabin": true, "limitKg": null, "carrier": "About 18 × 11 × 11 in, soft-sided", "notes": "Dog must stand and turn around in the carrier", "verified": false, "source": "https://www.united.com/" },
+    { "name": "Alaska Airlines", "cabin": true, "limitKg": null, "carrier": "17 × 11 × 9.5 in, soft-sided", "notes": "", "verified": true, "source": "https://www.alaskaair.com/content/travel-info/policies/pets-traveling-with-pets/pets-in-cabin" },
+    { "name": "Southwest", "cabin": true, "limitKg": null, "carrier": "18.5 × 8.5 × 13.5 in", "notes": "Cabin only; no pets in the hold", "verified": true, "source": "https://support.southwest.com/helpcenter/article/pet-policy" },
+    { "name": "British Airways", "cabin": false, "notes": "Assistance dogs only; pets fly as cargo", "verified": false, "source": "https://www.britishairways.com/" },
+    { "name": "Ryanair", "cabin": false, "notes": "Assistance dogs only", "verified": false, "source": "https://www.ryanair.com/" },
+    { "name": "easyJet", "cabin": false, "notes": "Assistance dogs only", "verified": false, "source": "https://www.easyjet.com/" },
+    { "name": "Qantas", "cabin": false, "notes": "Assistance dogs only; pets fly with Qantas Freight", "verified": false, "source": "https://www.qantas.com/" }
+  ]
+}
