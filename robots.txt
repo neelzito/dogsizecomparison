@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /tools/
+Disallow: /dev-shapes.html
+Disallow: /img/dogs/review.html
+
+Sitemap: https://dogsizecomparison.com/sitemap.xml
