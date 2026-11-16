@@ -175,8 +175,8 @@
     const n = rows.filter((r) => r.cls === "ok").length, s = rows.filter((r) => r.cls === "warn-t").length;
     return `<p class="kicker">Result</p><p class="big">${n} <small>of ${rows.length} airlines${s ? `, plus ${s} if your dog is on the lighter side` : ""}</small></p>
       <p>${label}${carrier ? `, ${fW(carrier)} with the carrier added` : ""}.</p>
-      <table class="data-table"><thead><tr><th>Airline</th><th>Cabin rule</th></tr></thead><tbody>${rows.map((r) => `<tr><td>${esc(r.a.name)}</td><td class="${r.cls}">${esc(r.res)}</td></tr>`).join("")}</tbody></table>
-      <p class="table-note">Rules last reviewed ${esc(window.AIRLINES.reviewed)}. Always confirm with the airline; limits can differ by route and aircraft.</p>`;
+      <table class="data-table"><thead><tr><th>Airline</th><th>Cabin rule</th></tr></thead><tbody>${rows.map((r) => `<tr><td>${esc(r.a.name)}${r.a.verified ? "" : "*"}</td><td class="${r.cls}">${esc(r.res)}</td></tr>`).join("")}</tbody></table>
+      <p class="table-note">Rules last reviewed ${esc(window.AIRLINES.reviewed)}. * Not confirmed on the airline's own website. Always confirm with the airline; limits can differ by route and aircraft.</p>`;
   }
 
   // ---------- dog years ----------

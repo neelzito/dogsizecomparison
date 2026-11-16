@@ -12,7 +12,7 @@ Most airlines that accept pets in the cabin have two limits: a **maximum weight*
 
 Most European airlines, including Lufthansa, Swiss, KLM, Air France and Turkish Airlines, cap dog plus carrier at **8 kg (17.6 lb)**. A light soft-sided carrier weighs 1–2 kg, which leaves roughly **6.5 kg (14 lb) for the dog**. That's the rule this site uses for its ✈ cabin labels, because a dog that meets it can fly with almost any airline that allows pets in the cabin.
 
-US airlines are often more relaxed about weight. Delta, United and Alaska set no weight limit at all, but the dog must fit in a carrier that slides under the seat, and it must be able to stand up and turn around inside. In practice that still means a dog under about 9 kg (20 lb).
+North American airlines are often more relaxed about weight. Delta, United, Alaska, Southwest and Air Canada publish no practical cabin weight limit, but the dog must fit in a carrier that slides under the seat, and it must be able to stand up and turn around inside. Air Canada, for example, only accepts soft-sided carriers, and on most of its Airbus jets the space is about 43 × 40 × 20 cm. In practice that still means a dog under about 9 kg (20 lb). American Airlines caps dog and carrier at 20 lb (9.07 kg).
 
 ## Airline rules at a glance
 
