@@ -1,0 +1,21 @@
+{
+  "reviewed": "November 2026",
+  "airlines": [
+    { "name": "Lufthansa", "cabin": true, "limitKg": 8, "includesCarrier": true, "carrier": "55 × 40 × 23 cm", "notes": "Same rule at Swiss, Austrian and Brussels Airlines" },
+    { "name": "Swiss", "cabin": true, "limitKg": 8, "includesCarrier": true, "carrier": "55 × 40 × 23 cm", "notes": "" },
+    { "name": "Austrian Airlines", "cabin": true, "limitKg": 8, "includesCarrier": true, "carrier": "55 × 40 × 23 cm", "notes": "" },
+    { "name": "KLM", "cabin": true, "limitKg": 8, "includesCarrier": true, "carrier": "46 × 28 × 24 cm", "notes": "" },
+    { "name": "Air France", "cabin": true, "limitKg": 8, "includesCarrier": true, "carrier": "46 × 28 × 24 cm", "notes": "" },
+    { "name": "Turkish Airlines", "cabin": true, "limitKg": 8, "includesCarrier": true, "carrier": "Must fit under the seat", "notes": "" },
+    { "name": "Air Canada", "cabin": true, "limitKg": 10, "includesCarrier": true, "carrier": "Must fit under the seat", "notes": "" },
+    { "name": "American Airlines", "cabin": true, "limitKg": 9.07, "includesCarrier": true, "carrier": "Must fit under the seat", "notes": "20 lb incl. carrier" },
+    { "name": "Delta", "cabin": true, "limitKg": null, "carrier": "Must fit under the seat", "notes": "Dog must stand and turn around in the carrier" },
+    { "name": "United", "cabin": true, "limitKg": null, "carrier": "Must fit under the seat", "notes": "Dog must stand and turn around in the carrier" },
+    { "name": "Alaska Airlines", "cabin": true, "limitKg": null, "carrier": "Must fit under the seat", "notes": "" },
+    { "name": "Southwest", "cabin": true, "limitKg": null, "carrier": "18.5 × 8.5 × 13.5 in", "notes": "Cabin only; no pets in the hold" },
+    { "name": "British Airways", "cabin": false, "notes": "Assistance dogs only; pets fly as cargo" },
+    { "name": "Ryanair", "cabin": false, "notes": "Assistance dogs only" },
+    { "name": "easyJet", "cabin": false, "notes": "Assistance dogs only" },
+    { "name": "Qantas", "cabin": false, "notes": "Assistance dogs only; pets fly as cargo" }
+  ]
+}
