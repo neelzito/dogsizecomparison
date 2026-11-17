@@ -83,6 +83,21 @@ const PAIRS_CURATED = [
   ["golden-retriever", "german-shepherd-dog"],
   ["siberian-husky", "german-shepherd-dog"],
   ["chihuahua", "great-dane"],
+  ["vizsla", "wirehaired-vizsla"],
+  ["podenco-andaluz-large", "ibizan-hound"],
+  ["podenco-canario", "pharaoh-hound"],
+  ["podenco-canario", "ibizan-hound"],
+  ["podenco-andaluz-medium", "podenco-andaluz-large"],
+  ["maneto", "dachshund-standard"],
+  ["portuguese-podengo-medium", "basenji"],
+  ["portuguese-podengo-pequeno", "chihuahua"],
+  ["podenco-valenciano", "podenco-andaluz-large"],
+  // kept so URLs already in the sitemap stay live
+  ["bavarian-mountain-scent-hound", "grand-basset-griffon-vendeen"],
+  ["beagle", "dachshund-standard"],
+  ["beagle", "norwegian-lundehund"],
+  ["cirneco-dell-etna", "whippet"],
+  ["saluki", "sloughi"],
 ];
 
 const GROUP_TEXT = {

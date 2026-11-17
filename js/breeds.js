@@ -8,7 +8,7 @@
  *  lifeMin, lifeMax,                                                 (years)
  *  overrides?]                                                       (optional silhouette tweaks)
  *
- * Values are compiled from kennel-club breed standards (AKC, FCI, The Kennel Club, UKC)
+ * Values are compiled from kennel-club breed standards (AKC, FCI, The Kennel Club, UKC, RSCE)
  * and, where a standard gives no figure, from typical ranges published by breed clubs.
  * Individual dogs can fall outside these ranges.
  */
@@ -135,6 +135,15 @@ window.BREED_ROWS = [
   ["Pharaoh Hound", "Hound", "Malta", "sighthound", 58.5, 63.5, 53.5, 61, 20.5, 25, 20.5, 25, 12, 14, { ear: "prick", earS: 1.4, legLen: 0.56 }],
   ["Ibizan Hound", "Hound", "Spain (Ibiza)", "sighthound", 59.5, 70, 57, 66, 22.5, 22.5, 20.5, 20.5, 11, 14, { ear: "prick", earS: 1.6 }],
   ["Cirneco dell'Etna", "Hound", "Italy (Sicily)", "sighthound", 45.5, 51, 43, 48.5, 9.1, 12.5, 8.6, 11.5, 15, 16, { ear: "prick", earS: 1.4, legLen: 0.56 }],
+  ["Podenco Canario", "Hound", "Spain (Canary Islands)", "sighthound", 55, 64, 53, 60, 20, 25, 17, 21, 12, 14, { ear: "prick", earS: 1.5 }],
+  ["Podenco Andaluz (Large)", "Hound", "Spain", "sighthound", 54, 64, 53, 61, 21, 33, 21, 33, 12, 14, { ear: "prick", earS: 1.4 }],
+  ["Podenco Andaluz (Medium)", "Hound", "Spain", "primitive", 43, 53, 42, 52, 10, 22, 10, 22, 12, 14, { ear: "prick", earS: 1.4, tail: "sickle" }],
+  ["Podenco Andaluz (Small)", "Hound", "Spain", "primitive", 35, 42, 32, 41, 5, 11, 5, 11, 12, 14, { ear: "prick", earS: 1.4, tail: "sickle" }],
+  ["Maneto", "Hound", "Spain", "longlow", 30, 35, 30, 35, 8.5, 11.5, 8.5, 11.5, 12, 14, { ear: "prick", earS: 1.3 }],
+  ["Podenco Orito Español", "Hound", "Spain", "primitive", 40, 50, 38, 48, 16, 22, 14, 20, 12, 14, { ear: "prick", earS: 1.3, tail: "sickle" }],
+  ["Podenco Valenciano", "Hound", "Spain", "sighthound", 55, 61, 50, 57, 16, 24, 14, 22, 12, 14, { ear: "prick", earS: 1.4 }],
+  ["Portuguese Podengo (Large)", "Hound", "Portugal", "primitive", 55, 70, 55, 70, 20, 30, 20, 30, 12, 15, { ear: "prick", earS: 1.3, tail: "sickle" }],
+  ["Portuguese Podengo (Medium)", "Hound", "Portugal", "primitive", 40, 54, 40, 54, 16, 20, 16, 20, 12, 15, { ear: "prick", earS: 1.3, tail: "sickle" }],
   ["Norwegian Elkhound", "Hound", "Norway", "spitz", 52, 52, 49.5, 49.5, 25, 25, 22, 22, 12, 15, { fluff: 0.06 }],
   ["American Foxhound", "Hound", "United States", "scenthound", 56, 63.5, 53.5, 61, 29.5, 32, 27, 29.5, 11, 13],
   ["English Foxhound", "Hound", "England", "scenthound", 61, 61, 61, 61, 27, 34, 27, 34, 10, 13],
@@ -400,6 +409,15 @@ window.BREED_SOURCES = {
   "Pharaoh Hound": {"src":"AKC"},
   "Ibizan Hound": {"src":"AKC"},
   "Cirneco dell'Etna": {"src":"AKC"},
+  "Podenco Canario": {"src":"FCI","unverified":["male weight min","male weight max","female weight min","female weight max"],"note":"FCI No. 329 gives heights only; weights are typical values."},
+  "Podenco Andaluz (Large)": {"src":"RSCE","note":"RSCE standard No. 401: 27 kg ± 6 kg. Not recognised by the FCI."},
+  "Podenco Andaluz (Medium)": {"src":"RSCE","note":"RSCE standard No. 401: 16 kg ± 6 kg. Not recognised by the FCI."},
+  "Podenco Andaluz (Small)": {"src":"RSCE","note":"RSCE standard No. 401: 8 kg ± 3 kg. Not recognised by the FCI."},
+  "Maneto": {"src":"RSCE","note":"RSCE standard No. 408: about 10 kg ± 1.5 kg. Not recognised by the FCI."},
+  "Podenco Orito Español": {"src":"Typical","note":"No published standard yet; sources disagree, these are commonly cited ranges."},
+  "Podenco Valenciano": {"src":"RSCE","note":"RSCE (Xarnego Valenciano): about 20 kg (males) and 18 kg (females), ± 4 kg. Not recognised by the FCI."},
+  "Portuguese Podengo (Large)": {"src":"FCI"},
+  "Portuguese Podengo (Medium)": {"src":"FCI"},
   "Norwegian Elkhound": {"src":"AKC"},
   "American Foxhound": {"src":"AKC"},
   "English Foxhound": {"src":"AKC"},
@@ -532,4 +550,27 @@ window.BREED_SOURCES = {
   "Schnoodle (Miniature)": {"src":"Typical"},
   "Cavachon": {"src":"Typical"},
   "Chiweenie": {"src":"Typical"},
+};
+
+
+/*
+ * Other names people search for. Shown on breed pages and matched by every search box.
+ */
+window.BREED_ALIASES = {
+  "Vizsla": ["Magyar Vizsla", "Hungarian Vizsla", "Hungarian Pointer"],
+  "Wirehaired Vizsla": ["Drótszőrű Magyar Vizsla", "Hungarian Wirehaired Vizsla"],
+  "Ibizan Hound": ["Podenco Ibicenco"],
+  "Pharaoh Hound": ["Kelb tal-Fenek"],
+  "Cirneco dell'Etna": ["Sicilian Hound"],
+  "Podenco Canario": ["Canarian Warren Hound", "Canary Islands Hound"],
+  "Podenco Andaluz (Large)": ["Andalusian Hound", "Podenco Andaluz Grande"],
+  "Podenco Andaluz (Medium)": ["Andalusian Hound", "Podenco Andaluz Mediano"],
+  "Podenco Andaluz (Small)": ["Andalusian Hound", "Podenco Andaluz Chico"],
+  "Maneto": ["Podenco Maneto", "Andalusian Maneto"],
+  "Podenco Orito Español": ["Orito Español", "Spanish Orito"],
+  "Podenco Valenciano": ["Xarnego Valenciano", "Podenco Xarnego", "Charnego"],
+  "Portuguese Podengo (Large)": ["Podengo Português Grande"],
+  "Portuguese Podengo (Medium)": ["Podengo Português Médio"],
+  "Portuguese Podengo Pequeno": ["Podengo Português Pequeno", "Portuguese Podengo (Small)"],
+  "German Shepherd Dog": ["Alsatian"],
 };

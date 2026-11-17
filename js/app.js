@@ -14,6 +14,8 @@
       ov: r[14] || null,
     };
     b.id = slug(b.name);
+    b.aliases = (window.BREED_ALIASES || {})[b.name] || [];
+    b.keys = [b.id, ...b.aliases.map(slug)];
     const w = (avg(b.m.w) + avg(b.f.w)) / 2;
     b.size = w < 5 ? "Toy" : w < 10 ? "Small" : w < 25 ? "Medium" : w < 45 ? "Large" : "Giant";
     b.hAvg = (avg(b.m.h) + avg(b.f.h)) / 2;
@@ -21,6 +23,10 @@
     return b;
   }).sort((a, b) => a.name.localeCompare(b.name));
   const BY_ID = Object.fromEntries(BREEDS.map((b) => [b.id, b]));
+  const matches = (b, q) => b.keys.some((k) => k.includes(q));
+  const aliasHit = (b, q) => (b.id.includes(q) ? "" : b.aliases.find((a) => slug(a).includes(q)) || "");
+  const breedUrl = (b) => `/breeds/${b.id}/`;
+  const infoLink = (b, cls = "info") => b.custom ? "" : `<a class="${cls}" href="${breedUrl(b)}" title="About the ${esc(b.name)}: sizes, facts and comparisons" aria-label="About the ${esc(b.name)}">i</a>`;
   const SIZES = ["Toy", "Small", "Medium", "Large", "Giant"];
   const GROUPS = [...new Set(BREEDS.map((b) => b.group))].sort();
   const COLORS = ["#c2562b", "#2f6db5", "#3d8b5a", "#8a4fbf", "#c9962a", "#1f8a8a", "#c2457a", "#6b6f2a", "#5b5bd6", "#8c5a3c"];
@@ -118,7 +124,7 @@
 
   // ---------- sources ----------
   const SOURCES = window.BREED_SOURCES || {};
-  const SRC_LABEL = { AKC: "AKC", FCI: "FCI", UKC: "UKC", PTCA: "PTCA", Typical: "Typical (no standard)" };
+  const SRC_LABEL = { AKC: "AKC", FCI: "FCI", UKC: "UKC", PTCA: "PTCA", RSCE: "RSCE (Spain)", Typical: "Typical (no standard)" };
   function sourceInfo(b, sex) {
     if (b.custom) return { label: "Your measurements", warn: false, notes: "" };
     const s = SOURCES[b.name] || { src: "Unverified" };
@@ -285,7 +291,8 @@
         while (labelSlots.some((sl) => sl.row === row && Math.abs(sl.x - lx) < (sl.w + estW) / 2 + 6)) row++;
         labelSlots.push({ x: lx, w: estW, row });
         const ly = groundY + 17 + row * 30;
-        labels += `<text class="label-name" x="${lx}" y="${ly}" text-anchor="middle">${esc(name)}${it.b.custom ? "" : ` <tspan fill="${it.sex === "m" ? "var(--male)" : "var(--female)"}">${sexSym[it.sex]}</tspan>`}</text>`;
+        const nameText = `<text class="label-name" x="${lx}" y="${ly}" text-anchor="middle">${esc(name)}${it.b.custom ? "" : ` <tspan fill="${it.sex === "m" ? "var(--male)" : "var(--female)"}">${sexSym[it.sex]}</tspan>`}</text>`;
+        labels += it.b.custom ? nameText : `<a class="label-link" href="${breedUrl(it.b)}"><title>About the ${esc(it.b.name)}</title>${nameText}</a>`;
         labels += `<text class="label-sub" x="${lx}" y="${ly + 13}" text-anchor="middle">${fmtH(o.hCm)} · ${fmtW(pick(it.w))}</text>`;
       }
       x += o.wCm * k;
@@ -371,7 +378,7 @@
     const big = byH[0], small = byH[byH.length - 1];
     const hx = avg(big.h) / avg(small.h);
     const wx = avg(big.w) / avg(small.w);
-    const n = (it) => `<strong>${esc(it.b.name)}</strong>${state.entries.length !== its.length || its.filter((x) => x.b === it.b).length > 1 ? ` (${sexWord[it.sex].toLowerCase()})` : ""}`;
+    const n = (it) => `<strong>${it.b.custom ? esc(it.b.name) : `<a href="${breedUrl(it.b)}">${esc(it.b.name)}</a>`}</strong>${state.entries.length !== its.length || its.filter((x) => x.b === it.b).length > 1 ? ` (${sexWord[it.sex].toLowerCase()})` : ""}`;
     el.innerHTML = `<span class="pill">An average ${n(big)} stands <strong>${round(hx, 1)}×</strong> as tall and weighs about <strong>${round(wx, 1)}×</strong> as much as an average ${n(small)}.</span>`;
   }
 
@@ -385,6 +392,7 @@
       return `<li class="chip" data-id="${e.id}">
         <span class="num" style="background:${colorFor(i)}">${i + 1}</span>
         <span class="name" title="${esc(b.name)}">${esc(b.name)}</span>
+        ${infoLink(b)}
         ${b.custom ? "" : `<span class="mini-seg">${btn("m", "♂", "Male")}${btn("f", "♀", "Female")}${btn("both", "♂♀", "Male and female")}</span>`}
         <button class="x" aria-label="Remove ${esc(b.name)}">×</button></li>`;
     }).join("");
@@ -401,7 +409,7 @@
   function renderLibrary() {
     const { q, group, size, sort, cabin } = state.lib;
     const qq = slug(q);
-    let list = BREEDS.filter((b) => (!qq || b.id.includes(qq) || slug(b.origin).includes(qq)) && (!group || b.group === group) && (!size || b.size === size)
+    let list = BREEDS.filter((b) => (!qq || matches(b, qq) || slug(b.origin).includes(qq)) && (!group || b.group === group) && (!size || b.size === size)
       && (!cabin || (cabin === "yes" ? cabinBreed(b) === "yes" : cabinBreed(b) !== "no")));
     const cmp = {
       name: (a, b) => a.name.localeCompare(b.name),
@@ -411,14 +419,14 @@
     list.sort(cmp);
     $("#lib-count").textContent = `· ${list.length} of ${BREEDS.length}`;
     const sel = new Set(state.entries.map((e) => e.id));
-    $("#lib-list").innerHTML = list.map((b) => `
+    $("#lib-list").innerHTML = list.map((b) => `<div class="lib-cell">
       <button class="lib-item${sel.has(b.id) ? " selected" : ""}" data-id="${b.id}" aria-pressed="${sel.has(b.id)}">
         ${miniSvg(b)}
         <span class="meta"><span class="nm" style="display:block">${esc(b.name)}${cabinBreed(b) !== "no" ? ` <span class="cabin cabin-${cabinBreed(b)}" title="${esc(cabinTitle(cabinBreed(b)))}">${CABIN_TEXT[cabinBreed(b)]}</span>` : ""}</span>
         <span class="st" style="display:block">♂ ${fmtHR(b.m.h)} · ${fmtWR(b.m.w)}</span>
         <span class="st" style="display:block">♀ ${fmtHR(b.f.h)} · ${fmtWR(b.f.w)}</span></span>
         <span class="add">${sel.has(b.id) ? "✓" : "+"}</span>
-      </button>`).join("") || `<p class="muted">No breeds match.</p>`;
+      </button>${infoLink(b, "info lib-info")}</div>`).join("") || `<p class="muted">No breeds match. <a href="/suggest-a-breed/${qq ? `?breed=${encodeURIComponent(q)}` : ""}">Suggest a breed →</a></p>`;
   }
 
   // ---------- controls ----------
@@ -484,14 +492,17 @@
     let results = [], active = 0;
     const close = () => { list.hidden = true; input.setAttribute("aria-expanded", "false"); };
     const draw = () => {
-      list.innerHTML = results.map((b, i) => `<li role="option" data-id="${b.id}" aria-selected="${i === active}"><span>${esc(b.name)}</span><small>${b.size} · ${fmtHR([Math.min(b.m.h[0], b.f.h[0]), Math.max(b.m.h[1], b.f.h[1])])}</small></li>`).join("");
+      const q = input.value.trim();
+      if (!results.length && q) { list.innerHTML = `<li class="no-match"><a href="/suggest-a-breed/?breed=${encodeURIComponent(q)}">No breed found. Suggest “${esc(q)}” →</a></li>`; list.hidden = false; return; }
+      list.innerHTML = results.map((b, i) => `<li role="option" data-id="${b.id}" aria-selected="${i === active}"><span>${esc(b.name)}${aliasHit(b, slug(input.value)) ? ` <em class="aka">(${esc(aliasHit(b, slug(input.value)))})</em>` : ""}</span><small>${b.size} · ${fmtHR([Math.min(b.m.h[0], b.f.h[0]), Math.max(b.m.h[1], b.f.h[1])])}</small></li>`).join("");
       list.hidden = !results.length;
     };
     input.addEventListener("input", () => {
       const q = slug(input.value);
       if (!q) { close(); return; }
-      results = BREEDS.filter((b) => b.id.includes(q))
-        .sort((a, b) => (a.id.startsWith(q) ? 0 : 1) - (b.id.startsWith(q) ? 0 : 1) || a.name.localeCompare(b.name))
+      const starts = (b) => (b.keys.some((k) => k.startsWith(q)) ? 0 : 1);
+      results = BREEDS.filter((b) => matches(b, q))
+        .sort((a, b) => starts(a) - starts(b) || a.name.localeCompare(b.name))
         .slice(0, 12);
       active = 0; draw();
     });
@@ -499,11 +510,12 @@
       if (list.hidden) return;
       if (e.key === "ArrowDown") { active = Math.min(results.length - 1, active + 1); draw(); e.preventDefault(); }
       else if (e.key === "ArrowUp") { active = Math.max(0, active - 1); draw(); e.preventDefault(); }
-      else if (e.key === "Enter") { if (results[active]) { addBreed(results[active].id); input.value = ""; close(); } e.preventDefault(); }
+      else if (e.key === "Enter") { if (!results.length) { location.href = list.querySelector(".no-match a").href; return; } if (results[active]) { addBreed(results[active].id); input.value = ""; close(); } e.preventDefault(); }
       else if (e.key === "Escape") close();
     });
     list.addEventListener("mousedown", (e) => {
       const li = e.target.closest("li"); if (!li) return;
+      if (li.classList.contains("no-match")) { location.href = li.querySelector("a").href; return; }
       e.preventDefault(); addBreed(li.dataset.id); input.value = ""; close(); input.focus();
     });
     input.addEventListener("blur", () => setTimeout(close, 100));
