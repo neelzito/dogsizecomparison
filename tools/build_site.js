@@ -19,7 +19,8 @@ const { fs, path, ROOT, esc, avg, round, list, pct, aName, H, W, H1, W1, cm, inc
 const { PAIRS_CURATED, GROUP_TEXT, COUNTRY_ADJ } = require("./site/content-data");
 const AIRLINES = require(path.join(ROOT, "content/airlines.json"));
 
-const OUT_DIRS = ["breeds", "compare", "sizes", "groups", "origins", "articles", "calculators", "about"];
+const OUT_DIRS = ["breeds", "compare", "sizes", "groups", "origins", "articles", "calculators", "about", "suggest-a-breed"];
+const REPO = "neelzito/dogsizecomparison";
 const pages = []; // { url, html, priority }
 const emit = (url, html, priority = 0.6) => pages.push({ url, html, priority });
 const today = new Date().toISOString().slice(0, 10);
@@ -48,6 +49,36 @@ for (const p of PAIRS) for (const x of [p.a, p.b]) (PAIRS_BY_BREED[x.id] ||= [])
 const other = (p, b) => (p.a === b ? p.b : p.a);
 
 // reference dog used next to a breed on its page
+// ---------- social preview images (rendered by tools/build_og.py) ----------
+const OG_JOBS = [];
+const rng = (r, f, u) => (f(r[0]) === f(r[1]) ? `${f(r[0])} ${u}` : `${f(r[0])}–${f(r[1])} ${u}`);
+const ogDog = (b, hCm, name, sub, color, muted = false) => {
+  const s = L.shapeOf(b);
+  return { img: `img/dogs/web/${b.id}.webp`, maxX: +s.maxX.toFixed(4), maxY: +s.maxY.toFixed(4), hCm: +hCm.toFixed(2), name, sub, color, muted };
+};
+function ogJob(job) {
+  if (job.dogs.some((g) => !fs.existsSync(path.join(ROOT, g.img)))) return undefined; // no illustration yet: keep the default image
+  OG_JOBS.push(job);
+  return "/" + job.out;
+}
+function breedOg(b, ref) {
+  const sexLine = (s, lbl) => [[`${lbl}  ${rng(b[s].h, cm, "cm")} · ${rng(b[s].w, kg, "kg")}`, "fact"], [`${rng(b[s].h, inch, "in")} · ${rng(b[s].w, lb, "lb")}`, "small"]];
+  return ogJob({
+    out: `img/og/breeds/${b.id}.png`, kind: "breed", kicker: "Dog breed size", title: b.name,
+    lines: [...(b.sameSexes ? sexLine("m", "Adults") : [...sexLine("m", "Males"), ...sexLine("f", "Females")]),
+      [`${b.size} · ${b.group === "Designer / Mixed" ? "Designer breed" : `${b.group} group`}`, "small"]],
+    dogs: [ogDog(b, avg(b.m.h), b.name, `${cm(avg(b.m.h))} cm · ${kg(avg(b.m.w))} kg`, "#c2562b"),
+      ogDog(ref, avg(ref.m.h), ref.name, `${cm(avg(ref.m.h))} cm · ${kg(avg(ref.m.w))} kg`, "#8c857a", true)],
+  });
+}
+function compareOg(A, B, url) {
+  return ogJob({
+    out: `img/og${url.replace(/\/$/, "")}.png`, kind: "compare", kicker: "", title: `${A.name} vs ${B.name}`,
+    lines: [["Drawn to scale", "fact"], ["average adult males", "fact"]],
+    dogs: [A, B].map((x, i) => ogDog(x, avg(x.m.h), x.name, `${cm(avg(x.m.h))} cm (${inch(avg(x.m.h))} in) · ${kg(avg(x.m.w))} kg`, COLORS[i])),
+  });
+}
+
 const refFor = (b) => (b.id === "labrador-retriever" ? BY_ID["golden-retriever"] : BY_ID["labrador-retriever"]);
 
 // ======================================================================
@@ -98,7 +129,9 @@ function sexText(b) {
   if (b.sameSexes) return "";
   const dh = avg(b.m.h) - avg(b.f.h), dw = avg(b.m.w) / avg(b.f.w) - 1;
   if (Math.abs(dh) < 0.5 && Math.abs(dw) < 0.03) return `Males and females are practically the same size.`;
-  return `An average male is ${round(Math.abs(dh), 1)} cm (${inch(Math.abs(dh))} in) ${dh >= 0 ? "taller" : "shorter"} and ${pct(Math.abs(dw))} ${dw >= 0 ? "heavier" : "lighter"} than an average female.`;
+  const hPart = Math.abs(dh) < 0.5 ? "about the same height as" : `${round(Math.abs(dh), 1)} cm (${inch(Math.abs(dh))} in) ${dh >= 0 ? "taller than" : "shorter than"}`;
+  const wPart = Math.abs(dw) < 0.03 ? "weighs about the same" : `is ${pct(Math.abs(dw))} ${dw >= 0 ? "heavier" : "lighter"}`;
+  return `An average male is ${hPart} an average female and ${wPart}.`;
 }
 
 function breedPage(b) {
@@ -138,6 +171,10 @@ function breedPage(b) {
     ["Airplane cabin", c === "yes" ? `<span class="cabin cabin-yes">✈ Fits</span>` : c === "some" ? `<span class="cabin cabin-some">✈ Lighter dogs</span>` : `Over ${CABIN.limitKg} kg limit`],
     ["Height rank", `${ordinal(byHeight.indexOf(b) + 1)} of ${N}`],
   ];
+  const SRC_NAME = { AKC: "American Kennel Club (AKC)", FCI: "FCI", UKC: "United Kennel Club (UKC)", PTCA: "PTCA", RSCE: "Real Sociedad Canina de España (RSCE)" };
+  const srcLine = !b.source ? "" : b.source.src === "Typical"
+    ? `There is no official breed standard, so these are typical ranges.${b.source.note ? ` ${b.source.note}` : ""}`
+    : `Sizes follow the ${SRC_NAME[b.source.src] || b.source.src} breed standard.${b.source.note ? ` ${b.source.note}` : ""}`;
 
   const sexTable = b.sameSexes ? "" : `<div class="table-scroll"><table class="data-table"><thead><tr><th></th><th class="sex-m">♂ Male</th><th class="sex-f">♀ Female</th></tr></thead><tbody>
     <tr><td>Height (min–max)</td><td>${H(b.m.h)}</td><td>${H(b.f.h)}</td></tr>
@@ -148,7 +185,7 @@ function breedPage(b) {
   const body = `${cr.html}
 <header class="page-head">
   <h1>${esc(b.name)} size</h1>
-  <p class="lede">${esc(b.name)}: ${sizeWord(b)} ${esc(b.group === "Designer / Mixed" ? "designer" : b.group.toLowerCase())} dog from ${esc(place(b.origin))}. Height, weight and how it compares, drawn to scale.</p>
+  <p class="lede">${esc(b.name)}: ${sizeWord(b)} ${esc(b.group === "Designer / Mixed" ? "designer" : b.group.toLowerCase())} dog from ${esc(place(b.origin))}. ${b.aliases.length ? `Also known as ${esc(L.list(b.aliases))}. ` : ""}Height, weight and how it compares, drawn to scale.</p>
 </header>
 <section class="card">
   ${scene(dogs, { title: `${b.name} drawn to scale next to a 175 cm person and a ${ref.name}` })}
@@ -162,6 +199,7 @@ function breedPage(b) {
   <p>${esc(breedIntro(b))}</p>
   <p>${esc([lifeText(b), cabinText(b)].filter(Boolean).join(" "))}</p>
   ${b.sameSexes ? "" : `<h2>Male vs female ${esc(b.name)}</h2><p>${esc(sexText(b))}</p>${sexTable}`}
+  ${srcLine ? `<p class="src-note">${esc(srcLine)}</p>` : ""}
   ${handWritten ? `<h2>About the ${esc(b.name)}</h2>${handWritten}` : ""}
 </article>
 <aside class="side">
@@ -180,8 +218,8 @@ ${fq.html}
   emit(url, page({
     url, current: "/breeds/",
     title: `${b.name} Size: Height & Weight${b.sameSexes ? "" : ", Male vs Female"}`,
-    description: `How big is ${aName(b)}? ${b.sameSexes ? `Adults stand ${H(b.m.h)} and weigh ${W(b.m.w)}.` : `Males stand ${H(b.m.h)} and weigh ${W(b.m.w)}; females ${H(b.f.h)}, ${W(b.f.w)}.`} Drawn to scale next to a person.`,
-    body, ld: [cr.ld, fq.ld],
+    description: `How big is ${aName(b)}${b.aliases.length ? ` (${b.aliases[0]})` : ""}? ${b.sameSexes ? `Adults stand ${H(b.m.h)} and weigh ${W(b.m.w)}.` : `Males stand ${H(b.m.h)} and weigh ${W(b.m.w)}; females ${H(b.f.h)}, ${W(b.f.w)}.`} Drawn to scale next to a person.`,
+    body, ld: [cr.ld, fq.ld], ogImage: breedOg(b, ref), ogAlt: `${b.name} drawn to scale next to a ${ref.name}`,
   }), 0.7);
 }
 
@@ -262,7 +300,7 @@ ${faq.html}`;
     url, current: "/compare/",
     title: `${A.name} vs ${B.name} Size Comparison`,
     description: `${A.name} vs ${B.name}: ${sentences[0]} See both breeds to scale with male and female heights and weights.`.slice(0, 300),
-    body, ld: [cr.ld, faq.ld],
+    body, ld: [cr.ld, faq.ld], ogImage: compareOg(A, B, url), ogAlt: `${A.name} and ${B.name} drawn to scale side by side`,
   }), p.curated ? 0.6 : 0.5);
 }
 
@@ -366,7 +404,8 @@ function breedsIndex() {
 <h2>By group</h2><div class="pill-row">${GROUPS.map((g) => `<a class="pill-link" href="${groupUrl(g)}">${esc(g === "Designer / Mixed" ? "Designer & mixed" : g)} <span>${BREEDS.filter((b) => b.group === g).length}</span></a>`).join("")}</div>
 <h2>By country</h2><div class="pill-row">${COUNTRIES.map((c) => `<a class="pill-link" href="${countryUrl(c)}">${esc(c)} <span>${BREEDS.filter((b) => b.country === c).length}</span></a>`).join("")}</div></section>
 <nav class="az" aria-label="Jump to letter">${letters.map((l) => `<a href="#${l}">${l}</a>`).join("")}</nav>
-${letters.map((l) => `<section id="${l}" class="az-sec"><h2 class="sec-h">${l}</h2>${breedGrid(BREEDS.filter((b) => b.name[0].toUpperCase() === l))}</section>`).join("\n")}`;
+${letters.map((l) => `<section id="${l}" class="az-sec"><h2 class="sec-h">${l}</h2>${breedGrid(BREEDS.filter((b) => b.name[0].toUpperCase() === l))}</section>`).join("\n")}
+<aside class="card suggest-cta"><h2>Missing a breed?</h2><p>We add breeds people ask for. <a href="/suggest-a-breed/">Suggest a breed →</a></p></aside>`;
   emit(url, page({ url, current: url, title: `All ${N} Dog Breeds by Size: Heights & Weights A–Z`, description: `Heights and weights of ${N} dog breeds, A–Z, for males and females. Browse by size class, breed group or country of origin.`, body, ld: [cr.ld] }), 0.9);
 }
 
@@ -515,6 +554,53 @@ function aboutPage(blocks) {
 }
 
 // ======================================================================
+// Suggest a breed
+// ======================================================================
+function suggestPage() {
+  const url = "/suggest-a-breed/";
+  const cr = crumbs([["/", "Home"], ["/breeds/", "Breeds"], [url, "Suggest a breed"]]);
+  const known = BREEDS.map((b) => [b.name, b.url, b.aliases]);
+  const body = `${cr.html}
+<header class="page-head"><h1>Suggest a dog breed</h1><p class="lede">Missing a breed? Tell us which one and we'll look up its breed standard and add it to the comparison tool. We currently list ${N} breeds.</p></header>
+<section class="card">
+<form id="suggest-form" class="calc-form suggest-form" novalidate>
+  <label class="fld"><span>Breed name *</span><input name="breed" required maxlength="80" autocomplete="off" placeholder="e.g. Podenco Campanero"></label>
+  <p id="suggest-known" class="suggest-known" hidden></p>
+  <label class="fld"><span>Country of origin</span><input name="origin" maxlength="60" placeholder="e.g. Spain"></label>
+  <label class="fld"><span>Kennel club or standard, if you know it</span><input name="standard" maxlength="200" placeholder="e.g. FCI No. 123, RSCE, link to the standard"></label>
+  <label class="fld"><span>Anything else?</span><textarea name="notes" rows="4" maxlength="1000" placeholder="Sizes, size varieties, other names…"></textarea></label>
+  <div><button class="btn" type="submit">Send suggestion</button></div>
+  <p class="muted small">Suggestions are posted as a public issue on our <a href="https://github.com/${REPO}/issues">GitHub page</a>, which needs a free GitHub account. Please don't include personal details.</p>
+</form>
+</section>
+<script>
+(function () {
+  var KNOWN = ${JSON.stringify(known)};
+  var REPO = ${JSON.stringify(REPO)};
+  var slug = function (s) { return s.toLowerCase().normalize("NFD").replace(/[\\u0300-\\u036f]/g, "").replace(/[^a-z0-9]+/g, " ").trim(); };
+  var f = document.getElementById("suggest-form"), out = document.getElementById("suggest-known");
+  var q = new URLSearchParams(location.search).get("breed");
+  if (q) f.breed.value = q.slice(0, 80);
+  function check() {
+    var v = slug(f.breed.value);
+    var hits = v.length < 3 ? [] : KNOWN.filter(function (k) { return [k[0]].concat(k[2]).some(function (n) { var s = slug(n); return s.indexOf(v) >= 0 || v.indexOf(s) >= 0; }); }).slice(0, 4);
+    out.hidden = !hits.length;
+    out.innerHTML = hits.length ? "Already on the site: " + hits.map(function (k) { return '<a href="' + k[1] + '">' + k[0].replace(/[&<>]/g, "") + "</a>"; }).join(", ") : "";
+  }
+  f.breed.addEventListener("input", check); check();
+  f.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var b = f.breed.value.trim();
+    if (!b) { f.breed.focus(); return; }
+    var body = "**Breed:** " + b + "\\n**Origin:** " + (f.origin.value.trim() || "-") + "\\n**Standard:** " + (f.standard.value.trim() || "-") + "\\n\\n" + (f.notes.value.trim() || "") + "\\n\\n_Sent from dogsizecomparison.com/suggest-a-breed/_";
+    window.open("https://github.com/" + REPO + "/issues/new?title=" + encodeURIComponent("Breed suggestion: " + b) + "&body=" + encodeURIComponent(body), "_blank", "noopener");
+  });
+})();
+</script>`;
+  emit(url, page({ url, current: "/breeds/", title: "Suggest a Dog Breed", description: `Missing a dog breed? Suggest it and we'll add it to the dog size comparison tool. ${N} breeds listed so far.`, body, ld: [cr.ld] }), 0.3);
+}
+
+// ======================================================================
 // Calculators
 // ======================================================================
 const CALC_DISCLAIMER = {
@@ -627,11 +713,21 @@ mdArticles(blocks);
 articlesIndex();
 aboutPage(blocks);
 calcPages();
+suggestPage();
 
 for (const p of pages) {
   const file = path.join(ROOT, p.url, "index.html");
   fs.mkdirSync(path.dirname(file), { recursive: true });
   fs.writeFileSync(file, p.html);
+}
+
+// social preview images
+{
+  const { spawnSync } = require("child_process");
+  const py = [path.join(ROOT, ".venv/bin/python"), "python3"].find((p) => p === "python3" || fs.existsSync(p));
+  const r = spawnSync(py, [path.join(ROOT, "tools/build_og.py")], { input: JSON.stringify(OG_JOBS), encoding: "utf8", maxBuffer: 1 << 26 });
+  if (r.status === 0) process.stdout.write(r.stdout);
+  else console.warn(`WARNING: preview images not rendered (${(r.stderr || r.error || "").toString().trim().split("\n").pop()}).\n  Set up once: python3 -m venv .venv && .venv/bin/pip install -r tools/requirements.txt`);
 }
 
 // index.html: SEO blocks, then top bar and site footer

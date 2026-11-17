@@ -65,6 +65,8 @@ const BREEDS = window.BREED_ROWS.map((r) => {
   b.country = originKey(b.origin);
   b.sameSexes = b.m.h[0] === b.f.h[0] && b.m.h[1] === b.f.h[1] && b.m.w[0] === b.f.w[0] && b.m.w[1] === b.f.w[1];
   b.url = `/breeds/${b.id}/`;
+  b.aliases = (window.BREED_ALIASES || {})[b.name] || [];
+  b.source = (window.BREED_SOURCES || {})[b.name] || null;
   b.img = `/img/dogs/web/${b.id}.webp`;
   return b;
 }).sort((a, b) => a.name.localeCompare(b.name));
@@ -268,8 +270,8 @@ function siteFooter() {
     ${col("By size", SIZES.map((s) => [sizeUrl(s), `${s} dog breeds`]))}
     ${col("By group", GROUPS.map((g) => [groupUrl(g), g === "Designer / Mixed" ? "Designer & mixed" : `${g} group`]))}
     ${col("Calculators", [["/calculators/puppy-weight/", "Puppy adult weight"], ["/calculators/crate-size/", "Crate size"], ["/calculators/airline-cabin/", "Airline cabin check"], ["/calculators/dog-years/", "Dog years to human years"]])}
-    ${col("Guides", [["/articles/how-to-measure-your-dog/", "How to measure your dog"], ["/articles/dog-size-classes-explained/", "Dog size classes explained"], ["/articles/flying-with-a-dog-in-the-cabin/", "Flying with a dog"], ["/about/", "About the data"]])}
-  </div><div class="wrap foot-note"><p>Heights and weights follow kennel-club breed standards (AKC, FCI, The Kennel Club, UKC). Individual dogs can fall outside every range shown. <a href="/about/">How we compile the figures</a>.</p>
+    ${col("Guides", [["/articles/how-to-measure-your-dog/", "How to measure your dog"], ["/articles/dog-size-classes-explained/", "Dog size classes explained"], ["/articles/flying-with-a-dog-in-the-cabin/", "Flying with a dog"], ["/about/", "About the data"], ["/suggest-a-breed/", "Suggest a breed"]])}
+  </div><div class="wrap foot-note"><p>Heights and weights follow kennel-club breed standards (AKC, FCI, The Kennel Club, UKC, RSCE). Individual dogs can fall outside every range shown. <a href="/about/">How we compile the figures</a>.</p>
     <p>All information on this site is general guidance only. It is not veterinary, medical or travel advice, and airline rules, breed standards and other details can change. Always check with your vet, airline or breeder before making decisions. <a href="/about/#disclaimer">Full disclaimer</a>.</p>
     <p class="copyright">© ${new Date().getFullYear()} MILIVON. All rights reserved. Text, data compilation and illustrations may not be reproduced without permission.</p></div></footer>`;
 }
@@ -278,7 +280,7 @@ function crumbs(items) {
   const ld = { "@type": "BreadcrumbList", itemListElement: items.map(([u, t], i) => ({ "@type": "ListItem", position: i + 1, name: t, item: SITE + u })) };
   return { html, ld };
 }
-function page({ url, title, description, body, ld = [], current = "", ogImage = "/img/og-image.png", scripts = [], noindex = false }) {
+function page({ url, title, description, body, ld = [], current = "", ogImage = "/img/og-image.png", ogAlt = "", scripts = [], noindex = false }) {
   const graph = { "@context": "https://schema.org", "@graph": ld };
   return `<!doctype html>
 <html lang="en">
@@ -300,6 +302,9 @@ function page({ url, title, description, body, ld = [], current = "", ogImage = 
   <meta property="og:title" content="${esc(title)}" />
   <meta property="og:description" content="${esc(description)}" />
   <meta property="og:image" content="${SITE}${ogImage}" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="${esc(ogImage === "/img/og-image.png" || !ogAlt ? "Illustrated dog breeds from Chihuahua to Irish Wolfhound standing side by side to scale" : ogAlt)}" />
   <meta name="twitter:card" content="summary_large_image" />
   ${ld.length ? `<script type="application/ld+json">${JSON.stringify(graph).replace(/</g, "\\u003c")}</script>` : ""}
   <link rel="preconnect" href="https://fonts.googleapis.com" />
