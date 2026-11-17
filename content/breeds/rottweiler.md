@@ -2,7 +2,7 @@ The Rottweiler takes its name from Rottweil, a market town in south-west Germany
 
 ### What a Rottweiler's size means at home
 
-A male Rottweiler stands about 61–69 cm at the shoulder, roughly an adult's mid-thigh, and weighs 43–61 kg (95–135 lb). That makes it one of the heaviest breeds in the large size class. Females are smaller and much lighter, at about 36–46 kg (80–100 lb). A Rottweiler needs a big boot, a 48″ (122 cm) crate (see the [crate size calculator](/calculators/crate-size/?breed=rottweiler)) and a strong owner on the lead: at full weight, it can easily pull an adult off balance.
+A male Rottweiler stands about 61–69 cm at the shoulder, roughly an adult's mid-thigh, and weighs 43–61 kg (95–135 lb). That's heavy enough to put it in the giant size class on this site, even though it isn't especially tall. Females are smaller and much lighter, at about 36–46 kg (80–100 lb). A Rottweiler needs a big boot, a 48″ (122 cm) crate (see the [crate size calculator](/calculators/crate-size/?breed=rottweiler)) and a strong owner on the lead: at full weight, it can easily pull an adult off balance.
 
 ### Rottweiler vs Doberman
 
