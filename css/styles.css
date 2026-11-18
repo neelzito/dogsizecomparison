@@ -372,6 +372,7 @@ button, input, select { font: inherit; color: inherit; }
 .prose .note strong { color: var(--ink); }
 .foot-note p { margin: 0 0 8px; }
 .foot-note .copyright { color: var(--ink-2); font-weight: 500; }
+.foot-note .copyright a { color: inherit; }
 
 /* ---------- breed info links, aliases, suggestions ---------- */
 a.info { flex: none; display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid var(--ink-3); color: var(--ink-3); font: italic 700 11px/1 Georgia, "Times New Roman", serif; text-decoration: none; }
