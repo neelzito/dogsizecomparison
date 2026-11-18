@@ -4,7 +4,7 @@
   --surface-2: #f1ede6;
   --ink: #1f1d1a;
   --ink-2: #5d574e;
-  --ink-3: #8c857a;
+  --ink-3: #6f685e;
   --line: #e4ded4;
   --grid: #ebe6dd;
   --accent: #c2562b;
@@ -20,7 +20,7 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #15140f; --surface: #1e1c17; --surface-2: #27241e; --ink: #f1ece3; --ink-2: #b8b0a3;
-    --ink-3: #857d70; --line: #353128; --grid: #2a2720; --accent: #e07a4c; --male: #6ea4e6; --female: #e77fab;
+    --ink-3: #9a9285; --line: #353128; --grid: #2a2720; --accent: #e07a4c; --male: #6ea4e6; --female: #e77fab;
     --shadow: 0 1px 2px rgba(0,0,0,.3); color-scheme: dark;
   }
 }
@@ -63,9 +63,9 @@ button, input, select { font: inherit; color: inherit; }
 .chip .num { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-size: 12px; font-weight: 700; flex: none; }
 .chip .name { font-weight: 550; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .chip .mini-seg { display: flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
-.chip .mini-seg button { border: 0; background: transparent; padding: 1px 7px; cursor: pointer; font-size: 13px; color: var(--ink-3); }
+.chip .mini-seg button { border: 0; background: transparent; padding: 0 9px; min-width: 30px; min-height: 28px; cursor: pointer; font-size: 13px; color: var(--ink-3); }
 .chip .mini-seg button[aria-pressed="true"] { background: var(--ink); color: var(--surface); }
-.chip .x { border: 0; background: transparent; cursor: pointer; width: 24px; height: 24px; border-radius: 50%; color: var(--ink-3); font-size: 16px; line-height: 1; }
+.chip .x { border: 0; background: transparent; cursor: pointer; width: 28px; height: 28px; border-radius: 50%; color: var(--ink-3); font-size: 16px; line-height: 1; }
 .chip .x:hover { background: var(--line); color: var(--ink); }
 .chips .empty { color: var(--ink-3); font-size: 14px; padding: 6px 2px; }
 
@@ -215,7 +215,7 @@ button, input, select { font: inherit; color: inherit; }
 .site-foot a { color: var(--ink-2); text-decoration: none; font-size: 14px; }
 .site-foot a:hover { color: var(--accent); text-decoration: underline; }
 .foot-note { color: var(--ink-3); font-size: 12.5px; padding-top: 14px; padding-bottom: 24px; }
-.foot-note a { font-size: inherit; }
+.foot-note a { font-size: inherit; text-decoration: underline; text-underline-offset: 2px; }
 
 .content { padding-top: 14px; padding-bottom: 8px; }
 .content a { color: var(--accent); }
@@ -372,6 +372,7 @@ button, input, select { font: inherit; color: inherit; }
 .prose .note strong { color: var(--ink); }
 .foot-note p { margin: 0 0 8px; }
 .foot-note .copyright { color: var(--ink-2); font-weight: 500; }
+.foot-note .copyright a { color: inherit; }
 
 /* ---------- breed info links, aliases, suggestions ---------- */
 a.info { flex: none; display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid var(--ink-3); color: var(--ink-3); font: italic 700 11px/1 Georgia, "Times New Roman", serif; text-decoration: none; }

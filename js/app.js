@@ -401,7 +401,7 @@
   // ---------- library ----------
   function miniSvg(b) {
     const s = shapeOf(b);
-    if (s.img) return `<img class="lib-thumb" src="${s.img}" alt="${esc(b.name)}" loading="lazy" decoding="async" width="64" height="44">`;
+    if (s.img) return `<img class="lib-thumb" src="${s.img.replace("/web/", "/thumb/")}" alt="${esc(b.name)}" loading="lazy" decoding="async" width="64" height="44">`;
     const w = s.maxX - s.minX, h = s.maxY;
     return `<svg viewBox="${s.minX} ${-h} ${w} ${h}" preserveAspectRatio="xMidYMax meet" aria-hidden="true"><g transform="scale(1 -1)">${s.markup}</g></svg>`;
   }

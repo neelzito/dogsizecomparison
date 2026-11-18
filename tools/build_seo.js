@@ -43,7 +43,7 @@ const cabin = (b) => { const m = cabinFor(b.m.w), f = cabinFor(b.f.w); return m 
 
 // ---------- library ----------
 const library = BREEDS.map((b) => {
-  const img = IMAGES[b.id] ? `<img class="lib-thumb" src="img/dogs/web/${b.id}.webp" alt="${esc(b.name)}" loading="lazy" decoding="async" width="64" height="44">` : "";
+  const img = IMAGES[b.id] ? `<img class="lib-thumb" src="img/dogs/thumb/${b.id}.webp" alt="${esc(b.name)}" loading="lazy" decoding="async" width="64" height="44">` : "";
   return `<button class="lib-item" data-id="${b.id}" aria-pressed="false">${img}<span class="meta"><span class="nm" style="display:block">${esc(b.name)}</span>`
     + `<span class="st" style="display:block">♂ ${H(b.m.h)} · ${W(b.m.w)}</span>`
     + `<span class="st" style="display:block">♀ ${H(b.f.h)} · ${W(b.f.w)}</span></span><span class="add">+</span></button>`;

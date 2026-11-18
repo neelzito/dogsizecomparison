@@ -302,7 +302,7 @@ function siteFooter() {
     ${col("Guides", [["/breed-finder/", "Breed finder"], ["/articles/how-to-measure-your-dog/", "How to measure your dog"], ["/articles/dog-size-classes-explained/", "Dog size classes explained"], ["/articles/flying-with-a-dog-in-the-cabin/", "Flying with a dog"], ["/about/", "About the data"], ["/suggest-a-breed/", "Suggest a breed"]])}
   </div><div class="wrap foot-note"><p>Heights and weights follow kennel-club breed standards (AKC, FCI, The Kennel Club, UKC, RSCE). Individual dogs can fall outside every range shown. <a href="/about/">How we compile the figures</a>.</p>
     <p>All information on this site is general guidance only. It is not veterinary, medical or travel advice, and airline rules, breed standards and other details can change. Always check with your vet, airline or breeder before making decisions. <a href="/about/#disclaimer">Full disclaimer</a>.</p>
-    <p class="copyright">© ${new Date().getFullYear()} MILIVON. All rights reserved. Text, data compilation and illustrations may not be reproduced without permission.</p></div></footer>`;
+    <p class="copyright">© ${new Date().getFullYear()} <a href="https://milivon.com">MILIVON</a>. All rights reserved. Text, data compilation and illustrations may not be reproduced without permission.</p></div></footer>`;
 }
 function crumbs(items) {
   const html = `<nav class="crumbs" aria-label="Breadcrumb"><ol>${items.map(([u, t], i) => `<li>${i === items.length - 1 ? `<span aria-current="page">${esc(t)}</span>` : `<a href="${u}">${esc(t)}</a>`}</li>`).join("")}</ol></nav>`;
@@ -359,7 +359,7 @@ ${scripts.map((s) => `  <script src="${s}"></script>`).join("\n")}
 function breedCard(b, { extra = "", attrs = "" } = {}) {
   const img = b.photo
     ? `<img class="bcard-photo" src="${b.photo.thumb}" alt="" loading="lazy" decoding="async" width="80" height="60">`
-    : `<img src="${b.img}" alt="" loading="lazy" decoding="async" width="72" height="50">`;
+    : `<img src="${b.img.replace("/web/", "/thumb/")}" alt="" loading="lazy" decoding="async" width="72" height="50">`;
   return `<a class="bcard" href="${b.url}"${attrs}>${img}<span class="bcard-meta"><span class="bcard-name">${esc(b.name)}</span>`
     + `<span class="bcard-st">♂ ${H(b.m.h)} · ${W(b.m.w)}</span>`
     + (b.sameSexes ? "" : `<span class="bcard-st">♀ ${H(b.f.h)} · ${W(b.f.w)}</span>`)
