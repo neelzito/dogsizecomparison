@@ -12,17 +12,18 @@
  */
 const L = require("./site/lib");
 const { place } = L;
-const { fs, path, ROOT, esc, avg, round, list, pct, aName, H, W, H1, W1, cm, inch, kg, lb, life, BREEDS, BY_ID, N,
+const { fs, path, ROOT, esc, avg, round, list, pct, aName, H, W, H1, W1, cm, inch, kg, lb, life, BREEDS, BY_ID, N, TRAIT_KEYS, TRAIT_INFO,
   SIZES, SIZE_INFO, GROUPS, groupUrl, groupLabel, sizeUrl, sizeWord, COUNTRIES, countryUrl, cabin, CABIN, CABIN_MAX_DOG,
   share, nearest, bodyLandmark, bodyUnits, MALE, FEMALE, COLORS, scene, markdown, frontMatter, crumbs, page,
   breedCard, breedGrid, toolLink, spanH, spanW, faqBlock, slug } = L;
 const { PAIRS_CURATED, GROUP_TEXT, COUNTRY_ADJ } = require("./site/content-data");
 const AIRLINES = require(path.join(ROOT, "content/airlines.json"));
 
-const OUT_DIRS = ["breeds", "compare", "sizes", "groups", "origins", "articles", "calculators", "about", "suggest-a-breed"];
+const OUT_DIRS = ["breeds", "compare", "sizes", "groups", "origins", "articles", "calculators", "about", "suggest-a-breed", "breed-finder"];
 const REPO = "neelzito/dogsizecomparison";
 const pages = []; // { url, html, priority }
 const emit = (url, html, priority = 0.6) => pages.push({ url, html, priority });
+const groupSlugOf = (g) => L.groupSlug(g);
 const today = new Date().toISOString().slice(0, 10);
 
 // ======================================================================
@@ -138,11 +139,36 @@ function sexText(b) {
 function photoFigure(b) {
   const p = b.photo;
   if (!p) return "";
-  const lic = p.licenseUrl ? `<a href="${esc(p.licenseUrl)}" rel="license noopener" target="_blank">${esc(p.license)}</a>` : esc(p.license);
   return `<figure class="breed-photo">
     <img src="${p.src}" width="${p.width}" height="${p.height}" alt="${esc(`A ${b.name}`)}" loading="eager" decoding="async">
-    <figcaption>Photo: <a href="${esc(p.source)}" rel="noopener" target="_blank">${esc(p.artist)}</a>, ${lic}, via Wikimedia Commons</figcaption>
+    <figcaption>${photoCredit(p)}</figcaption>
   </figure>`;
+}
+
+const photoCredit = (p) => {
+  const lic = p.licenseUrl ? `<a href="${esc(p.licenseUrl)}" rel="license noopener" target="_blank">${esc(p.license)}</a>` : esc(p.license);
+  return `Photo: <a href="${esc(p.source)}" rel="noopener" target="_blank">${esc(p.artist)}</a>, ${lic}, via Wikimedia Commons`;
+};
+// schema.org ImageObject with the licence details Google shows for image results.
+const photoLd = (b) => b.photo && {
+  "@type": "ImageObject", contentUrl: L.SITE + b.photo.src, width: b.photo.width, height: b.photo.height,
+  name: `${b.name}`, creditText: b.photo.artist, creator: { "@type": "Person", name: b.photo.artist },
+  license: b.photo.licenseUrl || undefined, acquireLicensePage: b.photo.source, copyrightNotice: `${b.photo.artist}, ${b.photo.license}`,
+};
+// Both breeds' photos side by side on comparison pages.
+function comparePhotos(A, B) {
+  if (!A.photo || !B.photo) return "";
+  const fig = (x) => `<figure><a href="${x.url}"><img src="${x.photo.src}" width="${x.photo.width}" height="${x.photo.height}" alt="${esc(`A ${x.name}`)}" decoding="async"></a><span class="cmp-name"><a href="${x.url}">${esc(x.name)}</a></span><figcaption>${photoCredit(x.photo)}</figcaption></figure>`;
+  return `<div class="cmp-photos">${fig(A)}${fig(B)}</div>`;
+}
+
+// "At a glance" ratings on breed pages, linking to the finder with similar settings.
+function traitsCard(b) {
+  const t = b.traits;
+  const rows = TRAIT_KEYS.map((k) => `<li><span class="tr-k">${TRAIT_INFO[k].label}</span><span class="tr-v"><span class="dots" aria-hidden="true">${[1, 2, 3].map((i) => `<i${i <= t[k] ? ' class="on"' : ""}></i>`).join("")}</span>${TRAIT_INFO[k].vals[t[k] - 1]}</span></li>`).join("");
+  return `<div class="card traits"><h2>${esc(b.name)} at a glance</h2><ul class="trait-list">${rows}</ul>
+  <p class="muted small">General tendencies for the breed; individual dogs vary.</p>
+  <p><a href="/breed-finder/?size=${b.size.toLowerCase()}&amp;energy=${t.energy}">Find breeds like this in the breed finder →</a></p></div>`;
 }
 
 function breedPage(b) {
@@ -215,6 +241,7 @@ function breedPage(b) {
   ${handWritten ? `<h2>About the ${esc(b.name)}</h2>${handWritten}` : ""}
 </article>
 <aside class="side">
+  ${traitsCard(b)}
   ${pairs.length ? `<div class="card"><h2>${esc(b.name)} comparisons</h2><ul class="link-list">${pairs.map((p) => `<li><a href="${p.url}">${esc(p.a.name)} vs ${esc(p.b.name)}</a></li>`).join("")}</ul></div>` : ""}
   <div class="card"><h2>${esc(b.name)} calculators</h2><ul class="link-list"><li><a href="/calculators/puppy-weight/?breed=${b.id}">How big will my ${esc(b.name)} puppy get?</a></li><li><a href="/calculators/crate-size/?breed=${b.id}">Crate size for ${aName(b)}</a></li>${b.size === "Toy" || b.size === "Small" ? `<li><a href="/calculators/airline-cabin/?breed=${b.id}">Can ${aName(b)} fly in the cabin?</a></li>` : ""}<li><a href="/calculators/dog-years/?breed=${b.id}">${esc(b.name)} age in human years</a></li></ul></div>
   <div class="card"><h2>More ${esc(b.group === "Designer / Mixed" ? "designer breeds" : `${b.group} breeds`)}</h2><ul class="link-list">${sameGroup.map((x) => `<li><a href="${x.url}">${esc(x.name)}</a></li>`).join("")}</ul><p><a href="${groupUrl(b.group)}">All ${esc(b.group === "Designer / Mixed" ? "designer & mixed" : b.group)} breeds →</a></p></div>
@@ -231,7 +258,7 @@ ${fq.html}
     url, current: "/breeds/",
     title: `${b.name} Size: Height & Weight${b.sameSexes ? "" : ", Male vs Female"}`,
     description: `How big is ${aName(b)}${b.aliases.length ? ` (${b.aliases[0]})` : ""}? ${b.sameSexes ? `Adults stand ${H(b.m.h)} and weigh ${W(b.m.w)}.` : `Males stand ${H(b.m.h)} and weigh ${W(b.m.w)}; females ${H(b.f.h)}, ${W(b.f.w)}.`} Drawn to scale next to a person.`,
-    body, ld: [cr.ld, fq.ld], ogImage: breedOg(b, ref), ogAlt: `${b.name} drawn to scale next to a ${ref.name}`,
+    body, ld: [cr.ld, fq.ld, photoLd(b)].filter(Boolean), ogImage: breedOg(b, ref), ogAlt: `${b.name} drawn to scale next to a ${ref.name}`,
   }), 0.7);
 }
 
@@ -297,6 +324,7 @@ function comparePage(p) {
 </section>
 <div class="cols">
 <article class="prose">
+  ${comparePhotos(A, B)}
   <h2>How the two breeds compare</h2>
   ${sentences.map((t) => `<p>${esc(t)}</p>`).join("")}
   <h2>Side by side</h2>
@@ -312,7 +340,7 @@ ${faq.html}`;
     url, current: "/compare/",
     title: `${A.name} vs ${B.name} Size Comparison`,
     description: `${A.name} vs ${B.name}: ${sentences[0]} See both breeds to scale with male and female heights and weights.`.slice(0, 300),
-    body, ld: [cr.ld, faq.ld], ogImage: compareOg(A, B, url), ogAlt: `${A.name} and ${B.name} drawn to scale side by side`,
+    body, ld: [cr.ld, faq.ld, photoLd(A), photoLd(B)].filter(Boolean), ogImage: compareOg(A, B, url), ogAlt: `${A.name} and ${B.name} drawn to scale side by side`,
   }), p.curated ? 0.6 : 0.5);
 }
 
@@ -412,7 +440,7 @@ function breedsIndex() {
   const letters = [...new Set(BREEDS.map((b) => b.name[0].toUpperCase()))];
   const body = `${cr.html}
 <header class="page-head"><h1>All ${N} dog breeds by size</h1><p class="lede">Every breed on the site with its height at the shoulder and weight for males (♂) and females (♀). Open a breed for its full size profile, or browse by size, group or country.</p></header>
-<section class="card"><h2>Browse by size</h2><div class="pill-row">${SIZES.map((s) => `<a class="pill-link" href="${sizeUrl(s)}">${s} <span>${BREEDS.filter((b) => b.size === s).length}</span></a>`).join("")}</div>
+<section class="card"><p class="finder-cta">Not sure which breed? <a href="/breed-finder/">Use the breed finder</a> to filter by size, energy, shedding and lifestyle.</p><h2>Browse by size</h2><div class="pill-row">${SIZES.map((s) => `<a class="pill-link" href="${sizeUrl(s)}">${s} <span>${BREEDS.filter((b) => b.size === s).length}</span></a>`).join("")}</div>
 <h2>By group</h2><div class="pill-row">${GROUPS.map((g) => `<a class="pill-link" href="${groupUrl(g)}">${esc(g === "Designer / Mixed" ? "Designer & mixed" : g)} <span>${BREEDS.filter((b) => b.group === g).length}</span></a>`).join("")}</div>
 <h2>By country</h2><div class="pill-row">${COUNTRIES.map((c) => `<a class="pill-link" href="${countryUrl(c)}">${esc(c)} <span>${BREEDS.filter((b) => b.country === c).length}</span></a>`).join("")}</div></section>
 <nav class="az" aria-label="Jump to letter">${letters.map((l) => `<a href="#${l}">${l}</a>`).join("")}</nav>
@@ -613,6 +641,62 @@ function suggestPage() {
 }
 
 // ======================================================================
+// Breed finder
+// ======================================================================
+function finderPage() {
+  const url = "/breed-finder/";
+  const cr = crumbs([["/", "Home"], ["/breeds/", "Breeds"], [url, "Breed finder"]]);
+  const chips = (name, opts) => `<div class="chips" role="group" data-f="${name}">${opts.map(([v, t]) => `<button type="button" data-v="${v}" aria-pressed="false">${t}</button>`).join("")}</div>`;
+  const check = (name, label) => `<label class="chk"><input type="checkbox" name="${name}"> <span>${label}</span></label>`;
+  const lvl = ["Low", "Moderate", "High"];
+  const card = (b) => {
+    const t = b.traits;
+    const attrs = ` data-id="${b.id}" data-size="${b.size.toLowerCase()}" data-group="${groupSlugOf(b.group)}" data-h="${round(b.hAvg, 1)}" data-w="${round(b.wAvg, 1)}" data-cabin="${cabin(b)}" ${TRAIT_KEYS.map((k) => `data-${k}="${t[k]}"`).join(" ")}`;
+    return breedCard(b, { attrs, extra: `${b.size} · energy ${lvl[t.energy - 1].toLowerCase()} · ${["low", "moderate", "high"][t.shed - 1]} shedding` });
+  };
+  const sorted = [...BREEDS].sort((a, b) => a.name.localeCompare(b.name));
+  const faq = faqBlock([
+    ["Which dog breeds are best for apartments?", `Small, calm breeds usually cope best with apartment life: for example the ${["cavalier-king-charles-spaniel", "french-bulldog", "shih-tzu", "bichon-frise", "havanese"].map((id) => BY_ID[id].name).join(", ")}. Some big but laid-back breeds, such as the Greyhound, also do well. Energy matters more than size: a bored terrier or herding dog is harder to live with in a flat than a sleepy giant.`],
+    ["Which dog breeds shed the least?", `Breeds with a continuously growing coat, such as poodles, Bichon Frisé, Maltese, Havanese and the schnauzers, shed very little, as do hairless breeds like the Chinese Crested. No dog is truly hypoallergenic: low-shedding coats need regular clipping or brushing instead.`],
+    ["Which breeds are good for first-time owners?", `Breeds known for being eager to please and easy-going, such as the ${["cavalier-king-charles-spaniel", "labrador-retriever", "golden-retriever", "standard-poodle", "papillon"].map((id) => BY_ID[id].name).join(", ")}. Strong-willed guardians, sighthounds and high-drive working breeds are better with experienced owners.`],
+    ["How are the ratings chosen?", "Each breed is rated 1 to 3 for energy, shedding, grooming, how it usually is with children, how well it suits first-time owners and apartment life. The ratings summarise breed-club and kennel-club descriptions. They describe typical dogs of the breed, not any individual dog, so always meet the dog and talk to breeders or rescues."],
+  ], "Breed finder: common questions");
+  const body = `${cr.html}
+<header class="page-head"><h1>Dog breed finder</h1><p class="lede">Filter ${N} breeds by size, energy, shedding and lifestyle to find dogs that fit your home. Every result links to the breed's full size profile.</p></header>
+<div class="finder">
+<form class="card finder-form" id="finder" onsubmit="return false" aria-label="Breed filters">
+  <div class="ff"><span class="ff-k">Size</span>${chips("size", SIZES.map((s) => [s.toLowerCase(), s]))}</div>
+  <div class="ff"><span class="ff-k">Energy</span>${chips("energy", lvl.map((t, i) => [i + 1, t]))}</div>
+  <div class="ff"><span class="ff-k">Lifestyle</span>
+    ${check("shed", "Low shedding")}
+    ${check("groom", "Easy grooming")}
+    ${check("kids", "Great with children")}
+    ${check("novice", "Good for first-time owners")}
+    ${check("apt", "Suits apartment living")}
+    ${check("cabin", "Can fly in the cabin (8 kg limit)")}
+  </div>
+  <label class="ff"><span class="ff-k">Group</span><select name="group"><option value="">All groups</option>${GROUPS.map((g) => `<option value="${groupSlugOf(g)}">${esc(g === "Designer / Mixed" ? "Designer & mixed" : g)}</option>`).join("")}</select></label>
+  <label class="ff"><span class="ff-k">Sort by</span><select name="sort"><option value="name">Name</option><option value="h-desc">Tallest first</option><option value="h-asc">Smallest first</option><option value="w-desc">Heaviest first</option><option value="w-asc">Lightest first</option></select></label>
+  <button type="button" class="btn-link" id="finder-reset">Reset filters</button>
+</form>
+<section class="finder-res" aria-live="polite">
+  <div class="finder-bar"><p id="finder-count"><strong>${N}</strong> breeds</p><a class="btn" id="finder-compare" href="${toolLink(sorted.slice(0, 10).map((b) => [b.id, "m"]))}">Compare in the tool →</a></div>
+  <div class="bgrid" id="finder-grid">${sorted.map(card).join("")}</div>
+  <p id="finder-empty" class="card" hidden>No breed matches all of these filters. Try removing one, or <a href="/suggest-a-breed/">suggest a breed</a> we're missing.</p>
+</section>
+</div>
+<aside class="disclaimer" role="note">Ratings are general tendencies for each breed, summarised from breed-club and kennel-club descriptions. Individual dogs vary a lot with genetics, upbringing and training. Meet the dog, and talk to breeders, rescues and your vet before choosing. <a href="/about/#disclaimer">Disclaimer</a>.</aside>
+${faq.html}
+<script src="/js/finder.js" defer></script>`;
+  emit(url, page({
+    url, current: url,
+    title: "Dog Breed Finder: Filter Breeds by Size, Energy & Shedding",
+    description: `Find the right dog breed: filter ${N} breeds by size, energy, shedding, grooming, apartment living, children and first-time owners.`,
+    body, ld: [cr.ld, faq.ld, { "@type": "WebApplication", name: "Dog breed finder", url: L.SITE + url, applicationCategory: "ReferenceApplication", operatingSystem: "Any", offers: { "@type": "Offer", price: "0", priceCurrency: "USD" } }],
+  }), 0.8);
+}
+
+// ======================================================================
 // Calculators
 // ======================================================================
 const CALC_DISCLAIMER = {
@@ -726,6 +810,7 @@ articlesIndex();
 aboutPage(blocks);
 calcPages();
 suggestPage();
+finderPage();
 
 for (const p of pages) {
   const file = path.join(ROOT, p.url, "index.html");
@@ -753,6 +838,7 @@ const put = (name, content) => {
 };
 put("topbar", L.topbar("/#"));
 put("footer", L.siteFooter());
+put("analytics", L.analyticsTag());
 fs.writeFileSync(indexFile, index);
 
 // sitemap

@@ -16,6 +16,16 @@ require(path.join(ROOT, "js/dog-images.js"));
 require(path.join(ROOT, "js/dog-renderer.js"));
 const IMAGES = window.DOG_IMAGES || {};
 const PHOTOS_FILE = path.join(ROOT, "content/photos.json");
+const TRAITS = JSON.parse(fs.readFileSync(path.join(ROOT, "content/traits.json"), "utf8"));
+const TRAIT_KEYS = ["energy", "shed", "groom", "kids", "novice", "apt"];
+const TRAIT_INFO = {
+  energy: { label: "Energy", vals: ["Low", "Moderate", "High"] },
+  shed: { label: "Shedding", vals: ["Low", "Moderate", "High"] },
+  groom: { label: "Grooming", vals: ["Low", "Moderate", "High"] },
+  kids: { label: "With children", vals: ["Needs care", "Good", "Great"] },
+  novice: { label: "First-time owners", vals: ["Experienced owners", "OK", "Great"] },
+  apt: { label: "Apartment living", vals: ["Needs space", "Possible", "Good"] },
+};
 const PHOTOS = fs.existsSync(PHOTOS_FILE) ? JSON.parse(fs.readFileSync(PHOTOS_FILE, "utf8")) : {};
 const DogRenderer = window.DogRenderer;
 
@@ -70,7 +80,10 @@ const BREEDS = window.BREED_ROWS.map((r) => {
   b.aliases = (window.BREED_ALIASES || {})[b.name] || [];
   b.source = (window.BREED_SOURCES || {})[b.name] || null;
   b.img = `/img/dogs/web/${b.id}.webp`;
-  b.photo = PHOTOS[b.id] ? { ...PHOTOS[b.id], src: `/img/photos/${b.id}.webp` } : null;
+  const t = TRAITS[b.id];
+  if (!t) throw new Error(`content/traits.json: no entry for ${b.id}`);
+  b.traits = Object.fromEntries(TRAIT_KEYS.map((k, i) => [k, t[i]]));
+  b.photo = PHOTOS[b.id] ? { ...PHOTOS[b.id], src: `/img/photos/${b.id}.webp`, thumb: `/img/photos/thumb/${b.id}.webp` } : null;
   return b;
 }).sort((a, b) => a.name.localeCompare(b.name));
 const BY_ID = Object.fromEntries(BREEDS.map((b) => [b.id, b]));
@@ -254,9 +267,22 @@ function frontMatter(src) {
   return { meta, body: src.slice(m[0].length) };
 }
 
+// ---------- analytics (content/site.json; off while provider or id is empty) ----------
+const SITE_CFG = JSON.parse(fs.readFileSync(path.join(ROOT, "content/site.json"), "utf8"));
+function analyticsTag() {
+  const { provider, id } = SITE_CFG.analytics || {};
+  if (!provider || !id) return "";
+  const a = esc(id);
+  if (provider === "cloudflare") return `<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "${a}"}'></script>`;
+  if (provider === "goatcounter") return `<script data-goatcounter="https://${a}.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>`;
+  if (provider === "plausible") return `<script defer data-domain="${a}" src="https://plausible.io/js/script.js"></script>`;
+  throw new Error(`content/site.json: unknown analytics provider "${provider}" (use cloudflare, goatcounter or plausible)`);
+}
+
 // ---------- layout ----------
 const NAV = [
   ["/breeds/", "Breeds"],
+  ["/breed-finder/", "Breed finder"],
   ["/compare/", "Comparisons"],
   ["/calculators/", "Calculators"],
   ["/articles/", "Articles"],
@@ -273,7 +299,7 @@ function siteFooter() {
     ${col("By size", SIZES.map((s) => [sizeUrl(s), `${s} dog breeds`]))}
     ${col("By group", GROUPS.map((g) => [groupUrl(g), g === "Designer / Mixed" ? "Designer & mixed" : `${g} group`]))}
     ${col("Calculators", [["/calculators/puppy-weight/", "Puppy adult weight"], ["/calculators/crate-size/", "Crate size"], ["/calculators/airline-cabin/", "Airline cabin check"], ["/calculators/dog-years/", "Dog years to human years"]])}
-    ${col("Guides", [["/articles/how-to-measure-your-dog/", "How to measure your dog"], ["/articles/dog-size-classes-explained/", "Dog size classes explained"], ["/articles/flying-with-a-dog-in-the-cabin/", "Flying with a dog"], ["/about/", "About the data"], ["/suggest-a-breed/", "Suggest a breed"]])}
+    ${col("Guides", [["/breed-finder/", "Breed finder"], ["/articles/how-to-measure-your-dog/", "How to measure your dog"], ["/articles/dog-size-classes-explained/", "Dog size classes explained"], ["/articles/flying-with-a-dog-in-the-cabin/", "Flying with a dog"], ["/about/", "About the data"], ["/suggest-a-breed/", "Suggest a breed"]])}
   </div><div class="wrap foot-note"><p>Heights and weights follow kennel-club breed standards (AKC, FCI, The Kennel Club, UKC, RSCE). Individual dogs can fall outside every range shown. <a href="/about/">How we compile the figures</a>.</p>
     <p>All information on this site is general guidance only. It is not veterinary, medical or travel advice, and airline rules, breed standards and other details can change. Always check with your vet, airline or breeder before making decisions. <a href="/about/#disclaimer">Full disclaimer</a>.</p>
     <p class="copyright">© ${new Date().getFullYear()} MILIVON. All rights reserved. Text, data compilation and illustrations may not be reproduced without permission.</p></div></footer>`;
@@ -314,6 +340,7 @@ function page({ url, title, description, body, ld = [], current = "", ogImage = 
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/css/styles.css" />
+  ${analyticsTag()}
 </head>
 <body class="site-page">
   ${topbar(current)}
@@ -329,8 +356,11 @@ ${scripts.map((s) => `  <script src="${s}"></script>`).join("\n")}
 
 // ---------- reusable fragments ----------
 /** Card linking to a breed page, with thumbnail and both sexes' figures. */
-function breedCard(b, { extra = "" } = {}) {
-  return `<a class="bcard" href="${b.url}"><img src="${b.img}" alt="" loading="lazy" decoding="async" width="72" height="50"><span class="bcard-meta"><span class="bcard-name">${esc(b.name)}</span>`
+function breedCard(b, { extra = "", attrs = "" } = {}) {
+  const img = b.photo
+    ? `<img class="bcard-photo" src="${b.photo.thumb}" alt="" loading="lazy" decoding="async" width="80" height="60">`
+    : `<img src="${b.img}" alt="" loading="lazy" decoding="async" width="72" height="50">`;
+  return `<a class="bcard" href="${b.url}"${attrs}>${img}<span class="bcard-meta"><span class="bcard-name">${esc(b.name)}</span>`
     + `<span class="bcard-st">♂ ${H(b.m.h)} · ${W(b.m.w)}</span>`
     + (b.sameSexes ? "" : `<span class="bcard-st">♀ ${H(b.f.h)} · ${W(b.f.w)}</span>`)
     + (extra ? `<span class="bcard-x">${extra}</span>` : "")
@@ -385,6 +415,7 @@ const CRATES = [
 ];
 
 module.exports = {
+  analyticsTag, TRAIT_KEYS, TRAIT_INFO,
   GROWTH, growthShare, DOG_YEARS, dogYears, CRATES,
   ROOT, SITE, SITE_NAME, fs, path,
   slug, esc, avg, round, list, pct, article, aName, place,
