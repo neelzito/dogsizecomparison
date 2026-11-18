@@ -289,6 +289,7 @@ button, input, select { font: inherit; color: inherit; }
 .bcard { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); text-decoration: none; color: var(--ink) !important; min-width: 0; }
 .bcard:hover { border-color: var(--accent); }
 .bcard img { width: 72px; height: 50px; object-fit: contain; object-position: center bottom; flex: none; }
+.bcard img.bcard-photo { width: 80px; height: 60px; object-fit: cover; border-radius: 8px; background: var(--line); }
 .bcard-meta { display: flex; flex-direction: column; min-width: 0; }
 .bcard-name { font-weight: 650; font-size: 14.5px; }
 .bcard-st, .bcard-x { font-size: 12px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
@@ -400,3 +401,37 @@ a.info:hover, a.info:focus-visible { border-color: var(--accent); background: va
 .breed-photo figcaption { font-size: 11.5px; line-height: 1.4; color: var(--ink-3); margin-top: 6px; }
 .breed-photo figcaption a { color: inherit; }
 @media (max-width: 640px) { .breed-photo { float: none; width: 100%; margin: 0 0 16px; } .breed-photo img { max-height: 300px; } }
+.cmp-photos { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 0 0 18px; }
+.cmp-photos figure { margin: 0; }
+.cmp-photos img { display: block; width: 100%; aspect-ratio: 4 / 3; height: auto; object-fit: cover; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); }
+.cmp-photos .cmp-name { font-weight: 650; font-size: 14.5px; margin-top: 6px; display: block; }
+.cmp-photos figcaption { font-size: 11.5px; line-height: 1.4; color: var(--ink-3); margin-top: 2px; }
+.cmp-photos figcaption a { color: inherit; }
+.cmp-photos .cmp-name a { color: var(--ink); }
+@media (max-width: 480px) { .cmp-photos { gap: 10px; } }
+/* breed traits card (breed pages) */
+.trait-list { list-style: none; margin: 0 0 8px; padding: 0; }
+.trait-list li { display: flex; justify-content: space-between; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+.trait-list li:last-child { border-bottom: 0; }
+.tr-k { color: var(--ink-2); }
+.tr-v { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; text-align: right; }
+.dots { display: inline-flex; gap: 3px; }
+.dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--line); }
+.dots i.on { background: var(--accent); }
+/* breed finder */
+.finder { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 22px; align-items: start; margin-bottom: 22px; }
+.finder [hidden] { display: none !important; }
+.finder-form { padding: 16px; display: flex; flex-direction: column; gap: 16px; position: sticky; top: 12px; }
+.ff { display: flex; flex-direction: column; gap: 7px; }
+.ff-k { font-size: 11.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-3); font-weight: 600; }
+.ff select { font: inherit; font-size: 14px; padding: 7px 9px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface); color: var(--ink); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button { font: inherit; font-size: 13.5px; padding: 5px 11px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface-2); color: var(--ink-2); cursor: pointer; }
+.chips button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 600; }
+.chk { display: flex; align-items: center; gap: 8px; font-size: 14px; cursor: pointer; }
+.chk input { accent-color: var(--accent); width: 16px; height: 16px; margin: 0; }
+.btn-link { align-self: flex-start; background: none; border: 0; padding: 0; color: var(--accent); font: inherit; font-size: 14px; cursor: pointer; text-decoration: underline; }
+.finder-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+.finder-bar p { margin: 0; font-size: 15px; }
+#finder-empty { padding: 16px; }
+@media (max-width: 860px) { .finder { grid-template-columns: 1fr; } .finder-form { position: static; } }

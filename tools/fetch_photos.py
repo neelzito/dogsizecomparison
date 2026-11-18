@@ -11,6 +11,7 @@ Usage:
   .venv/bin/python tools/fetch_photos.py labrador-retriever vizsla   # some breeds
   .venv/bin/python tools/fetch_photos.py --all                        # every breed
   .venv/bin/python tools/fetch_photos.py --force vizsla               # refetch
+  .venv/bin/python tools/fetch_photos.py --thumbs                     # rebuild all thumbnails
 
 Overrides live in tools/photo_overrides.json:
   {"vizsla": "File:Some better photo.jpg",          # pick a specific Commons file
@@ -37,6 +38,8 @@ OVERRIDES = ROOT / "tools/photo_overrides.json"
 API = "https://en.wikipedia.org/w/api.php"
 UA = "dog-breed-photo-fetcher/0.1 (static site build script; python-urllib)"
 WIDTH = 800
+THUMB = (160, 120)  # card thumbnails, shown at 80 x 60
+THUMB_DIR = OUT_DIR / "thumb"
 FREE = re.compile(r"^(cc0|public domain|pd\b|pd-|cc by(-sa)? [0-9.]+|cc by(-sa)?$|gfdl|gpl|fal\b|free art|copyrighted free use|attribution)", re.I)
 
 
@@ -138,6 +141,14 @@ def candidate_titles(b):
     return t
 
 
+def make_thumb(bid):
+    """Centre-cropped 4:3 thumbnail for breed cards (img/photos/thumb/<id>.webp)."""
+    from PIL import ImageOps
+    img = Image.open(OUT_DIR / f"{bid}.webp").convert("RGB")
+    THUMB_DIR.mkdir(parents=True, exist_ok=True)
+    ImageOps.fit(img, THUMB, Image.LANCZOS, centering=(0.5, 0.4)).save(THUMB_DIR / f"{bid}.webp", "WEBP", quality=72, method=6)
+
+
 def fetch(b, overrides, data, force):
     if b["id"] in data and not force:
         return "kept"
@@ -165,6 +176,7 @@ def fetch(b, overrides, data, force):
         img = img.resize((WIDTH, round(img.height * WIDTH / img.width)), Image.LANCZOS)
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     img.save(OUT_DIR / f"{b['id']}.webp", "WEBP", quality=78, method=6)
+    make_thumb(b["id"])
     info.update(width=img.width, height=img.height, article=article)
     data[b["id"]] = info
     return f"ok  {info['file']}  ({info['license']}, {info['artist']})"
@@ -181,6 +193,11 @@ def main():
         sys.exit(f"Unknown breed ids: {', '.join(sorted(unknown))}")
     overrides = json.loads(OVERRIDES.read_text()) if OVERRIDES.exists() else {}
     data = json.loads(DATA.read_text()) if DATA.exists() else {}
+    if "--thumbs" in args:
+        for bid in data:
+            make_thumb(bid)
+        print(f"{len(data)} thumbnails in {THUMB_DIR.relative_to(ROOT)}")
+        return
     for b in pick:
         try:
             msg = fetch(b, overrides, data, force)

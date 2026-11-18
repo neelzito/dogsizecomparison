@@ -78,6 +78,8 @@ ${faq.map(([q, a]) => `      <details><summary>${esc(q)}</summary><p>${esc(a)}</
 const ld = {
   "@context": "https://schema.org",
   "@graph": [
+    { "@type": "WebSite", "@id": "https://dogsizecomparison.com/#website", name: "Dog Size Comparison", url: "https://dogsizecomparison.com/", publisher: { "@id": "https://dogsizecomparison.com/#org" } },
+    { "@type": "Organization", "@id": "https://dogsizecomparison.com/#org", name: "MILIVON", url: "https://dogsizecomparison.com/", logo: "https://dogsizecomparison.com/img/apple-touch-icon.png" },
     {
       "@type": "WebApplication",
       name: "Dog Size Comparison",

@@ -52,3 +52,21 @@ Each breed page shows a real photo from Wikimedia Commons with the credit the li
 - Run it with the project venv: `.venv/bin/python tools/fetch_photos.py <breed-id> ...`, `--all` for every breed without a photo, `--force` to refetch. It paces itself to stay under Wikimedia's rate limits.
 - `tools/photo_overrides.json` picks a specific `"File:..."`, a different article (`{"title": "..."}`), or `null` for no photo. Use it when the lead image is wrong (another article, a collage, a shared photo for size variants).
 - After adding a new breed: run the script for its id, look at the photo, then `node tools/build_site.js`.
+
+## Breed traits (breed finder)
+
+`content/traits.json` rates every breed 1–3 for `[energy, shedding, grooming, good with children, suits first-time owners, suits apartments]`. The ratings feed the "at a glance" card on breed pages and the filters on `/breed-finder/`. The build fails if a breed has no entry, so add one whenever you add a breed. In the finder, the checkboxes keep only the best rating: shedding or grooming 1, or children, first-time owners or apartments 3.
+
+## Analytics
+
+`content/site.json` turns on a cookie-free analytics script on every page:
+
+```json
+{ "analytics": { "provider": "cloudflare", "id": "<site token>" } }
+```
+
+`provider` is `cloudflare` (Cloudflare Web Analytics token), `goatcounter` (your GoatCounter code, e.g. `dogsize` for dogsize.goatcounter.com) or `plausible` (the domain, `dogsizecomparison.com`). Leave either field empty to turn analytics off. Rebuild after changing it.
+
+## Photo thumbnails
+
+Breed cards use 160 × 120 crops in `img/photos/thumb/`. `tools/fetch_photos.py` makes one for every photo it fetches; run `.venv/bin/python tools/fetch_photos.py --thumbs` to rebuild them all.
