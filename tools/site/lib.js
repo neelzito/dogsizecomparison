@@ -15,6 +15,8 @@ require(path.join(ROOT, "js/breeds.js"));
 require(path.join(ROOT, "js/dog-images.js"));
 require(path.join(ROOT, "js/dog-renderer.js"));
 const IMAGES = window.DOG_IMAGES || {};
+const PHOTOS_FILE = path.join(ROOT, "content/photos.json");
+const PHOTOS = fs.existsSync(PHOTOS_FILE) ? JSON.parse(fs.readFileSync(PHOTOS_FILE, "utf8")) : {};
 const DogRenderer = window.DogRenderer;
 
 // ---------- basic helpers ----------
@@ -68,6 +70,7 @@ const BREEDS = window.BREED_ROWS.map((r) => {
   b.aliases = (window.BREED_ALIASES || {})[b.name] || [];
   b.source = (window.BREED_SOURCES || {})[b.name] || null;
   b.img = `/img/dogs/web/${b.id}.webp`;
+  b.photo = PHOTOS[b.id] ? { ...PHOTOS[b.id], src: `/img/photos/${b.id}.webp` } : null;
   return b;
 }).sort((a, b) => a.name.localeCompare(b.name));
 const BY_ID = Object.fromEntries(BREEDS.map((b) => [b.id, b]));

@@ -134,6 +134,17 @@ function sexText(b) {
   return `An average male is ${hPart} an average female and ${wPart}.`;
 }
 
+// Real photo from Wikimedia Commons (tools/fetch_photos.py), with the credit the licence requires.
+function photoFigure(b) {
+  const p = b.photo;
+  if (!p) return "";
+  const lic = p.licenseUrl ? `<a href="${esc(p.licenseUrl)}" rel="license noopener" target="_blank">${esc(p.license)}</a>` : esc(p.license);
+  return `<figure class="breed-photo">
+    <img src="${p.src}" width="${p.width}" height="${p.height}" alt="${esc(`A ${b.name}`)}" loading="eager" decoding="async">
+    <figcaption>Photo: <a href="${esc(p.source)}" rel="noopener" target="_blank">${esc(p.artist)}</a>, ${lic}, via Wikimedia Commons</figcaption>
+  </figure>`;
+}
+
 function breedPage(b) {
   const url = b.url;
   const ref = refFor(b);
@@ -195,6 +206,7 @@ function breedPage(b) {
 <section class="facts">${facts.map(([k, v]) => `<div class="fact"><span class="fact-k">${k}</span><span class="fact-v">${v}</span></div>`).join("")}</section>
 <div class="cols">
 <article class="prose">
+  ${photoFigure(b)}
   <h2>How big is ${aName(b)}?</h2>
   <p>${esc(breedIntro(b))}</p>
   <p>${esc([lifeText(b), cabinText(b)].filter(Boolean).join(" "))}</p>
