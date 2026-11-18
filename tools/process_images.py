@@ -4,6 +4,7 @@
 For every img/dogs/<id>.png:
   * removes the white background (flood fill from the image border, soft edge),
   * crops to the dog, scales to at most MAX_W px wide, saves img/dogs/web/<id>.webp,
+  * saves a small copy for list thumbnails as img/dogs/thumb/<id>.webp (fits THUMB),
   * finds the ground line (lowest paw) and the withers (top of the shoulder),
 and writes js/dog-images.js:
   window.DOG_IMAGES = { id: [aspect, withersY, withersX], ... }
@@ -24,6 +25,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(ROOT, "img", "dogs")
 OUT = os.path.join(SRC, "web")
 MAX_W = 640
+THUMB = (144, 100)   # list thumbnails are shown at up to 72 x 50 px
+THUMB_DIR = os.path.join(SRC, "thumb")
 BG_MAX_DARK = 9      # a pixel is background-ish if 255 - min(r,g,b) <= this
 EDGE_SOFT = 24       # darkness at which an edge pixel becomes fully opaque
 
@@ -88,7 +91,19 @@ def measure(a):
     return wy / h, x / w
 
 
+def save_thumb(im, i):
+    os.makedirs(THUMB_DIR, exist_ok=True)
+    t = im.copy()
+    t.thumbnail(THUMB, Image.LANCZOS)
+    t.save(os.path.join(THUMB_DIR, i + ".webp"), "WEBP", quality=85, method=6)
+
+
 def main():
+    if sys.argv[1:] == ["--thumbs"]:  # rebuild thumbnails from the existing web images
+        for f in sorted(os.listdir(OUT)):
+            if f.endswith(".webp"):
+                save_thumb(Image.open(os.path.join(OUT, f)), f[:-5])
+        return
     os.makedirs(OUT, exist_ok=True)
     ids = [x for x in sys.argv[1:] if not x.startswith("--")] or sorted(f[:-4] for f in os.listdir(SRC) if f.endswith(".png"))
     ov_path = os.path.join(ROOT, "tools", "withers_overrides.json")
@@ -116,6 +131,7 @@ def main():
         if im.width > MAX_W:
             im = im.resize((MAX_W, round(im.height * MAX_W / im.width)), Image.LANCZOS)
         im.save(os.path.join(OUT, i + ".webp"), "WEBP", quality=88, method=6)
+        save_thumb(im, i)
         wy, wx = measure(np.asarray(im.getchannel("A")))
         o = overrides.get(i, {})
         wy, wx = o.get("y", wy), o.get("x", wx)

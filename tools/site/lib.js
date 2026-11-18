@@ -359,7 +359,7 @@ ${scripts.map((s) => `  <script src="${s}"></script>`).join("\n")}
 function breedCard(b, { extra = "", attrs = "" } = {}) {
   const img = b.photo
     ? `<img class="bcard-photo" src="${b.photo.thumb}" alt="" loading="lazy" decoding="async" width="80" height="60">`
-    : `<img src="${b.img}" alt="" loading="lazy" decoding="async" width="72" height="50">`;
+    : `<img src="${b.img.replace("/web/", "/thumb/")}" alt="" loading="lazy" decoding="async" width="72" height="50">`;
   return `<a class="bcard" href="${b.url}"${attrs}>${img}<span class="bcard-meta"><span class="bcard-name">${esc(b.name)}</span>`
     + `<span class="bcard-st">♂ ${H(b.m.h)} · ${W(b.m.w)}</span>`
     + (b.sameSexes ? "" : `<span class="bcard-st">♀ ${H(b.f.h)} · ${W(b.f.w)}</span>`)
