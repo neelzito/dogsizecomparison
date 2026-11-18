@@ -43,3 +43,12 @@ same-group neighbour automatically.
 
 Breed suggestions from `/suggest-a-breed/` arrive as GitHub issues titled
 "Breed suggestion: …".
+
+## Breed photos (Wikimedia Commons)
+
+Each breed page shows a real photo from Wikimedia Commons with the credit the licence requires (photographer, licence, link to the Commons page).
+
+- `tools/fetch_photos.py` takes the lead image of the breed's English Wikipedia article, accepts only free licences (CC0, public domain, CC BY, CC BY-SA, GFDL, GPL, FAL), and writes `img/photos/<id>.webp` plus the credit in `content/photos.json`.
+- Run it with the project venv: `.venv/bin/python tools/fetch_photos.py <breed-id> ...`, `--all` for every breed without a photo, `--force` to refetch. It paces itself to stay under Wikimedia's rate limits.
+- `tools/photo_overrides.json` picks a specific `"File:..."`, a different article (`{"title": "..."}`), or `null` for no photo. Use it when the lead image is wrong (another article, a collage, a shared photo for size variants).
+- After adding a new breed: run the script for its id, look at the photo, then `node tools/build_site.js`.
