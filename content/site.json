@@ -1,6 +1,6 @@
 {
   "analytics": {
-    "provider": "",
-    "id": ""
+    "provider": "cloudflare",
+    "id": "a08e06fc6186473584ec211e486c0aa9"
   }
 }

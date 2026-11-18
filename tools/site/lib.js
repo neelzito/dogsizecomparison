@@ -273,7 +273,7 @@ function analyticsTag() {
   const { provider, id } = SITE_CFG.analytics || {};
   if (!provider || !id) return "";
   const a = esc(id);
-  if (provider === "cloudflare") return `<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "${a}"}'></script>`;
+  if (provider === "cloudflare") return `<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "${a}"}'></script>`;
   if (provider === "goatcounter") return `<script data-goatcounter="https://${a}.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>`;
   if (provider === "plausible") return `<script defer data-domain="${a}" src="https://plausible.io/js/script.js"></script>`;
   throw new Error(`content/site.json: unknown analytics provider "${provider}" (use cloudflare, goatcounter or plausible)`);
