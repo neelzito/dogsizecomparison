@@ -1,0 +1,128 @@
+{
+ "sighthounds": {
+  "en": {
+   "file": "sighthounds-to-scale",
+   "w": 4800,
+   "h": 1643,
+   "title": "Sighthounds, drawn to scale",
+   "n": 10,
+   "sub": "From the Italian Greyhound to the Irish Wolfhound. Every dog is drawn at the same scale."
+  },
+  "de": {
+   "file": "windhunde-massstabsgetreu",
+   "w": 4800,
+   "h": 1642,
+   "title": "Windhunde, maßstabsgetreu",
+   "n": 10,
+   "sub": "Vom Italienischen Windspiel bis zum Irischen Wolfshund. Alle Hunde im selben Maßstab."
+  }
+ },
+ "terriers": {
+  "en": {
+   "file": "terriers-to-scale",
+   "w": 4800,
+   "h": 3471,
+   "title": "Terriers, drawn to scale",
+   "n": 39,
+   "sub": "From the Yorkshire Terrier to the Airedale, the King of Terriers. Every dog is drawn at the same scale."
+  },
+  "de": {
+   "file": "terrier-massstabsgetreu",
+   "w": 4800,
+   "h": 3471,
+   "title": "Terrier, maßstabsgetreu",
+   "n": 39,
+   "sub": "Vom Yorkshire Terrier bis zum Airedale, dem König der Terrier. Alle Hunde im selben Maßstab."
+  }
+ },
+ "spitz": {
+  "en": {
+   "file": "spitz-nordic-to-scale",
+   "w": 4800,
+   "h": 3145,
+   "title": "Spitz and Nordic breeds, drawn to scale",
+   "n": 25,
+   "sub": "From the Pomeranian to the American Akita. Every dog is drawn at the same scale."
+  },
+  "de": {
+   "file": "spitze-nordische-hunde-massstabsgetreu",
+   "w": 4800,
+   "h": 3145,
+   "title": "Spitze und nordische Hunde, maßstabsgetreu",
+   "n": 25,
+   "sub": "Vom Zwergspitz bis zum Amerikanischen Akita. Alle Hunde im selben Maßstab."
+  }
+ },
+ "herding": {
+  "en": {
+   "file": "herding-dogs-to-scale",
+   "w": 4800,
+   "h": 3587,
+   "title": "Herding dogs, drawn to scale",
+   "n": 33,
+   "sub": "From the Lancashire Heeler to the Komondor. Every dog is drawn at the same scale."
+  },
+  "de": {
+   "file": "huetehunde-massstabsgetreu",
+   "w": 4800,
+   "h": 3587,
+   "title": "Hütehunde, maßstabsgetreu",
+   "n": 33,
+   "sub": "Vom Lancashire Heeler bis zum Komondor. Alle Hunde im selben Maßstab."
+  }
+ },
+ "molossers": {
+  "en": {
+   "file": "molossers-mountain-dogs-to-scale",
+   "w": 4800,
+   "h": 3626,
+   "title": "Molossers and mountain dogs, drawn to scale",
+   "n": 32,
+   "sub": "From the French Bulldog to the Mastiff. Every dog is drawn at the same scale."
+  },
+  "de": {
+   "file": "molosser-berghunde-massstabsgetreu",
+   "w": 4800,
+   "h": 3574,
+   "title": "Molosser und Berghunde, maßstabsgetreu",
+   "n": 32,
+   "sub": "Von der Französischen Bulldogge bis zum Mastiff. Alle Hunde im selben Maßstab."
+  }
+ },
+ "gundogs": {
+  "en": {
+   "file": "gun-dogs-to-scale",
+   "w": 4800,
+   "h": 3632,
+   "title": "Gun dogs, drawn to scale",
+   "n": 35,
+   "sub": "Spaniels, retrievers, pointers and setters, from the Sussex Spaniel to the Irish Setter. Every dog is drawn at the same scale."
+  },
+  "de": {
+   "file": "jagdhunde-massstabsgetreu",
+   "w": 4800,
+   "h": 3580,
+   "title": "Jagdhunde, maßstabsgetreu",
+   "n": 35,
+   "sub": "Stöberhunde, Apportierhunde, Vorstehhunde und Setter, vom Sussex Spaniel bis zum Irish Red Setter. Alle Hunde im selben Maßstab."
+  }
+ },
+ "scenthounds": {
+  "en": {
+   "file": "scent-hounds-to-scale",
+   "w": 4800,
+   "h": 2281,
+   "title": "Scent hounds, drawn to scale",
+   "n": 19,
+   "sub": "From the Basset Hound to the Rhodesian Ridgeback. Every dog is drawn at the same scale."
+  },
+  "de": {
+   "file": "lauf-schweisshunde-massstabsgetreu",
+   "w": 4800,
+   "h": 2281,
+   "title": "Lauf- und Schweißhunde, maßstabsgetreu",
+   "n": 19,
+   "sub": "Vom Basset Hound bis zum Rhodesian Ridgeback. Alle Hunde im selben Maßstab."
+  }
+ }
+}

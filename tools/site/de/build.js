@@ -601,10 +601,12 @@ ${letters.map((l) => `<section id="${l}" class="az-sec"><h2 class="sec-h">${l}</
     const body = `${cr.html}
 <header class="page-head"><h1>Hundegrößen-Poster</h1><p class="lede">Kostenlose Poster mit Hunderassen in maßstabsgetreuer Darstellung, mit denselben Illustrationen und Rassestandard-Größen wie im <a href="/de/">Vergleichstool</a>.</p></header>
 ${L.posterCards(["podencosDe", "akc"], "de")}
+<h2 class="sec-h">Rassegruppen</h2>
+${L.posterCards(L.GROUP_KEYS.map((k) => k + "De"), "de")}
 <section class="card prose prose-wide"><h2>Teilen und drucken</h2>
 <p>Du darfst die Poster gern für zu Hause, die Schule oder den Verein ausdrucken und in Foren, Gruppen und sozialen Netzwerken teilen. Bitte lass den Hinweis auf dem Poster stehen und verlinke nach Möglichkeit auf dogsizecomparison.com. Für eine kommerzielle Nutzung <a href="https://github.com/${REPO}/issues">frag uns bitte vorher</a>.</p>
 <p>Die Größen sind die Widerristhöhen (höchster Punkt der Schulter) laut Rassestandard. Einzelne Hunde können größer oder kleiner sein. Woher die Zahlen stammen, steht unter <a href="/de/ueber-die-daten/">Über die Daten</a>.</p></section>`;
-    emit(url, page({ url, title: "Hundegrößen-Poster: Alle Podencos und alle AKC-Rassen maßstabsgetreu", description: "Kostenlose Poster zum Ausdrucken: alle Podencos mit ihren Verwandten rund ums Mittelmeer und alle vom AKC anerkannten Rassen, maßstabsgetreu.", body, ld: [cr.ld] }), 0.5, L.POSTERS_URL.en);
+    emit(url, page({ url, title: "Hundegrößen-Poster: Podencos, Rassegruppen und AKC-Rassen maßstabsgetreu", description: "Kostenlose Poster zum Ausdrucken: alle Podencos, Terrier, Windhunde, Hütehunde, Jagdhunde und weitere Rassegruppen sowie alle AKC-Rassen, maßstabsgetreu.", body, ld: [cr.ld] }), 0.5, L.POSTERS_URL.en);
   }
 
   // ======================================================================

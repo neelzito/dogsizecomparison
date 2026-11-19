@@ -36,13 +36,13 @@ TEXT = {
 DOG_GAP, MIN_LABEL_W = 60, 300
 
 
-def load(lang):
+def load(lang, sections=None):
     js = ("global.window={};require('./js/breeds.js');require('./js/dog-images.js');require('./js/i18n-de.js');"
           "console.log(JSON.stringify({rows:window.BREED_ROWS,img:window.DOG_IMAGES,de:window.I18N.names}))")
     data = json.loads(subprocess.check_output(["node", "-e", js], cwd=ROOT))
     rows = {r[0]: r for r in data["rows"]}
     out = []
-    for title, names in SECTIONS:
+    for title, names in (sections or SECTIONS):
         sec = []
         for n in names:
             r = rows[n]
@@ -50,7 +50,7 @@ def load(lang):
             aspect, wy, _ = data["img"][bid]
             sec.append({"name": data["de"].get(bid, n) if lang == "de" else n, "id": bid, "m": (r[4], r[5]), "f": (r[6], r[7]),
                         "h": (r[4] + r[5] + r[6] + r[7]) / 4, "unitW": aspect / wy, "unitH": 1 / wy})
-        out.append((title[0] if lang == "de" else title[1], sec))
+        out.append(((title[0] if lang == "de" else title[1]) if title else None, sec))
     return out
 
 
@@ -83,28 +83,24 @@ def layout(sections, k, d, T):
 def sizes(rows, k):
     width = max(sum(s["w"] for s in sl) + DOG_GAP * (len(sl) - 1) for _, sl in rows)
     height = 0
-    for _, sl in rows:
+    for title, sl in rows:
         nl = max(len(s["lines"]) for s in sl)
-        height += SEC_SZ + 50 + max(s["dh"] for s in sl) + 20 + nl * (NAME_SZ + 8) + 2 * (SUB_SZ + 6) + 90
+        height += (SEC_SZ + 50 if title else 30) + max(s["dh"] for s in sl) + 20 + nl * (NAME_SZ + 8) + 2 * (SUB_SZ + 6) + 90
     return width, height
 
 
-def main():
+def render(sections, T, lang, width, ratio):
+    """Draw the poster. sections: [(title or None, [breed dicts from load()])]; T: texts (file, title, sub, note, site, male, female)."""
     global DEC
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--lang", choices=["de", "en"], default="de")
-    ap.add_argument("--width", type=int, default=4800)
-    ap.add_argument("--ratio", type=float, default=0.56, help="height / width")
-    a = ap.parse_args()
-    T = TEXT[a.lang]
-    DEC = "," if a.lang == "de" else "."
-    W, H = a.width, round(a.width * a.ratio)
+    DEC = "," if lang == "de" else "."
+    W = width
     M = round(W * 0.045)
     RULER_W = 130
     HEAD_H, FOOT_H = round(W * 0.115), round(W * 0.06)
+    # ratio None: scale to fit the width only, then make the poster as tall as the content needs
+    H = round(width * ratio) if ratio else 10 ** 6
     avail_w, avail_h = W - 2 * M - RULER_W, H - HEAD_H - FOOT_H - M * 0.6
 
-    sections = load(a.lang)
     scratch = ImageDraw.Draw(Image.new("RGB", (10, 10)))
     lo, hi = 0.5, 60.0
     for _ in range(40):
@@ -114,19 +110,26 @@ def main():
     k = lo
     rows = layout(sections, k, scratch, T)
     _, used_h = sizes(rows, k)
+    if not ratio:
+        H = round(HEAD_H + FOOT_H + M * 0.6 + used_h)
+        avail_h = used_h
     extra = (avail_h - used_h) / len(rows)
 
     im = Image.new("RGB", (W, H), BG)
     d = ImageDraw.Draw(im)
-    d.text((M, M), T["title"], font=font("serif", round(W * 0.042)), fill=INK)
+    ts = round(W * 0.042)
+    while d.textlength(T["title"], font=font("serif", ts)) > W - 2 * M:
+        ts -= 4
+    d.text((M, M), T["title"], font=font("serif", ts), fill=INK)
     d.text((M, M + round(W * 0.06)), T["sub"], font=font("medium", round(W * 0.0125)), fill=INK2)
 
     fN, fS, fR = font("demi", NAME_SZ), font("regular", SUB_SZ), font("regular", 28)
     y = HEAD_H + M * 0.2
     for title, sl in rows:
-        d.text((M + RULER_W, y), title.upper(), font=font("demi", SEC_SZ), fill=ACCENT)
+        if title:
+            d.text((M + RULER_W, y), title.upper(), font=font("demi", SEC_SZ), fill=ACCENT)
         top = max(s["dh"] for s in sl)
-        ground = y + SEC_SZ + 50 + top
+        ground = y + (SEC_SZ + 50 if title else 30) + top
         rx = M + RULER_W - 30
         tallest = max(s["b"]["h"] for s in sl)
         d.line([(rx, ground), (rx, ground - tallest * k)], fill=LINE, width=4)
@@ -175,6 +178,15 @@ def main():
     prev.save(os.path.join(OUT_DIR, T["file"] + "-preview.jpg"), quality=88)
     save_web(im, T["file"])
     print(f"{k:.2f} px/cm -> {out}")
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--lang", choices=["de", "en"], default="de")
+    ap.add_argument("--width", type=int, default=4800)
+    ap.add_argument("--ratio", type=float, default=0.56, help="height / width")
+    a = ap.parse_args()
+    render(load(a.lang), TEXT[a.lang], a.lang, a.width, a.ratio)
 
 
 if __name__ == "__main__":
