@@ -148,7 +148,8 @@ function niceStep(rangeUnits, target) {
  * Draw dogs (and optionally a person) standing on one ground line, to scale.
  * dogs: [{ b, hCm, label, sub, color, dashed }]
  */
-function scene(dogs, { human = 175, width = 760, height = 380, title = "" } = {}) {
+function scene(dogs, { human = 175, width = 760, height = 380, title = "", lang = "en", nameOf = (b) => b.name } = {}) {
+  const de = lang === "de", num = (v) => (de ? String(v).replace(".", ",") : String(v));
   const objs = [];
   if (human) objs.push({ kind: "human", shape: DogRenderer.human(), hCm: human });
   for (const d of dogs) objs.push({ kind: "dog", ...d, shape: shapeOf(d.b) });
@@ -168,13 +169,13 @@ function scene(dogs, { human = 175, width = 760, height = 380, title = "" } = {}
   for (let v = 0; v <= visCm; v += stepCm) {
     const y = groundY - v * k;
     if (v > 0) grid += `<line class="sc-grid" x1="${padL - 4}" x2="${width - padR + 4}" y1="${y}" y2="${y}"/>`;
-    grid += `<text class="sc-axis" x="${padL - 8}" y="${y + 4}" text-anchor="end">${round(v, 1)}</text>`;
+    grid += `<text class="sc-axis" x="${padL - 8}" y="${y + 4}" text-anchor="end">${num(round(v, 1))}</text>`;
   }
-  for (let v = stepIn; v <= visCm / 2.54; v += stepIn) {
+  for (let v = stepIn; !de && v <= visCm / 2.54; v += stepIn) {
     const y = groundY - v * 2.54 * k;
     grid += `<text class="sc-axis" x="${width - padR + 8}" y="${y + 4}">${round(v, 1)}</text>`;
   }
-  grid += `<text class="sc-axis" x="${padL - 8}" y="${padT - 10}" text-anchor="end">cm</text><text class="sc-axis" x="${width - padR + 8}" y="${padT - 10}">in</text>`;
+  grid += `<text class="sc-axis" x="${padL - 8}" y="${padT - 10}" text-anchor="end">cm</text>${de ? "" : `<text class="sc-axis" x="${width - padR + 8}" y="${padT - 10}">in</text>`}`;
 
   let body = "", labels = "";
   const slots = [];
@@ -183,14 +184,14 @@ function scene(dogs, { human = 175, width = 760, height = 380, title = "" } = {}
     const s = o.hCm * k, ox = x - o.shape.minX * s, cx = x + (o.wCm * k) / 2;
     if (o.kind === "human") {
       body += `<g class="sc-human" transform="translate(${round(ox, 2)} ${groundY}) scale(${round(s, 3)} ${round(-s, 3)})">${o.shape.markup}</g>`;
-      labels += `<text class="sc-sub" x="${round(cx, 1)}" y="${groundY + 18}" text-anchor="middle">Person · ${cm(o.hCm)} cm</text>`;
+      labels += `<text class="sc-sub" x="${round(cx, 1)}" y="${groundY + 18}" text-anchor="middle">${de ? "Mensch" : "Person"} · ${num(cm(o.hCm))} cm</text>`;
       slots.push({ x: cx, w: 96, row: 0 });
     } else {
       const iw = o.shape.maxX * s, ih = o.shape.maxY * s;
-      if (o.shape.img) body += `<image href="${o.shape.img}" x="${round(ox, 2)}" y="${round(groundY - ih, 2)}" width="${round(iw, 2)}" height="${round(ih, 2)}" preserveAspectRatio="none"><title>${esc(o.b.name)}</title></image>`;
+      if (o.shape.img) body += `<image href="${o.shape.img}" x="${round(ox, 2)}" y="${round(groundY - ih, 2)}" width="${round(iw, 2)}" height="${round(ih, 2)}" preserveAspectRatio="none"><title>${esc(nameOf(o.b))}</title></image>`;
       else body += `<g style="color:${o.color}" transform="translate(${round(ox, 2)} ${groundY}) scale(${round(s, 3)} ${round(-s, 3)})">${o.shape.markup}</g>`;
       body += `<line class="sc-key" x1="${round(ox + iw * 0.12, 1)}" x2="${round(ox + iw * 0.88, 1)}" y1="${groundY + 3}" y2="${groundY + 3}" stroke="${o.color}"${o.dashed ? ' stroke-dasharray="6 4"' : ""}/>`;
-      const label = o.label || o.b.name;
+      const label = o.label || nameOf(o.b);
       const estW = Math.max(label.length * 7 + 12, 76);
       const lx = Math.min(Math.max(cx, estW / 2 + 2), width - estW / 2 - 2);
       let row = 0;
@@ -204,7 +205,7 @@ function scene(dogs, { human = 175, width = 760, height = 380, title = "" } = {}
   }
   const rows = Math.max(1, ...slots.map((s) => s.row + 1));
   const total = groundY + 16 + rows * 30;
-  return `<figure class="scene"><svg viewBox="0 0 ${width} ${total}" role="img" aria-label="${esc(title || "Dogs drawn to scale")}">${grid}<line class="sc-ground" x1="${padL - 4}" x2="${width - padR + 4}" y1="${groundY}" y2="${groundY}"/>${body}${labels}</svg></figure>`;
+  return `<figure class="scene"><svg viewBox="0 0 ${width} ${total}" role="img" aria-label="${esc(title || (de ? "Hunde maßstabsgetreu" : "Dogs drawn to scale"))}">${grid}<line class="sc-ground" x1="${padL - 4}" x2="${width - padR + 4}" y1="${groundY}" y2="${groundY}"/>${body}${labels}</svg></figure>`;
 }
 
 // ---------- Markdown (just enough for our content files) ----------
@@ -279,6 +280,24 @@ function analyticsTag() {
   throw new Error(`content/site.json: unknown analytics provider "${provider}" (use cloudflare, goatcounter or plausible)`);
 }
 
+// ---------- languages ----------
+// Pages are written with two placeholders that are filled in once both languages are
+// built (tools/build_site.js): HREFLANG (alternate-language links in <head>) and
+// LANG_ALT (the URL of the same page in the other language, for the EN/DE switch).
+const HREFLANG = "<!--hreflang-->";
+const LANG_ALT = "__LANG_ALT__";
+/** pairs: { enUrl: deUrl } */
+function finalizeHtml(html, url, pairs) {
+  const en = url.startsWith("/de/") || url === "/de/" ? Object.keys(pairs).find((k) => pairs[k] === url) : url;
+  const de = en != null ? pairs[en] : undefined;
+  const isDe = url.startsWith("/de/");
+  const alt = isDe ? (en || "/") : (de || "/de/");
+  const links = en != null && de
+    ? `<link rel="alternate" hreflang="en" href="${SITE}${en}" />\n  <link rel="alternate" hreflang="de" href="${SITE}${de}" />\n  <link rel="alternate" hreflang="x-default" href="${SITE}${en}" />`
+    : "";
+  return html.split(HREFLANG).join(links).split(LANG_ALT).join(alt);
+}
+
 // ---------- layout ----------
 const NAV = [
   ["/breeds/", "Breeds"],
@@ -290,7 +309,7 @@ const NAV = [
 function topbar(current = "") {
   return `<header class="topbar"><div class="wrap topbar-in">
     <a class="brand" href="/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 10a2 2 0 1 1 0-4 2 2 0 0 1 0 4Zm4-3.5a2 2 0 1 1 0-4 2 2 0 0 1 0 4Zm7 0a2 2 0 1 1 0-4 2 2 0 0 1 0 4Zm4 3.5a2 2 0 1 1 0-4 2 2 0 0 1 0 4ZM12 11c2.6 0 6 3.6 6 6.4 0 2-1.5 2.9-3 2.9-1.2 0-1.9-.6-3-.6s-1.8.6-3 .6c-1.5 0-3-.9-3-2.9C6 14.6 9.4 11 12 11Z"/></svg>Dog Size Comparison</a>
-    <nav class="topnav" aria-label="Main">${NAV.map(([u, t]) => `<a href="${u}"${current.startsWith(u) ? ' aria-current="page"' : ""}>${t}</a>`).join("")}<a class="nav-cta" href="/">Compare tool</a></nav>
+    <nav class="topnav" aria-label="Main">${NAV.map(([u, t]) => `<a href="${u}"${current.startsWith(u) ? ' aria-current="page"' : ""}>${t}</a>`).join("")}<a class="nav-cta" href="/">Compare tool</a><a class="lang-switch" href="${LANG_ALT}" hreflang="de" lang="de" title="Diese Seite auf Deutsch">DE</a></nav>
   </div></header>`;
 }
 function siteFooter() {
@@ -299,41 +318,42 @@ function siteFooter() {
     ${col("By size", SIZES.map((s) => [sizeUrl(s), `${s} dog breeds`]))}
     ${col("By group", GROUPS.map((g) => [groupUrl(g), g === "Designer / Mixed" ? "Designer & mixed" : `${g} group`]))}
     ${col("Calculators", [["/calculators/puppy-weight/", "Puppy adult weight"], ["/calculators/crate-size/", "Crate size"], ["/calculators/airline-cabin/", "Airline cabin check"], ["/calculators/dog-years/", "Dog years to human years"]])}
-    ${col("Guides", [["/breed-finder/", "Breed finder"], ["/articles/how-to-measure-your-dog/", "How to measure your dog"], ["/articles/dog-size-classes-explained/", "Dog size classes explained"], ["/articles/flying-with-a-dog-in-the-cabin/", "Flying with a dog"], ["/about/", "About the data"], ["/suggest-a-breed/", "Suggest a breed"]])}
+    ${col("Guides", [["/breed-finder/", "Breed finder"], ["/articles/how-to-measure-your-dog/", "How to measure your dog"], ["/articles/dog-size-classes-explained/", "Dog size classes explained"], ["/articles/flying-with-a-dog-in-the-cabin/", "Flying with a dog"], ["/about/", "About the data"], ["/photo-credits/", "Photo credits"], ["/suggest-a-breed/", "Suggest a breed"]])}
   </div><div class="wrap foot-note"><p>Heights and weights follow kennel-club breed standards (AKC, FCI, The Kennel Club, UKC, RSCE). Individual dogs can fall outside every range shown. <a href="/about/">How we compile the figures</a>.</p>
     <p>All information on this site is general guidance only. It is not veterinary, medical or travel advice, and airline rules, breed standards and other details can change. Always check with your vet, airline or breeder before making decisions. <a href="/about/#disclaimer">Full disclaimer</a>.</p>
-    <p class="copyright">© ${new Date().getFullYear()} <a href="https://milivon.com">MILIVON</a>. All rights reserved. Text, data compilation and illustrations may not be reproduced without permission.</p></div></footer>`;
+    <p class="copyright">© ${new Date().getFullYear()} <a href="https://milivon.com">MILIVON</a>. All rights reserved. Text, data compilation and illustrations may not be reproduced without permission. Breed photos are by Wikimedia Commons contributors and remain under their own licences (CC BY, CC BY-SA, CC0 or public domain); card thumbnails are cropped. <a href="/photo-credits/">Photo credits</a>.</p></div></footer>`;
 }
 function crumbs(items) {
   const html = `<nav class="crumbs" aria-label="Breadcrumb"><ol>${items.map(([u, t], i) => `<li>${i === items.length - 1 ? `<span aria-current="page">${esc(t)}</span>` : `<a href="${u}">${esc(t)}</a>`}</li>`).join("")}</ol></nav>`;
   const ld = { "@type": "BreadcrumbList", itemListElement: items.map(([u, t], i) => ({ "@type": "ListItem", position: i + 1, name: t, item: SITE + u })) };
   return { html, ld };
 }
-function page({ url, title, description, body, ld = [], current = "", ogImage = "/img/og-image.png", ogAlt = "", scripts = [], noindex = false }) {
+function page({ url, title, description, body, ld = [], current = "", ogImage = "/img/og-image.png", ogAlt = "", scripts = [], noindex = false, lang = "en", topbarHtml, footerHtml, defaultOgAlt = "Illustrated dog breeds from Chihuahua to Irish Wolfhound standing side by side to scale", siteName = SITE_NAME }) {
   const graph = { "@context": "https://schema.org", "@graph": ld };
   return `<!doctype html>
-<html lang="en">
+<html lang="${lang}">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>${esc(title)}</title>
   <meta name="description" content="${esc(description)}" />
   <meta name="copyright" content="© ${new Date().getFullYear()} MILIVON" />
-  <link rel="canonical" href="${SITE}${url}" />${noindex ? '\n  <meta name="robots" content="noindex" />' : ""}
+  <link rel="canonical" href="${SITE}${url}" />
+  ${HREFLANG}${noindex ? '\n  <meta name="robots" content="noindex" />' : ""}
   <meta name="theme-color" content="#f6f3ee" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#15140f" media="(prefers-color-scheme: dark)" />
   <link rel="icon" href="/favicon.ico" sizes="any" />
   <link rel="icon" href="/img/favicon-32.png" type="image/png" sizes="32x32" />
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.png" />
   <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="${SITE_NAME}" />
+  <meta property="og:site_name" content="${esc(siteName)}" />${lang === "de" ? '\n  <meta property="og:locale" content="de_DE" />' : ""}
   <meta property="og:url" content="${SITE}${url}" />
   <meta property="og:title" content="${esc(title)}" />
   <meta property="og:description" content="${esc(description)}" />
   <meta property="og:image" content="${SITE}${ogImage}" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="${esc(ogImage === "/img/og-image.png" || !ogAlt ? "Illustrated dog breeds from Chihuahua to Irish Wolfhound standing side by side to scale" : ogAlt)}" />
+  <meta property="og:image:alt" content="${esc(ogImage === "/img/og-image.png" || !ogAlt ? defaultOgAlt : ogAlt)}" />
   <meta name="twitter:card" content="summary_large_image" />
   ${ld.length ? `<script type="application/ld+json">${JSON.stringify(graph).replace(/</g, "\\u003c")}</script>` : ""}
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -343,22 +363,44 @@ function page({ url, title, description, body, ld = [], current = "", ogImage = 
   ${analyticsTag()}
 </head>
 <body class="site-page">
-  ${topbar(current)}
+  ${topbarHtml || topbar(current)}
   <main class="wrap content">
 ${body}
   </main>
-  ${siteFooter()}
+  ${footerHtml || siteFooter()}
 ${scripts.map((s) => `  <script src="${s}"></script>`).join("\n")}
 </body>
 </html>
 `;
 }
 
+// ---------- photo credits ----------
+// Breed photos are Wikimedia Commons files under CC BY, CC BY-SA, CC0 or public domain
+// (content/photos.json). CC licences need author, licence and source wherever a photo
+// is shown, and a note that it was changed: card thumbnails are cropped 4:3.
+const PHOTO_CREDITS_URL = { en: "/photo-credits/", de: "/de/bildnachweise/" };
+const photoArtist = (p, lang = "en") => (lang === "de" && p.artist === "Unknown author" ? "Urheber unbekannt" : p.artist);
+const photoLicense = (p, lang = "en") => (lang === "de" && p.license === "Public domain" ? "gemeinfrei" : p.license);
+/** One-line credit for a cropped card thumbnail (title attribute). */
+const photoTitle = (p, lang = "en") => lang === "de"
+  ? `Foto: ${photoArtist(p, lang)}, ${photoLicense(p, lang)}, Wikimedia Commons (zugeschnitten)`
+  : `Photo: ${p.artist}, ${p.license}, Wikimedia Commons (cropped)`;
+/** Table of every breed photo with author, licence and source. rows: [{b, name, url}] */
+function photoCreditsTable(rows, lang = "en") {
+  const de = lang === "de";
+  const lic = (p) => (p.licenseUrl ? `<a href="${esc(p.licenseUrl)}" rel="license noopener" target="_blank">${esc(photoLicense(p, lang))}</a>` : esc(photoLicense(p, lang)));
+  const file = (p) => esc(p.file.replace(/^File:/, ""));
+  return `<div class="table-scroll"><table class="data-table credits-table">
+<thead><tr><th>${de ? "Foto" : "Photo"}</th><th>${de ? "Rasse" : "Breed"}</th><th>${de ? "Urheber" : "Author"}</th><th>${de ? "Lizenz" : "Licence"}</th><th>${de ? "Quelle" : "Source"}</th></tr></thead>
+<tbody>${rows.map(({ b, name, url }) => `<tr id="${b.id}"><td><img src="${b.photo.thumb}" alt="" loading="lazy" decoding="async" width="80" height="60"></td><td class="breed"><a href="${url}">${esc(name)}</a></td><td>${esc(photoArtist(b.photo, lang))}</td><td>${lic(b.photo)}</td><td><a href="${esc(b.photo.source)}" rel="noopener" target="_blank">${file(b.photo)}</a></td></tr>`).join("\n")}</tbody>
+</table></div>`;
+}
+
 // ---------- reusable fragments ----------
 /** Card linking to a breed page, with thumbnail and both sexes' figures. */
 function breedCard(b, { extra = "", attrs = "" } = {}) {
   const img = b.photo
-    ? `<img class="bcard-photo" src="${b.photo.thumb}" alt="" loading="lazy" decoding="async" width="80" height="60">`
+    ? `<img class="bcard-photo" src="${b.photo.thumb}" alt="" title="${esc(photoTitle(b.photo))}" loading="lazy" decoding="async" width="80" height="60">`
     : `<img src="${b.img.replace("/web/", "/thumb/")}" alt="" loading="lazy" decoding="async" width="72" height="50">`;
   return `<a class="bcard" href="${b.url}"${attrs}>${img}<span class="bcard-meta"><span class="bcard-name">${esc(b.name)}</span>`
     + `<span class="bcard-st">♂ ${H(b.m.h)} · ${W(b.m.w)}</span>`
@@ -426,5 +468,5 @@ module.exports = {
   shapeOf, bodyUnits, share, distance, nearest, bodyLandmark,
   MALE, FEMALE, COLORS, scene,
   markdown, frontMatter, inline,
-  topbar, siteFooter, crumbs, page, breedCard, breedGrid, toolLink, spanH, spanW, faqBlock,
+  topbar, siteFooter, crumbs, page, PHOTO_CREDITS_URL, photoTitle, photoCreditsTable, HREFLANG, LANG_ALT, finalizeHtml, breedCard, breedGrid, toolLink, spanH, spanW, faqBlock,
 };

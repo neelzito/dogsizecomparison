@@ -189,7 +189,8 @@ def main():
 
     # header
     d.text((M, M), "Every AKC breed, drawn to scale", font=font("serif", round(W * 0.042)), fill=INK)
-    sub = (f"All {len(akc_list())} breeds recognised by the American Kennel Club, from the {breeds[0]['name']} "
+    n = len(akc_list())
+    sub = (f"Over {(n - 1) // 100 * 100} breeds recognised by the American Kennel Club, from the {breeds[0]['name']} "
            f"to the {breeds[-1]['name']}. Every dog is drawn at the same scale.")
     d.text((M, M + round(W * 0.062)), sub, font=font("medium", round(W * 0.0105)), fill=INK2)
 

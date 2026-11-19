@@ -40,7 +40,7 @@ UA = "dog-breed-photo-fetcher/0.1 (static site build script; python-urllib)"
 WIDTH = 800
 THUMB = (160, 120)  # card thumbnails, shown at 80 x 60
 THUMB_DIR = OUT_DIR / "thumb"
-FREE = re.compile(r"^(cc0|public domain|pd\b|pd-|cc by(-sa)? [0-9.]+|cc by(-sa)?$|gfdl|gpl|fal\b|free art|copyrighted free use|attribution)", re.I)
+FREE = re.compile(r"^(cc0|public domain|pd\b|pd-|cc by(-sa)? [0-9.]+( [a-z]{2})?$)", re.I)  # CC and PD only: GPL/GFDL/FAL need the full licence text, "copyrighted free use" is vague
 
 
 def get(url, binary=False):
@@ -116,6 +116,7 @@ def file_info(fname):
     artist = re.sub(r"^by\s*$", "", artist).strip(' "') or "Unknown author"
     artist = re.sub(r"^\S+\.(jpe?g|png|tiff?):\s*", "", artist, flags=re.I)  # "Original.jpg: Author"
     artist = re.sub(r"\s*derivative work:\s*", ", derivative work by ", artist, flags=re.I)
+    artist = tidy_artist(artist)
     if len(artist) > 80:
         artist = artist[:77].rstrip() + "…"
     return {
@@ -126,6 +127,17 @@ def file_info(fname):
         "licenseUrl": val("LicenseUrl"),
         "source": ii["descriptionurl"],
     }, None
+
+
+def tidy_artist(a):
+    """Turn Commons boilerplate into a plain credit: "No machine-readable author provided. X assumed
+    (based on copyright claims)." -> "X"; "The original uploader was X at English Wikipedia." -> "X at English Wikipedia"."""
+    a = re.sub(r"^No machine-readable author provided\.\s*(.+?)\s+assumed\b.*$", r"\1", a)
+    a = re.sub(r"^.*?\b[Tt]he original uploader was\s+", "", a) if a.lower().startswith(("original uploader", "the original uploader")) else re.sub(r"\.\s*The original uploader was .*$", "", a)
+    a = re.sub(r"^Original uploader was\s+", "", a)
+    a = re.sub(r"^User:", "", a).replace(", User:", ", ")
+    a = re.sub(r"~commonswiki\b", "", a)
+    return a.strip(" .") or "Unknown author"
 
 
 def candidate_titles(b):

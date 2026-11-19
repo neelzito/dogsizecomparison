@@ -10,6 +10,8 @@
   var cmpEl = document.getElementById("finder-compare");
   var CHECKS = ["shed", "groom", "kids", "novice", "apt", "cabin"];
   var chipGroups = form.querySelectorAll(".chips");
+  // German page (/de/rassefinder/) loads js/i18n-de.js first
+  var DE = !!window.I18N;
 
   function chipValues(name) {
     return Array.prototype.slice.call(form.querySelectorAll('.chips[data-f="' + name + '"] [aria-pressed="true"]')).map(function (b) { return b.dataset.v; });
@@ -38,7 +40,7 @@
   function sortCards(list, how) {
     var key = how.charAt(0), dir = how.slice(2) === "asc" ? 1 : -1;
     return list.sort(function (a, b) {
-      if (how === "name") return a.querySelector(".bcard-name").textContent.localeCompare(b.querySelector(".bcard-name").textContent);
+      if (how === "name") return a.querySelector(".bcard-name").textContent.localeCompare(b.querySelector(".bcard-name").textContent, DE ? "de" : "en");
       return (parseFloat(a.dataset[key]) - parseFloat(b.dataset[key])) * dir;
     });
   }
@@ -59,11 +61,15 @@
     var shown = sortCards(cards.filter(function (c) { return passes(c.dataset, st); }), st.sort);
     cards.forEach(function (c) { c.hidden = true; });
     shown.forEach(function (c) { c.hidden = false; grid.appendChild(c); });
-    countEl.innerHTML = "<strong>" + shown.length + "</strong> " + (shown.length === 1 ? "breed matches" : shown.length === cards.length ? "breeds" : "breeds match");
+    countEl.innerHTML = "<strong>" + shown.length + "</strong> " + (DE
+      ? (shown.length === 1 ? "Rasse passt" : shown.length === cards.length ? "Rassen" : "Rassen passen")
+      : (shown.length === 1 ? "breed matches" : shown.length === cards.length ? "breeds" : "breeds match"));
     emptyEl.hidden = shown.length > 0;
     cmpEl.hidden = shown.length === 0;
-    cmpEl.href = "/#b=" + shown.slice(0, 10).map(function (c) { return c.dataset.id + ":m"; }).join(",");
-    cmpEl.textContent = shown.length > 10 ? "Compare the first 10 in the tool →" : "Compare " + (shown.length === 1 ? "it" : "these " + shown.length) + " in the tool →";
+    cmpEl.href = (DE ? "/de/#b=" : "/#b=") + shown.slice(0, 10).map(function (c) { return c.dataset.id + ":m"; }).join(",");
+    cmpEl.textContent = DE
+      ? (shown.length > 10 ? "Die ersten 10 im Tool vergleichen →" : shown.length === 1 ? "Im Tool ansehen →" : "Diese " + shown.length + " im Tool vergleichen →")
+      : (shown.length > 10 ? "Compare the first 10 in the tool →" : "Compare " + (shown.length === 1 ? "it" : "these " + shown.length) + " in the tool →");
     writeUrl(st);
   }
 

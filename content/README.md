@@ -70,3 +70,14 @@ Each breed page shows a real photo from Wikimedia Commons with the credit the li
 ## Photo thumbnails
 
 Breed cards use 160 × 120 crops in `img/photos/thumb/`. `tools/fetch_photos.py` makes one for every photo it fetches; run `.venv/bin/python tools/fetch_photos.py --thumbs` to rebuild them all.
+
+## German version (/de/)
+
+`node tools/build_site.js` also builds every page in German under `/de/`, plus the German comparison tool at `/de/` (from `index.html`). English and German pages link to each other (hreflang tags and the EN/DE switch in the top bar).
+
+- **Breed names:** `tools/site/de/names.js` holds the German name and grammatical gender of every breed. A `~` marks an adjective whose ending changes ("Deutsch~ Schäferhund" → "der Deutsche Schäferhund"). The build fails if a breed has no German name, so add one whenever you add a breed.
+- **Generated sentences, groups, sizes and countries:** `tools/site/de/build.js` and `tools/site/de/lang.js`. They're written in German directly rather than translated from the English templates.
+- **Hand-written text:** `content/de/breeds/<breed-id>.md`, `content/de/articles/<german-slug>.md` (front matter `en:` names the English article it matches) and `content/de/about.md`. Links can use the English URLs (`/breeds/beagle/`, `/calculators/crate-size/?breed=…`): the build rewrites them to the German pages.
+- **Airline notes:** `content/de/airlines.json` translates the carrier sizes and notes in `content/airlines.json`. The build fails if a new English note has no German entry.
+- **Comparison tool:** the German labels for `index.html` are in `tools/site/de/tool.js`. If you change English text in `index.html`, the build stops and names the text that needs a German counterpart. German breed names and URLs for the scripts are written to `js/i18n-de.js`; `js/app.js`, `js/calc.js` and `js/finder.js` switch to German when it's loaded.
+- **When you change an English breed text,** update the German one in `content/de/breeds/` too, because nothing checks that they stay in step.

@@ -19,7 +19,7 @@ const { fs, path, ROOT, esc, avg, round, list, pct, aName, H, W, H1, W1, cm, inc
 const { PAIRS_CURATED, PAIRS_KEEP, GROUP_TEXT, COUNTRY_ADJ } = require("./site/content-data");
 const AIRLINES = require(path.join(ROOT, "content/airlines.json"));
 
-const OUT_DIRS = ["breeds", "compare", "sizes", "groups", "origins", "articles", "calculators", "about", "suggest-a-breed", "breed-finder"];
+const OUT_DIRS = ["breeds", "compare", "sizes", "groups", "origins", "articles", "calculators", "about", "suggest-a-breed", "breed-finder", "photo-credits", "de"];
 const REPO = "neelzito/dogsizecomparison";
 const pages = []; // { url, html, priority }
 const emit = (url, html, priority = 0.6) => pages.push({ url, html, priority });
@@ -595,6 +595,24 @@ function aboutPage(blocks) {
 }
 
 // ======================================================================
+// Photo credits
+// ======================================================================
+function photoCreditsPage() {
+  const url = L.PHOTO_CREDITS_URL.en;
+  const rows = BREEDS.filter((b) => b.photo).sort((a, b) => a.name.localeCompare(b.name, "en")).map((b) => ({ b, name: b.name, url: b.url }));
+  const cr = crumbs([["/", "Home"], ["/about/", "About the data"], [url, "Photo credits"]]);
+  const body = `${cr.html}
+<header class="page-head"><h1>Photo credits</h1><p class="lede">The ${rows.length} breed photos on this site come from Wikimedia Commons. Thank you to everyone who took and shared them.</p></header>
+<section class="card prose prose-wide">
+<p>Each photo is used under the licence shown below: Creative Commons Attribution (CC BY), Attribution-ShareAlike (CC BY-SA), CC0 or public domain. Follow the source link for the original file, its full author details and the licence terms. The photos are not covered by this site's copyright notice. You may reuse them under their own licences.</p>
+<p><strong>Changes:</strong> photos are resized and converted to WebP. The small thumbnails on breed cards are also cropped to a 4:3 frame. Under CC BY-SA, these adapted versions are shared under the same licence as the original.</p>
+<p>Authors are credited as named on each Commons file page, sometimes by their Wikimedia username. If you took one of these photos and would like a different credit, or would like it removed, please <a href="https://github.com/${REPO}/issues">tell us</a>.</p>
+</section>
+<section class="card">${L.photoCreditsTable(rows, "en")}</section>`;
+  emit(url, page({ url, title: "Photo credits", description: `Authors, licences and sources of the ${rows.length} Wikimedia Commons breed photos used on Dog Size Comparison.`, body, ld: [cr.ld] }), 0.2);
+}
+
+// ======================================================================
 // Suggest a breed
 // ======================================================================
 function suggestPage() {
@@ -809,14 +827,18 @@ rankedArticles();
 mdArticles(blocks);
 articlesIndex();
 aboutPage(blocks);
+photoCreditsPage();
 calcPages();
 suggestPage();
 finderPage();
 
-for (const p of pages) {
+// German pages (/de/…), built from the same data; returns its pages and the EN → DE URL pairs
+const DE = require("./site/de/build")({ PAIRS, PAIRS_BY_BREED, ogJob, ogDog, refFor, today, REPO, AIRLINES, spread, sizeLifeAvg });
+const allPages = [...pages, ...DE.pages];
+for (const p of allPages) {
   const file = path.join(ROOT, p.url, "index.html");
   fs.mkdirSync(path.dirname(file), { recursive: true });
-  fs.writeFileSync(file, p.html);
+  fs.writeFileSync(file, L.finalizeHtml(p.html, p.url, DE.pairs));
 }
 
 // social preview images
@@ -840,14 +862,17 @@ const put = (name, content) => {
 put("topbar", L.topbar("/#"));
 put("footer", L.siteFooter());
 put("analytics", L.analyticsTag());
-fs.writeFileSync(indexFile, index);
+put("hreflang", L.HREFLANG);
+fs.writeFileSync(indexFile, L.finalizeHtml(index, "/", DE.pairs));
+// German comparison tool: /de/index.html, translated from index.html
+require("./site/de/tool")(index, DE.pairs);
 
 // sitemap
-const urls = [{ url: "/", priority: 1 }, ...pages];
+const urls = [{ url: "/", priority: 1 }, { url: "/de/", priority: 1 }, ...allPages];
 fs.writeFileSync(path.join(ROOT, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls.map((p) => `  <url><loc>${L.SITE}${p.url}</loc><lastmod>${today}</lastmod><priority>${p.priority.toFixed(1)}</priority></url>`).join("\n")}
 </urlset>
 `);
 const count = (pre) => pages.filter((p) => p.url.startsWith(pre)).length;
-console.log(`site: ${pages.length} pages (breeds ${count("/breeds/")}, compare ${count("/compare/")}, sizes ${count("/sizes/")}, groups ${count("/groups/")}, origins ${count("/origins/")}, articles ${count("/articles/")}, calculators ${count("/calculators/")}) + sitemap`);
+console.log(`site: ${allPages.length} pages, ${DE.pages.length + 1} of them German (breeds ${count("/breeds/")}, compare ${count("/compare/")}, sizes ${count("/sizes/")}, groups ${count("/groups/")}, origins ${count("/origins/")}, articles ${count("/articles/")}, calculators ${count("/calculators/")}) + sitemap`);
