@@ -149,7 +149,7 @@
 
   // ---------- sources ----------
   const SOURCES = window.BREED_SOURCES || {};
-  const SRC_LABEL = { AKC: "AKC", FCI: "FCI", UKC: "UKC", PTCA: "PTCA", RSCE: tx("RSCE (Spain)", "RSCE (Spanien)"), Typical: tx("Typical (no standard)", "Typisch (kein Standard)") };
+  const SRC_LABEL = { AKC: "AKC", FCI: "FCI", UKC: "UKC", PTCA: "PTCA", RSCE: tx("RSCE (Spain)", "RSCE (Spanien)"), Xunta: tx("Xunta de Galicia (Spain)", "Xunta de Galicia (Spanien)"), Typical: tx("Typical (no standard)", "Typisch (kein Standard)") };
   const FLAG_DE = { male: "Rüde", female: "Hündin", height: "Größe", weight: "Gewicht", min: "min.", max: "max." };
   function sourceInfo(b, sex) {
     if (b.custom) return { label: tx("Your measurements", "Deine Maße"), warn: false, notes: "" };

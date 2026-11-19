@@ -453,3 +453,10 @@ a.info:hover, a.info:focus-visible { border-color: var(--accent); background: va
   .credits-table td:first-child { grid-row: span 4; }
   .credits-table td:last-child { word-break: break-all; }
 }
+
+/* posters page */
+.poster-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: 16px; align-items: start; margin-bottom: 16px; }
+.poster-card { margin: 0; }
+.poster-card img { display: block; width: 100%; height: auto; border-radius: calc(var(--radius) - 4px); border: 1px solid var(--line); }
+.poster-card figcaption h2 { margin: 14px 0 6px; font-size: 17px; }
+.poster-card figcaption p { margin: 0 0 10px; color: var(--ink-2); font-size: 14px; }

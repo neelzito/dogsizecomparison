@@ -19,7 +19,7 @@ const { fs, path, ROOT, esc, avg, round, list, pct, aName, H, W, H1, W1, cm, inc
 const { PAIRS_CURATED, PAIRS_KEEP, GROUP_TEXT, COUNTRY_ADJ } = require("./site/content-data");
 const AIRLINES = require(path.join(ROOT, "content/airlines.json"));
 
-const OUT_DIRS = ["breeds", "compare", "sizes", "groups", "origins", "articles", "calculators", "about", "suggest-a-breed", "breed-finder", "photo-credits", "de"];
+const OUT_DIRS = ["breeds", "compare", "sizes", "groups", "origins", "articles", "calculators", "about", "suggest-a-breed", "breed-finder", "photo-credits", "posters", "de"];
 const REPO = "neelzito/dogsizecomparison";
 const pages = []; // { url, html, priority }
 const emit = (url, html, priority = 0.6) => pages.push({ url, html, priority });
@@ -209,7 +209,7 @@ function breedPage(b) {
     ["Airplane cabin", c === "yes" ? `<span class="cabin cabin-yes">✈ Fits</span>` : c === "some" ? `<span class="cabin cabin-some">✈ Lighter dogs</span>` : `Over ${CABIN.limitKg} kg limit`],
     ["Height rank", `${ordinal(byHeight.indexOf(b) + 1)} of ${N}`],
   ];
-  const SRC_NAME = { AKC: "American Kennel Club (AKC)", FCI: "FCI", UKC: "United Kennel Club (UKC)", PTCA: "PTCA", RSCE: "Real Sociedad Canina de España (RSCE)" };
+  const SRC_NAME = { AKC: "American Kennel Club (AKC)", FCI: "FCI", UKC: "United Kennel Club (UKC)", PTCA: "PTCA", RSCE: "Real Sociedad Canina de España (RSCE)", Xunta: "official Galician (Xunta de Galicia)" };
   const srcLine = !b.source ? "" : b.source.src === "Typical"
     ? `There is no official breed standard, so these are typical ranges.${b.source.note ? ` ${b.source.note}` : ""}`
     : `Sizes follow the ${SRC_NAME[b.source.src] || b.source.src} breed standard.${b.source.note ? ` ${b.source.note}` : ""}`;
@@ -613,6 +613,21 @@ function photoCreditsPage() {
 }
 
 // ======================================================================
+// Posters
+// ======================================================================
+function postersPage() {
+  const url = L.POSTERS_URL.en;
+  const cr = crumbs([["/", "Home"], [url, "Posters"]]);
+  const body = `${cr.html}
+<header class="page-head"><h1>Dog size posters</h1><p class="lede">Free posters of dog breeds drawn to scale, made with the same illustrations and breed-standard sizes as the <a href="/">comparison tool</a>.</p></header>
+${L.posterCards(["akc", "podencosEn", "podencosDe"], "en")}
+<section class="card prose prose-wide"><h2>Sharing and printing</h2>
+<p>You're welcome to print these posters for your home, school or club, and to share them in forums, groups and on social media. Please keep the credit line on the poster, and link to dogsizecomparison.com where you can. For commercial use, please <a href="https://github.com/${REPO}/issues">ask us first</a>.</p>
+<p>The heights are the breed-standard heights at the withers (the top of the shoulder). Individual dogs can be bigger or smaller. See <a href="/about/">about the data</a> for where the figures come from.</p></section>`;
+  emit(url, page({ url, title: "Dog Size Posters: Every AKC Breed and Every Podenco, to Scale", description: "Free printable posters of dog breeds drawn to scale: every AKC-recognised breed, and every podenco with its Mediterranean relatives.", body, ld: [cr.ld] }), 0.5);
+}
+
+// ======================================================================
 // Suggest a breed
 // ======================================================================
 function suggestPage() {
@@ -828,6 +843,7 @@ mdArticles(blocks);
 articlesIndex();
 aboutPage(blocks);
 photoCreditsPage();
+postersPage();
 calcPages();
 suggestPage();
 finderPage();

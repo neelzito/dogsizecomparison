@@ -150,7 +150,7 @@ const COUNTRY_DE = {
   "West Africa": { name: "Westafrika", aus: "Westafrika" },
   UK: { name: "Großbritannien", aus: "Großbritannien" },
 };
-const REGION_DE = { Tibet: "Tibet", Sicily: "Sizilien", Siberia: "Sibirien", Shetland: "Shetland", "Canary Islands": "Kanaren", Ibiza: "Ibiza", Alaska: "Alaska" };
+const REGION_DE = { Tibet: "Tibet", Sicily: "Sizilien", Siberia: "Sibirien", Shetland: "Shetland", "Canary Islands": "Kanaren", Ibiza: "Ibiza", Galicia: "Galicien", Alaska: "Alaska" };
 const country = (c) => { const x = COUNTRY_DE[c]; if (!x) throw new Error(`tools/site/de/lang.js: no German country for "${c}"`); return x; };
 for (const b of BREEDS) for (const part of b.origin.replace(/\s*\(.*\)/, "").split("/")) country(part.trim());
 const regionOf = (o) => { const m = o.match(/\((.+)\)/); return m ? REGION_DE[m[1]] || m[1] : ""; };
@@ -212,7 +212,7 @@ function siteFooter() {
     ${col("Nach Größe", SIZES.map((s) => [sizeUrl(s), SIZE_DE[s].list]))}
     ${col("Nach Gruppe", GROUPS.map((g) => [groupUrl(g), groupName(g)]))}
     ${col("Rechner", CALC_NAV)}
-    ${col("Ratgeber", [["/de/rassefinder/", "Rassefinder"], ["/de/ratgeber/hund-richtig-messen/", "Hund richtig messen"], ["/de/ratgeber/groessenklassen-bei-hunden/", "Größenklassen bei Hunden"], ["/de/ratgeber/mit-hund-in-der-flugzeugkabine/", "Mit Hund fliegen"], ["/de/ueber-die-daten/", "Über die Daten"], ["/de/bildnachweise/", "Bildnachweise"], ["/de/rasse-vorschlagen/", "Rasse vorschlagen"]])}
+    ${col("Ratgeber", [["/de/rassefinder/", "Rassefinder"], ["/de/ratgeber/hund-richtig-messen/", "Hund richtig messen"], ["/de/ratgeber/groessenklassen-bei-hunden/", "Größenklassen bei Hunden"], ["/de/ratgeber/mit-hund-in-der-flugzeugkabine/", "Mit Hund fliegen"], ["/de/ueber-die-daten/", "Über die Daten"], ["/de/poster/", "Poster"], ["/de/bildnachweise/", "Bildnachweise"], ["/de/rasse-vorschlagen/", "Rasse vorschlagen"]])}
   </div><div class="wrap foot-note"><p>Größen und Gewichte folgen den Rassestandards der Zuchtverbände (AKC, FCI, The Kennel Club, UKC, RSCE). Einzelne Hunde können außerhalb aller angegebenen Bereiche liegen. <a href="/de/ueber-die-daten/">So stellen wir die Zahlen zusammen</a>.</p>
     <p>Alle Angaben auf dieser Website sind allgemeine Orientierung. Sie sind keine tierärztliche, medizinische oder Reiseberatung, und Airline-Regeln, Rassestandards und andere Details können sich ändern. Sprich vor Entscheidungen immer mit deiner Tierarztpraxis, deiner Airline oder dem Züchter. <a href="/de/ueber-die-daten/#haftungsausschluss">Vollständiger Haftungsausschluss</a>.</p>
     <p class="copyright">© ${new Date().getFullYear()} <a href="https://milivon.com">MILIVON</a>. Alle Rechte vorbehalten. Texte, Datenzusammenstellung und Illustrationen dürfen nicht ohne Erlaubnis vervielfältigt werden. Die Rassefotos stammen von Mitwirkenden auf Wikimedia Commons und stehen weiter unter ihren eigenen Lizenzen (CC BY, CC BY-SA, CC0 oder gemeinfrei); die Vorschaubilder sind zugeschnitten. <a href="/de/bildnachweise/">Bildnachweise</a>.</p></div></footer>`;

@@ -138,6 +138,7 @@ module.exports = {
   "maneto": ["Maneto", "m"],
   "podenco-orito-espanol": ["Podenco Orito Español", "m"],
   "podenco-valenciano": ["Podenco Valenciano", "m"],
+  "podengo-galego": ["Podengo Galego", "m"],
   "portuguese-podengo-large": ["Podengo Português (groß)", "m"],
   "portuguese-podengo-medium": ["Podengo Português (mittel)", "m"],
   "norwegian-elkhound": ["Norwegisch~ Elchhund", "m"],
