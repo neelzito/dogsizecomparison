@@ -475,6 +475,20 @@ const POSTERS = {
     de: { title: "Alle Podencos, maßstabsgetreu", alt: "Poster der spanischen Podencos und ihrer Verwandten rund ums Mittelmeer, maßstabsgetreu",
       desc: "Die spanischen Podencos vom Maneto bis zum Podenco Ibicenco, mit allen drei Größen des Podenco Andaluz, dazu ihre Verwandten aus Portugal, Italien und Malta. Unter jedem Hund stehen die Größen für Rüden und Hündinnen. Querformat." } },
 };
+// Breed-group posters, rendered by tools/build_group_posters.py, which writes their sizes and titles here.
+const GROUP_POSTERS = JSON.parse(fs.readFileSync(path.join(__dirname, "group-posters.json"), "utf8"));
+const GROUP_KEYS = Object.keys(GROUP_POSTERS);
+for (const [k, g] of Object.entries(GROUP_POSTERS)) {
+  const card = (lang) => {
+    const v = g[lang], de = lang === "de", sub = v.sub.replace(/ (Every dog is drawn at the same scale|Alle Hunde im selben Maßstab)\.$/, ""), plain = v.title.replace(/, (drawn to scale|maßstabsgetreu)$/, "");
+    return { file: v.file, w: v.w, h: v.h, [lang]: {
+      title: v.title,
+      alt: de ? `Poster: ${v.n} Rassen der Gruppe ${plain}, maßstabsgetreu von klein nach groß` : `Poster of ${v.n} ${plain.toLowerCase()} drawn to scale from smallest to largest`,
+      desc: de ? `${v.n} Rassen. ${sub} Unter jedem Hund stehen die Größen für Rüden und Hündinnen.` : `${v.n} breeds. ${sub} Heights for males and females under every dog.` } };
+  };
+  POSTERS[k + "En"] = card("en");
+  POSTERS[k + "De"] = card("de");
+}
 /** One card per poster: preview linking to the full-size JPG, title, description and a download button. */
 function posterCards(keys, lang = "en") {
   const de = lang === "de";
@@ -500,5 +514,5 @@ module.exports = {
   shapeOf, bodyUnits, share, distance, nearest, bodyLandmark,
   MALE, FEMALE, COLORS, scene,
   markdown, frontMatter, inline,
-  topbar, siteFooter, crumbs, page, PHOTO_CREDITS_URL, POSTERS_URL, posterCards, photoTitle, photoCreditsTable, HREFLANG, LANG_ALT, finalizeHtml, breedCard, breedGrid, toolLink, spanH, spanW, faqBlock,
+  topbar, siteFooter, crumbs, page, PHOTO_CREDITS_URL, POSTERS_URL, posterCards, GROUP_KEYS, photoTitle, photoCreditsTable, HREFLANG, LANG_ALT, finalizeHtml, breedCard, breedGrid, toolLink, spanH, spanW, faqBlock,
 };
