@@ -4,7 +4,7 @@
 Every breed the AKC fully recognises (tools/akc_recognised.txt) is drawn with the
 site's illustrations at one shared scale, in rows from smallest to largest, at the midpoint of
 the male breed-standard height. Output: poster/akc-breeds-to-scale.png (full size) and
-poster/akc-breeds-to-scale-preview.jpg.
+poster/akc-breeds-to-scale-preview.jpg, plus web copies in img/posters/.
 
   .venv/bin/python tools/build_poster.py [--width 6000] [--ratio 1.5]
 """
@@ -68,6 +68,16 @@ DISPLAY = {
     "Belgian Sheepdog (Groenendael)": "Belgian Sheepdog", "Anatolian Shepherd Dog": "Anatolian Shepherd",
     "Plott Hound": "Plott", "Xoloitzcuintli (Standard)": "Xoloitzcuintli", "Bergamasco Sheepdog": "Bergamasco",
 }
+
+
+def save_web(im, name):
+    """Web copies for the site's poster pages: img/posters/<name>.jpg (full size) and <name>-preview.webp."""
+    d = os.path.join(ROOT, "img", "posters")
+    os.makedirs(d, exist_ok=True)
+    im.convert("RGB").save(os.path.join(d, name + ".jpg"), quality=88, optimize=True, progressive=True)
+    prev = im.copy()
+    prev.thumbnail((1400, 2100), Image.LANCZOS)
+    prev.save(os.path.join(d, name + "-preview.webp"), "WEBP", quality=85, method=6)
 
 
 def norm(s):
@@ -251,6 +261,7 @@ def main():
     prev = im.copy()
     prev.thumbnail((1500, 2250))
     prev.save(os.path.join(OUT_DIR, "akc-breeds-to-scale-preview.jpg"), quality=88)
+    save_web(im, "akc-breeds-to-scale")
     print(f"{len(breeds)} breeds, {len(rows)} rows, {k:.2f} px/cm -> {out}")
 
 

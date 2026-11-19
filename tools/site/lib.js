@@ -318,7 +318,7 @@ function siteFooter() {
     ${col("By size", SIZES.map((s) => [sizeUrl(s), `${s} dog breeds`]))}
     ${col("By group", GROUPS.map((g) => [groupUrl(g), g === "Designer / Mixed" ? "Designer & mixed" : `${g} group`]))}
     ${col("Calculators", [["/calculators/puppy-weight/", "Puppy adult weight"], ["/calculators/crate-size/", "Crate size"], ["/calculators/airline-cabin/", "Airline cabin check"], ["/calculators/dog-years/", "Dog years to human years"]])}
-    ${col("Guides", [["/breed-finder/", "Breed finder"], ["/articles/how-to-measure-your-dog/", "How to measure your dog"], ["/articles/dog-size-classes-explained/", "Dog size classes explained"], ["/articles/flying-with-a-dog-in-the-cabin/", "Flying with a dog"], ["/about/", "About the data"], ["/photo-credits/", "Photo credits"], ["/suggest-a-breed/", "Suggest a breed"]])}
+    ${col("Guides", [["/breed-finder/", "Breed finder"], ["/articles/how-to-measure-your-dog/", "How to measure your dog"], ["/articles/dog-size-classes-explained/", "Dog size classes explained"], ["/articles/flying-with-a-dog-in-the-cabin/", "Flying with a dog"], ["/about/", "About the data"], ["/posters/", "Posters"], ["/photo-credits/", "Photo credits"], ["/suggest-a-breed/", "Suggest a breed"]])}
   </div><div class="wrap foot-note"><p>Heights and weights follow kennel-club breed standards (AKC, FCI, The Kennel Club, UKC, RSCE). Individual dogs can fall outside every range shown. <a href="/about/">How we compile the figures</a>.</p>
     <p>All information on this site is general guidance only. It is not veterinary, medical or travel advice, and airline rules, breed standards and other details can change. Always check with your vet, airline or breeder before making decisions. <a href="/about/#disclaimer">Full disclaimer</a>.</p>
     <p class="copyright">© ${new Date().getFullYear()} <a href="https://milivon.com">MILIVON</a>. All rights reserved. Text, data compilation and illustrations may not be reproduced without permission. Breed photos are by Wikimedia Commons contributors and remain under their own licences (CC BY, CC BY-SA, CC0 or public domain); card thumbnails are cropped. <a href="/photo-credits/">Photo credits</a>.</p></div></footer>`;
@@ -456,6 +456,38 @@ const CRATES = [
   { name: "Giant", l: 54, w: 37, h: 45, ex: "Great Dane, Mastiff, Irish Wolfhound" },
 ];
 
+// ---------- posters ----------
+// Rendered by tools/build_poster.py and tools/build_podenco_poster.py into img/posters/
+// (<file>.jpg full size, <file>-preview.webp for the page).
+const POSTERS_URL = { en: "/posters/", de: "/de/poster/" };
+const POSTERS = {
+  akc: { file: "akc-breeds-to-scale", w: 6000, h: 9000,
+    en: { title: "Every AKC breed, drawn to scale", alt: "Poster of more than 200 AKC dog breeds drawn to scale in rows from smallest to largest",
+      desc: "All the breeds recognised by the American Kennel Club, from the Miniature Dachshund to the Irish Wolfhound, in rows from smallest to largest. Every dog is drawn at the same scale, with a centimetre ruler on each row. Portrait, sized for printing up to A1." },
+    de: { title: "Every AKC breed, drawn to scale (Englisch)", alt: "Poster mit über 200 AKC-Hunderassen maßstabsgetreu in Reihen von klein nach groß",
+      desc: "Alle Rassen, die der American Kennel Club anerkennt, vom Zwergdackel bis zum Irischen Wolfshund, in Reihen von klein nach groß. Alle Hunde im selben Maßstab, mit Zentimeterlineal in jeder Reihe. Hochformat, groß genug für einen Druck bis A1. Die Beschriftung ist englisch." } },
+  podencosEn: { file: "podencos-to-scale", w: 4800, h: 2688,
+    en: { title: "Every podenco, drawn to scale", alt: "Poster of the Spanish podencos and their Mediterranean relatives drawn to scale",
+      desc: "The Spanish podencos, from the Maneto to the Ibizan Hound, including all three sizes of Podenco Andaluz, plus their relatives from Portugal, Italy and Malta. Heights for males and females under every dog. Landscape." } },
+  podencosDe: { file: "podencos-massstabsgetreu", w: 4800, h: 2688,
+    en: { title: "Alle Podencos, maßstabsgetreu (German)", alt: "German poster of the Spanish podencos and their Mediterranean relatives drawn to scale",
+      desc: "The podenco poster with German labels." },
+    de: { title: "Alle Podencos, maßstabsgetreu", alt: "Poster der spanischen Podencos und ihrer Verwandten rund ums Mittelmeer, maßstabsgetreu",
+      desc: "Die spanischen Podencos vom Maneto bis zum Podenco Ibicenco, mit allen drei Größen des Podenco Andaluz, dazu ihre Verwandten aus Portugal, Italien und Malta. Unter jedem Hund stehen die Größen für Rüden und Hündinnen. Querformat." } },
+};
+/** One card per poster: preview linking to the full-size JPG, title, description and a download button. */
+function posterCards(keys, lang = "en") {
+  const de = lang === "de";
+  return `<div class="poster-grid">${keys.map((k) => {
+    const p = POSTERS[k], t = p[lang], src = `/img/posters/${p.file}.jpg`;
+    const mb = fs.statSync(path.join(ROOT, src)).size / 1048576;
+    const size = `JPG, ${de ? mb.toFixed(1).replace(".", ",") : mb.toFixed(1)} MB, ${p.w} × ${p.h} px`;
+    const pw = 1400, ph = Math.round(pw * p.h / p.w); // previews fit 1400 × 2100
+    return `<figure class="card poster-card"><a href="${src}"><img src="/img/posters/${p.file}-preview.webp" alt="${esc(t.alt)}" width="${pw}" height="${ph}" loading="lazy" decoding="async"></a>
+<figcaption><h2>${esc(t.title)}</h2><p>${esc(t.desc)}</p><p><a class="btn" href="${src}" download>${de ? "Herunterladen" : "Download"}</a> <span class="muted small">${size}</span></p></figcaption></figure>`;
+  }).join("\n")}</div>`;
+}
+
 module.exports = {
   analyticsTag, TRAIT_KEYS, TRAIT_INFO,
   GROWTH, growthShare, DOG_YEARS, dogYears, CRATES,
@@ -468,5 +500,5 @@ module.exports = {
   shapeOf, bodyUnits, share, distance, nearest, bodyLandmark,
   MALE, FEMALE, COLORS, scene,
   markdown, frontMatter, inline,
-  topbar, siteFooter, crumbs, page, PHOTO_CREDITS_URL, photoTitle, photoCreditsTable, HREFLANG, LANG_ALT, finalizeHtml, breedCard, breedGrid, toolLink, spanH, spanW, faqBlock,
+  topbar, siteFooter, crumbs, page, PHOTO_CREDITS_URL, POSTERS_URL, posterCards, photoTitle, photoCreditsTable, HREFLANG, LANG_ALT, finalizeHtml, breedCard, breedGrid, toolLink, spanH, spanW, faqBlock,
 };

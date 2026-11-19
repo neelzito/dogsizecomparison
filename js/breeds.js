@@ -148,6 +148,7 @@ window.BREED_ROWS = [
   ["Maneto", "Hound", "Spain", "longlow", 30, 35, 30, 35, 8.5, 11.5, 8.5, 11.5, 12, 14, { ear: "prick", earS: 1.3 }],
   ["Podenco Orito Español", "Hound", "Spain", "primitive", 40, 50, 38, 48, 16, 22, 14, 20, 12, 14, { ear: "prick", earS: 1.3, tail: "sickle" }],
   ["Podenco Valenciano", "Hound", "Spain", "sighthound", 55, 61, 50, 57, 16, 24, 14, 22, 12, 14, { ear: "prick", earS: 1.4 }],
+  ["Podengo Galego", "Hound", "Spain (Galicia)", "primitive", 46, 52, 42, 46, 10, 15, 10, 15, 12, 14, { ear: "prick", earS: 1.4, tail: "sickle" }],
   ["Portuguese Podengo (Large)", "Hound", "Portugal", "primitive", 55, 70, 55, 70, 20, 30, 20, 30, 12, 15, { ear: "prick", earS: 1.3, tail: "sickle" }],
   ["Portuguese Podengo (Medium)", "Hound", "Portugal", "primitive", 40, 54, 40, 54, 16, 20, 16, 20, 12, 15, { ear: "prick", earS: 1.3, tail: "sickle" }],
   ["Norwegian Elkhound", "Hound", "Norway", "spitz", 52, 52, 49.5, 49.5, 25, 25, 22, 22, 12, 15, { fluff: 0.06 }],
@@ -299,7 +300,7 @@ window.BREED_ROWS = [
 
 /*
  * Where each breed’s numbers come from (checked 2026-11-16).
- * AKC = akc.org breed page; FCI/UKC/PTCA = that registry’s standard.
+ * AKC = akc.org breed page; FCI/UKC/PTCA = that registry’s standard; Xunta = Xunta de Galicia.
  * "unverified" lists fields the source gives no number for (e.g. "females slightly smaller"),
  * where a typical value is shown instead. "Typical" = no official standard exists.
  */
@@ -435,6 +436,7 @@ window.BREED_SOURCES = {
   "Podenco Andaluz (Small)": {"src":"RSCE","note":"RSCE standard No. 401: 8 kg ± 3 kg. Not recognised by the FCI."},
   "Maneto": {"src":"RSCE","note":"RSCE standard No. 408: about 10 kg ± 1.5 kg. Not recognised by the FCI."},
   "Podenco Orito Español": {"src":"Typical","note":"No published standard yet; sources disagree, these are commonly cited ranges."},
+  "Podengo Galego": {"src":"Xunta","unverified":["life min","life max"],"note":"Official Galician standard (Xunta de Galicia): 42–52 cm, males 46–52 cm, females 42–46 cm, 10–15 kg. The standard gives no life span; the figure shown is typical for podencos. Not recognised by the FCI."},
   "Podenco Valenciano": {"src":"RSCE","note":"RSCE (Xarnego Valenciano): about 20 kg (males) and 18 kg (females), ± 4 kg. Not recognised by the FCI."},
   "Portuguese Podengo (Large)": {"src":"FCI"},
   "Portuguese Podengo (Medium)": {"src":"FCI"},
@@ -596,6 +598,7 @@ window.BREED_ALIASES = {
   "Podenco Andaluz (Small)": ["Andalusian Hound", "Podenco Andaluz Chico"],
   "Maneto": ["Podenco Maneto", "Andalusian Maneto"],
   "Podenco Orito Español": ["Orito Español", "Spanish Orito"],
+  "Podengo Galego": ["Podenco Gallego", "Podenco Galego", "Galician Podenco", "Galician Warren Hound"],
   "Podenco Valenciano": ["Xarnego Valenciano", "Podenco Xarnego", "Charnego"],
   "Portuguese Podengo (Large)": ["Podengo Português Grande"],
   "Portuguese Podengo (Medium)": ["Podengo Português Médio"],

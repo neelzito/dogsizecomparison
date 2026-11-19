@@ -136,7 +136,7 @@ module.exports = function buildDe(ctx) {
   <p class="muted small">Allgemeine Tendenzen der Rasse; einzelne Hunde sind verschieden.</p>
   <p><a href="/de/rassefinder/?size=${b.size.toLowerCase()}&amp;energy=${t.energy}">Ähnliche Rassen im Rassefinder →</a></p></div>`;
   }
-  const SRC_NAME = { AKC: "des American Kennel Club (AKC)", FCI: "der FCI", UKC: "des United Kennel Club (UKC)", PTCA: "der PTCA", RSCE: "der Real Sociedad Canina de España (RSCE)" };
+  const SRC_NAME = { AKC: "des American Kennel Club (AKC)", FCI: "der FCI", UKC: "des United Kennel Club (UKC)", PTCA: "der PTCA", RSCE: "der Real Sociedad Canina de España (RSCE)", Xunta: "der Xunta de Galicia (offizieller galicischer Standard)" };
 
   function breedPage(b) {
     const url = breedUrl(b);
@@ -593,6 +593,21 @@ ${letters.map((l) => `<section id="${l}" class="az-sec"><h2 class="sec-h">${l}</
   }
 
   // ======================================================================
+  // Poster
+  // ======================================================================
+  function postersPage() {
+    const url = L.POSTERS_URL.de;
+    const cr = crumbs([home, [url, "Poster"]]);
+    const body = `${cr.html}
+<header class="page-head"><h1>Hundegrößen-Poster</h1><p class="lede">Kostenlose Poster mit Hunderassen in maßstabsgetreuer Darstellung, mit denselben Illustrationen und Rassestandard-Größen wie im <a href="/de/">Vergleichstool</a>.</p></header>
+${L.posterCards(["podencosDe", "akc"], "de")}
+<section class="card prose prose-wide"><h2>Teilen und drucken</h2>
+<p>Du darfst die Poster gern für zu Hause, die Schule oder den Verein ausdrucken und in Foren, Gruppen und sozialen Netzwerken teilen. Bitte lass den Hinweis auf dem Poster stehen und verlinke nach Möglichkeit auf dogsizecomparison.com. Für eine kommerzielle Nutzung <a href="https://github.com/${REPO}/issues">frag uns bitte vorher</a>.</p>
+<p>Die Größen sind die Widerristhöhen (höchster Punkt der Schulter) laut Rassestandard. Einzelne Hunde können größer oder kleiner sein. Woher die Zahlen stammen, steht unter <a href="/de/ueber-die-daten/">Über die Daten</a>.</p></section>`;
+    emit(url, page({ url, title: "Hundegrößen-Poster: Alle Podencos und alle AKC-Rassen maßstabsgetreu", description: "Kostenlose Poster zum Ausdrucken: alle Podencos mit ihren Verwandten rund ums Mittelmeer und alle vom AKC anerkannten Rassen, maßstabsgetreu.", body, ld: [cr.ld] }), 0.5, L.POSTERS_URL.en);
+  }
+
+  // ======================================================================
   // Suggest a breed
   // ======================================================================
   function suggestPage() {
@@ -807,6 +822,7 @@ ${extra}`;
   articlesIndex();
   aboutPage(blocks);
   photoCreditsPage();
+  postersPage();
   calcPages();
   suggestPage();
   finderPage();
