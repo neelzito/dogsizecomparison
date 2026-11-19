@@ -1,0 +1,208 @@
+# Breeds fully recognised (registered) by the American Kennel Club: 205 breeds.
+# Source: https://www.akc.org/press-center/articles-resources/facts-and-stats/breeds-year-recognized/
+# ("last updated 1/1/26", fetched 2026-11-19). Names as the AKC writes them, one per line.
+Pointer
+Retriever (Chesapeake Bay)
+Spaniel (Clumber)
+Spaniel (Cocker)
+Setter (English)
+Setter (Gordon)
+Setter (Irish)
+Spaniel (Irish Water)
+Spaniel (Sussex)
+Basset Hound
+Beagle
+Bloodhound
+Bull Terrier
+Collie
+Dachshund
+Fox Terrier
+Greyhound
+Harrier
+Irish Terrier
+Mastiff
+Pug
+Saint Bernard
+Scottish Terrier
+Yorkshire Terrier
+Bedlington Terrier
+Bulldog
+Dandie Dinmont Terrier
+English Toy Spaniel
+Foxhound (American)
+Italian Greyhound
+Manchester Terrier (Toy)
+Newfoundland
+Scottish Deerhound
+Great Dane
+Manchester Terrier (Standard)
+Poodle
+Skye Terrier
+Wirehaired Pointing Griffon
+Airedale Terrier
+Dalmatian
+Japanese Chin
+Maltese
+Old English Sheepdog
+Pomeranian
+Welsh Terrier
+Whippet
+Borzoi
+Boston Terrier
+Spaniel (Field)
+Irish Wolfhound
+French Bulldog
+Chow Chow
+Boxer
+Chihuahua
+Schipperke
+Standard Schnauzer
+Pekingese
+Samoyed
+Doberman Pinscher
+German Shepherd Dog
+West Highland White Terrier
+Foxhound (English)
+Otterhound
+Brussels Griffon
+Spaniel (English Springer)
+Sealyham Terrier
+Shetland Sheepdog
+Belgian Sheepdog
+Cairn Terrier
+Norwegian Elkhound
+Spaniel (Welsh Springer)
+Papillon
+Retriever (Flat-Coated)
+Retriever (Labrador)
+Kerry Blue Terrier
+Retriever (Curly-Coated)
+Miniature Pinscher
+Retriever (Golden)
+Afghan Hound
+Miniature Schnauzer
+Saluki
+Briard
+Border Terrier
+Giant Schnauzer
+Keeshond
+Pointer (German Shorthaired)
+Siberian Husky
+Bouvier des Flandres
+Kuvasz
+Rottweiler
+Great Pyrenees
+Brittany
+Bullmastiff
+Lakeland Terrier
+Welsh Corgi (Pembroke)
+Alaskan Malamute
+Lhasa Apso
+Welsh Corgi (Cardigan)
+Affenpinscher
+American Staffordshire Terrier
+Norwich Terrier
+Puli
+Bernese Mountain Dog
+Komondor
+Spaniel (American Water)
+Weimaraner
+Basenji
+Black and Tan Coonhound
+Spaniel (English Cocker)
+Rhodesian Ridgeback
+Belgian Malinois
+Belgian Tervuren
+Pointer (German Wirehaired)
+Silky Terrier
+Australian Terrier
+Vizsla
+Shih Tzu
+Akita
+Bichon Frise
+Soft Coated Wheaten Terrier
+Tibetan Terrier
+Staffordshire Bull Terrier
+Bearded Collie
+Ibizan Hound
+Norfolk Terrier
+Australian Cattle Dog
+Pharaoh Hound
+Portuguese Water Dog
+Tibetan Spaniel
+Petit Basset Griffon Vendéen
+Australian Shepherd
+Chinese Crested
+Finnish Spitz
+Miniature Bull Terrier
+Chinese Shar-Pei
+Shiba Inu
+American Eskimo Dog
+Border Collie
+Cavalier King Charles Spaniel
+Greater Swiss Mountain Dog
+Anatolian Shepherd
+Havanese
+Löwchen
+Canaan Dog
+Parson Russell Terrier
+Spinone Italiano
+Polish Lowland Sheepdog
+German Pinscher
+Nova Scotia Duck Tolling Retriever
+Toy Fox Terrier
+Black Russian Terrier
+Glen of Imaal Terrier
+Neapolitan Mastiff
+Plott
+Tibetan Mastiff
+Beauceron
+Swedish Vallhund
+Dogue de Bordeaux
+Bluetick Coonhound
+Boykin Spaniel
+Irish Red & White Setter
+Norwegian Buhund
+Pyrenean Shepherd
+Redbone Coonhound
+Cane Corso
+Icelandic Sheepdog
+Leonberger
+American English Coonhound
+Cesky Terrier
+Entlebucher Mountain Dog
+Finnish Lapphund
+Norwegian Lundehund
+Xoloitzcuintli
+Russell Terrier
+Treeing Walker Coonhound
+Chinook
+Portuguese Podengo Pequeno
+Rat Terrier
+Coton de Tulear
+Wirehaired Vizsla
+Bergamasco
+Berger Picard
+Boerboel
+Cirneco dell'Etna
+Lagotto Romagnolo
+Miniature American Shepherd
+Spanish Water Dog
+American Hairless Terrier
+Pumi
+Sloughi
+Grand Basset Griffon Vendéen
+Nederlandse Kooikerhondje
+Azawakh
+Barbet
+Dogo Argentino
+Belgian Laekenois
+Biewer Terrier
+Bracco Italiano
+Mudi
+Russian Toy
+Lancashire Heeler
+Danish-Swedish Farmdog
+Basset Fauve de Bretagne
+Russian Tsvetnaya Bolonka
+Teddy Roosevelt Terrier

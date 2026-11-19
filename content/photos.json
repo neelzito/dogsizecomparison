@@ -79,6 +79,16 @@
   "height": 358,
   "article": "American Cocker Spaniel"
  },
+ "american-english-coonhound": {
+  "file": "File:English Coonhound.jpg",
+  "artist": "Unknown author",
+  "license": "Public domain",
+  "licenseUrl": "",
+  "source": "https://commons.wikimedia.org/wiki/File:English_Coonhound.jpg",
+  "width": 267,
+  "height": 148,
+  "article": "American English Coonhound"
+ },
  "american-eskimo-dog": {
   "file": "File:American Eskimo Dog 1.jpg",
   "artist": "Christmas w/a K",
@@ -98,6 +108,16 @@
   "width": 415,
   "height": 354,
   "article": "American Foxhound"
+ },
+ "american-hairless-terrier": {
+  "file": "File:American Hairless Terrier Adelor.jpg",
+  "artist": "Nyaah",
+  "license": "CC BY-SA 3.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:American_Hairless_Terrier_Adelor.jpg",
+  "width": 800,
+  "height": 1200,
+  "article": "American Hairless Terrier"
  },
  "american-pit-bull-terrier": {
   "file": "File:001 American Pit Bull Terrier.jpg",
@@ -199,6 +219,16 @@
   "height": 800,
   "article": "Azawakh"
  },
+ "barbet": {
+  "file": "File:Chien de race Barbet.jpg",
+  "artist": "Unknown author",
+  "license": "Public domain",
+  "licenseUrl": "",
+  "source": "https://commons.wikimedia.org/wiki/File:Chien_de_race_Barbet.jpg",
+  "width": 312,
+  "height": 258,
+  "article": "Barbet (dog breed)"
+ },
  "basenji": {
   "file": "File:Basenji Profile (loosercrop).jpg",
   "artist": "fugzu",
@@ -278,6 +308,16 @@
   "width": 800,
   "height": 600,
   "article": "Bedlington Terrier"
+ },
+ "belgian-laekenois": {
+  "file": "File:Belgian Laekenois 600.jpg",
+  "artist": "Unknown author",
+  "license": "CC BY-SA 3.0",
+  "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
+  "source": "https://commons.wikimedia.org/wiki/File:Belgian_Laekenois_600.jpg",
+  "width": 500,
+  "height": 642,
+  "article": null
  },
  "belgian-malinois": {
   "file": "File:Grupp 1, BELGISK VALLHUND, MALINOIS, Krokasmedens Epic (24014622180).jpg",
@@ -669,6 +709,16 @@
   "height": 633,
   "article": "Central Asian Shepherd Dog"
  },
+ "cesky-terrier": {
+  "file": "File:Terier czeski suka 2009 pl2.jpg",
+  "artist": "Pleple2000",
+  "license": "CC BY-SA 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Terier_czeski_suka_2009_pl2.jpg",
+  "width": 800,
+  "height": 680,
+  "article": "Cesky Terrier"
+ },
  "chesapeake-bay-retriever": {
   "file": "File:CH Chesapeake.jpg",
   "artist": "George Makatura",
@@ -839,6 +889,16 @@
   "height": 356,
   "article": "Dandie Dinmont Terrier"
  },
+ "danish-swedish-farmdog": {
+  "file": "File:Danish Farm Dog1604fxcr wb.jpg",
+  "artist": "Ellen Levy Finch (User:Elf)",
+  "license": "CC BY-SA 3.0",
+  "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
+  "source": "https://commons.wikimedia.org/wiki/File:Danish_Farm_Dog1604fxcr_wb.jpg",
+  "width": 800,
+  "height": 559,
+  "article": "Danish–Swedish Farmdog"
+ },
  "doberman-pinscher": {
   "file": "File:Dobermann handling.jpg",
   "artist": "Miroslav Cacik",
@@ -1008,6 +1068,16 @@
   "width": 800,
   "height": 593,
   "article": "French Bulldog"
+ },
+ "german-pinscher": {
+  "file": "File:Bvdb-duitse pincher.jpg",
+  "artist": "Bonnie van den Born, http://www.bonfoto.nl",
+  "license": "CC BY-SA 3.0",
+  "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
+  "source": "https://commons.wikimedia.org/wiki/File:Bvdb-duitse_pincher.jpg",
+  "width": 330,
+  "height": 497,
+  "article": "German Pinscher"
  },
  "german-shepherd-dog": {
   "file": "File:German Shepherd - DSC 0346 (10096362833).jpg",
@@ -2029,6 +2099,16 @@
   "height": 747,
   "article": "Russian Toy"
  },
+ "russian-tsvetnaya-bolonka": {
+  "file": "File:RUSSKAYA TSVETNAYA BOLONKA, Rayskoe Sotsvetie Tsevtik (24264726856).jpg",
+  "artist": "Svenska Mässan from Sweden",
+  "license": "CC BY 2.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:RUSSKAYA_TSVETNAYA_BOLONKA,_Rayskoe_Sotsvetie_Tsevtik_(24264726856).jpg",
+  "width": 800,
+  "height": 533,
+  "article": "Bolonka"
+ },
  "saarloos-wolfdog": {
   "file": "File:Oishani Othari van Koekie's Ranch.jpg",
   "artist": "Claudia Schröder",
@@ -2329,6 +2409,16 @@
   "height": 532,
   "article": "Swedish Vallhund"
  },
+ "teddy-roosevelt-terrier": {
+  "file": "File:Teddyterrier.jpg",
+  "artist": "NinaB at English Wikipedia",
+  "license": "Public domain",
+  "licenseUrl": "",
+  "source": "https://commons.wikimedia.org/wiki/File:Teddyterrier.jpg",
+  "width": 281,
+  "height": 261,
+  "article": "Teddy Roosevelt Terrier"
+ },
  "thai-ridgeback": {
   "file": "File:Thai-Ridgeback.jpg",
   "artist": "HiSa Hiller, Schweiz",
@@ -2388,6 +2478,16 @@
   "width": 800,
   "height": 682,
   "article": "Toy Fox Terrier"
+ },
+ "toy-manchester-terrier": {
+  "file": "File:Toy manchesters lg.jpg",
+  "artist": "Kenneth R. Pergrem (krp)",
+  "license": "CC BY-SA 3.0",
+  "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
+  "source": "https://commons.wikimedia.org/wiki/File:Toy_manchesters_lg.jpg",
+  "width": 800,
+  "height": 485,
+  "article": "Toy Manchester Terrier"
  },
  "toy-poodle": {
   "file": "File:Toy Poodle in Riga 3.JPG",

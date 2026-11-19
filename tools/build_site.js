@@ -16,7 +16,7 @@ const { fs, path, ROOT, esc, avg, round, list, pct, aName, H, W, H1, W1, cm, inc
   SIZES, SIZE_INFO, GROUPS, groupUrl, groupLabel, sizeUrl, sizeWord, COUNTRIES, countryUrl, cabin, CABIN, CABIN_MAX_DOG,
   share, nearest, bodyLandmark, bodyUnits, MALE, FEMALE, COLORS, scene, markdown, frontMatter, crumbs, page,
   breedCard, breedGrid, toolLink, spanH, spanW, faqBlock, slug } = L;
-const { PAIRS_CURATED, GROUP_TEXT, COUNTRY_ADJ } = require("./site/content-data");
+const { PAIRS_CURATED, PAIRS_KEEP, GROUP_TEXT, COUNTRY_ADJ } = require("./site/content-data");
 const AIRLINES = require(path.join(ROOT, "content/airlines.json"));
 
 const OUT_DIRS = ["breeds", "compare", "sizes", "groups", "origins", "articles", "calculators", "about", "suggest-a-breed", "breed-finder"];
@@ -40,6 +40,7 @@ function addPair(a, b, curated) {
   PAIRS.push({ a: BY_ID[a], b: BY_ID[b], curated, url: `/compare/${a}-vs-${b}/` });
 }
 PAIRS_CURATED.forEach(([a, b]) => addPair(a, b, true));
+PAIRS_KEEP.forEach(([a, b]) => addPair(a, b, false));
 // every breed gets at least its closest same-group neighbour
 for (const b of BREEDS) {
   const [n] = nearest(b, 1, (x) => x.group === b.group);

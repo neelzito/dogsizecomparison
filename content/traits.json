@@ -255,5 +255,15 @@
  "sheepadoodle-standard": [2, 1, 3, 3, 3, 1],
  "schnoodle-miniature": [2, 1, 3, 3, 3, 3],
  "cavachon": [2, 1, 3, 3, 3, 3],
- "chiweenie": [2, 2, 1, 1, 2, 3]
+ "chiweenie": [2, 2, 1, 1, 2, 3],
+ "russian-tsvetnaya-bolonka": [2, 2, 2, 3, 3, 3],
+ "toy-manchester-terrier": [3, 1, 1, 2, 2, 3],
+ "cesky-terrier": [2, 1, 2, 3, 2, 3],
+ "american-hairless-terrier": [2, 1, 1, 3, 3, 3],
+ "teddy-roosevelt-terrier": [2, 2, 1, 3, 2, 3],
+ "barbet": [2, 1, 3, 2, 2, 1],
+ "american-english-coonhound": [3, 1, 1, 2, 2, 1],
+ "german-pinscher": [3, 2, 1, 2, 1, 1],
+ "danish-swedish-farmdog": [3, 1, 1, 3, 3, 2],
+ "belgian-laekenois": [3, 2, 1, 2, 1, 1]
 }

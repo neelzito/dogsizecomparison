@@ -100,6 +100,21 @@ const PAIRS_CURATED = [
   ["saluki", "sloughi"],
 ];
 
+// Automatic pairs (closest same-group neighbour) that a later breed addition displaced.
+// Kept so their /compare/ URLs stay live.
+const PAIRS_KEEP = [
+  ["affenpinscher", "japanese-chin"],
+  ["alaskan-klee-kai", "kai-ken"],
+  ["belgian-malinois", "belgian-sheepdog-groenendael"],
+  ["belgian-malinois", "berger-picard"],
+  ["bolognese", "miniature-pinscher"],
+  ["irish-red-and-white-setter", "wirehaired-pointing-griffon"],
+  ["kai-ken", "standard-schnauzer"],
+  ["miniature-bull-terrier", "sealyham-terrier"],
+  ["small-munsterlander", "wirehaired-pointing-griffon"],
+  ["vizsla", "wirehaired-pointing-griffon"],
+];
+
 const GROUP_TEXT = {
   Herding: "Bred to gather, drive and guard livestock, herding dogs are agile, quick to learn and often very energetic. The group runs from compact corgis and heelers to big shepherds.",
   Hound: "Bred to hunt by scent or by sight. Scent hounds like the Beagle and Bloodhound follow a trail with their nose; sighthounds like the Greyhound and Irish Wolfhound chase by sight and are built for speed.",
@@ -118,4 +133,4 @@ const COUNTRY_ADJ = {
   "United States": "American", Wales: "Welsh", Canada: "Canadian", Portugal: "Portuguese", Norway: "Norwegian",
 };
 
-module.exports = { PAIRS_CURATED, GROUP_TEXT, COUNTRY_ADJ };
+module.exports = { PAIRS_CURATED, PAIRS_KEEP, GROUP_TEXT, COUNTRY_ADJ };

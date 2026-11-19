@@ -42,6 +42,8 @@ window.BREED_ROWS = [
   ["German Spitz (Mittel)", "Non-Sporting", "Germany", "spitz", 30.5, 38, 30.5, 38, 6.8, 11.5, 6.8, 11.5, 13, 15],
   ["Löwchen", "Non-Sporting", "France/Germany", "longcoat", 30.5, 35.5, 30.5, 35.5, 6.8, 6.8, 6.8, 6.8, 13, 15],
 
+  ["Russian Tsvetnaya Bolonka", "Toy", "Russia", "longcoat", 28, 28, 28, 28, 2.7, 4.1, 2.7, 4.1, 14, 20],
+  ["Toy Manchester Terrier", "Toy", "England", "athletic", 25.5, 30.5, 25.5, 30.5, 2.7, 5.4, 2.7, 5.4, 15, 17, { ear: "prick" }],
   // ---------- Terrier ----------
   ["Jack Russell Terrier", "Terrier", "England", "terrier", 25, 30, 25, 30, 5, 6, 5, 6, 13, 16],
   ["Parson Russell Terrier", "Terrier", "England", "terrier", 35.5, 35.5, 33, 33, 5.9, 7.7, 5.9, 7.7, 13, 15],
@@ -77,6 +79,9 @@ window.BREED_ROWS = [
   ["Russell Terrier", "Terrier", "England", "terrier", 25.5, 30.5, 25.5, 30.5, 4.1, 6.8, 4.1, 6.8, 12, 14],
   ["Kromfohrländer", "Terrier", "Germany", "terrier", 38, 45.5, 38, 45.5, 9.1, 16, 9.1, 16, 13, 15, { tail: "curl" }],
 
+  ["Cesky Terrier", "Terrier", "Czech Republic", "lowterrier", 25.5, 33, 25.5, 33, 6.4, 10.9, 6.4, 10.9, 12, 15],
+  ["American Hairless Terrier", "Terrier", "United States", "terrier", 30.5, 40.5, 30.5, 40.5, 5.4, 12.7, 5.4, 12.7, 14, 16, { ear: "prick" }],
+  ["Teddy Roosevelt Terrier", "Terrier", "United States", "lowterrier", 20.5, 35.5, 20.5, 35.5, 3.6, 11.3, 3.6, 11.3, 14, 16, { ear: "semi", fluff: 0 }],
   // ---------- Sporting ----------
   ["Labrador Retriever", "Sporting", "Canada/UK", "retriever", 57, 62, 54.5, 59.5, 29.5, 36.5, 25, 32, 11, 13, { fluff: 0 , tail: "otter" }],
   ["Golden Retriever", "Sporting", "Scotland", "retriever", 58.5, 61, 54.5, 57, 29.5, 34, 25, 29.5, 10, 12],
@@ -115,6 +120,7 @@ window.BREED_ROWS = [
   ["Spanish Water Dog", "Herding", "Spain", "poodle", 44.5, 50, 40, 45.5, 18, 22, 14, 18, 12, 14],
   ["Portuguese Water Dog", "Working", "Portugal", "poodle", 51, 58.5, 43, 53.5, 19, 27, 16, 22.5, 11, 13],
 
+  ["Barbet", "Sporting", "France", "shaggy", 48.5, 62, 48.5, 62, 15.9, 29.5, 15.9, 29.5, 12, 14],
   // ---------- Hound ----------
   ["Beagle", "Hound", "England", "scenthound", 33, 38, 33, 38, 9.5, 13.5, 9, 13.5, 10, 15],
   ["Basset Hound", "Hound", "France", "basset", 33, 38, 28, 38, 18, 29.5, 18, 29.5, 12, 13],
@@ -162,6 +168,7 @@ window.BREED_ROWS = [
   ["Thai Ridgeback", "Hound", "Thailand", "primitive", 51, 61, 51, 61, 16, 34, 16, 34, 14, 15, { tail: "sickle" }],
   ["Bavarian Mountain Scent Hound", "Hound", "Germany", "scenthound", 43, 52, 43, 52, 17, 30, 17, 30, 12, 15, { tail: "low" }],
 
+  ["American English Coonhound", "Hound", "United States", "coonhound", 61, 66, 58.5, 63.5, 20.4, 29.5, 20.4, 29.5, 11, 12],
   // ---------- Working ----------
   ["Rottweiler", "Working", "Germany", "molosser", 61, 68.5, 56, 63.5, 43, 61, 36.5, 45.5, 9, 10],
   ["Doberman Pinscher", "Working", "Germany", "athletic", 66, 71, 61, 66, 34, 45.5, 27, 41, 10, 12],
@@ -205,6 +212,8 @@ window.BREED_ROWS = [
   ["Pyrenean Mastiff", "Working", "Spain", "mountain", 76, 78.5, 71, 76, 54.5, 86, 54.5, 86, 10, 12, { fluff: 0.06 }],
   ["Landseer (European)", "Working", "Germany/Switzerland", "mountain", 72, 80, 67, 72, 50, 70, 45, 60, 10, 12, { fluff: 0.08 }],
 
+  ["German Pinscher", "Working", "Germany", "athletic", 43, 51, 43, 51, 11.3, 20.4, 11.3, 20.4, 12, 14],
+  ["Danish-Swedish Farmdog", "Working", "Denmark/Sweden", "terrier", 32, 37, 32, 37, 6.8, 9.1, 6.8, 9.1, 11, 13, { ear: "semi" }],
   // ---------- Herding ----------
   ["German Shepherd Dog", "Herding", "Germany", "shepherd", 61, 66, 56, 61, 29.5, 41, 22.5, 32, 12, 14],
   ["Border Collie", "Herding", "England/Scotland", "collie", 48.5, 56, 45.5, 53.5, 13.5, 25, 13.5, 25, 12, 15],
@@ -245,6 +254,7 @@ window.BREED_ROWS = [
   ["Saarloos Wolfdog", "Herding", "Netherlands", "nordic", 65, 75, 60, 70, 36, 41, 30, 35, 10, 12, { tail: "down", legLen: 0.56 }],
   ["White Swiss Shepherd Dog", "Herding", "Switzerland", "shepherd", 60, 66, 55, 61, 30, 40, 25, 35, 12, 14, { slope: 0.02 }],
 
+  ["Belgian Laekenois", "Herding", "Belgium", "shepherd", 61, 66, 56, 61, 24.9, 29.5, 24.9, 29.5, 10, 12, { fluff: 0.05 }],
   // ---------- Non-Sporting ----------
   ["French Bulldog", "Non-Sporting", "France", "bulldog", 28, 33, 28, 33, 9, 12.5, 8, 12.5, 10, 12, { ear: "bat" }],
   ["Bulldog (English)", "Non-Sporting", "England", "bulldog", 35.5, 38, 35.5, 38, 22.5, 22.5, 18, 18, 8, 10],
@@ -294,6 +304,16 @@ window.BREED_ROWS = [
  * where a typical value is shown instead. "Typical" = no official standard exists.
  */
 window.BREED_SOURCES = {
+  "Russian Tsvetnaya Bolonka": {"src":"AKC"},
+  "Toy Manchester Terrier": {"src":"AKC","unverified":["male weight min","female weight min"],"note":"AKC: under 12 pounds. The lower figure is typical."},
+  "Cesky Terrier": {"src":"AKC"},
+  "American Hairless Terrier": {"src":"AKC"},
+  "Teddy Roosevelt Terrier": {"src":"AKC"},
+  "Barbet": {"src":"AKC"},
+  "American English Coonhound": {"src":"AKC"},
+  "German Pinscher": {"src":"AKC"},
+  "Danish-Swedish Farmdog": {"src":"AKC"},
+  "Belgian Laekenois": {"src":"AKC"},
   "Chihuahua": {"src":"AKC"},
   "Pomeranian": {"src":"AKC"},
   "Yorkshire Terrier": {"src":"AKC"},
@@ -557,6 +577,14 @@ window.BREED_SOURCES = {
  * Other names people search for. Shown on breed pages and matched by every search box.
  */
 window.BREED_ALIASES = {
+  "Russian Tsvetnaya Bolonka": ["Bolonka", "Tsvetnaya Bolonka", "Russian Colored Lapdog"],
+  "Toy Manchester Terrier": ["Manchester Terrier (Toy)"],
+  "Cesky Terrier": ["Bohemian Terrier", "Český teriér"],
+  "Barbet": ["French Water Dog"],
+  "American English Coonhound": ["English Coonhound", "Redtick Coonhound"],
+  "German Pinscher": ["Deutscher Pinscher"],
+  "Danish-Swedish Farmdog": ["Danish Farmdog", "Dansk-Svensk Gårdshund"],
+  "Belgian Laekenois": ["Laekenois", "Belgian Shepherd Laekenois"],
   "Vizsla": ["Magyar Vizsla", "Hungarian Vizsla", "Hungarian Pointer"],
   "Wirehaired Vizsla": ["Drótszőrű Magyar Vizsla", "Hungarian Wirehaired Vizsla"],
   "Ibizan Hound": ["Podenco Ibicenco"],
