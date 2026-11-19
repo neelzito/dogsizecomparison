@@ -1,6 +1,13 @@
 (function () {
   "use strict";
 
+  // ---------- language ----------
+  // The German page (/de/) loads js/i18n-de.js first, which sets window.I18N with
+  // German breed names, page URLs, group/size/origin names. UI text is inline: tx(en, de).
+  const I = window.I18N || null;
+  const DE = !!I;
+  const tx = (en, de) => (DE ? de : en);
+
   // ---------- data ----------
   const slug = (s) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
   const avg = (r) => (r[0] + r[1]) / 2;
@@ -14,19 +21,25 @@
       ov: r[14] || null,
     };
     b.id = slug(b.name);
+    b.dname = DE ? I.names[b.id] || b.name : b.name; // display name
     b.aliases = (window.BREED_ALIASES || {})[b.name] || [];
-    b.keys = [b.id, ...b.aliases.map(slug)];
+    if (DE && b.dname !== b.name) b.aliases = [b.name, ...b.aliases];
+    b.keys = [slug(b.dname), ...(DE ? [slug(b.dname.toLowerCase().replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").replace(/ß/g, "ss"))] : []), b.id, ...b.aliases.map(slug)];
     const w = (avg(b.m.w) + avg(b.f.w)) / 2;
     b.size = w < 5 ? "Toy" : w < 10 ? "Small" : w < 25 ? "Medium" : w < 45 ? "Large" : "Giant";
     b.hAvg = (avg(b.m.h) + avg(b.f.h)) / 2;
     b.wAvg = w;
     return b;
-  }).sort((a, b) => a.name.localeCompare(b.name));
+  }).sort((a, b) => a.dname.localeCompare(b.dname, DE ? "de" : "en"));
   const BY_ID = Object.fromEntries(BREEDS.map((b) => [b.id, b]));
   const matches = (b, q) => b.keys.some((k) => k.includes(q));
-  const aliasHit = (b, q) => (b.id.includes(q) ? "" : b.aliases.find((a) => slug(a).includes(q)) || "");
-  const breedUrl = (b) => `/breeds/${b.id}/`;
-  const infoLink = (b, cls = "info") => b.custom ? "" : `<a class="${cls}" href="${breedUrl(b)}" title="About the ${esc(b.name)}: sizes, facts and comparisons" aria-label="About the ${esc(b.name)}">i</a>`;
+  const aliasHit = (b, q) => (b.keys.slice(0, DE ? 2 : 1).some((k) => k.includes(q)) ? "" : b.aliases.find((a) => slug(a).includes(q)) || "");
+  const breedUrl = (b) => (DE ? I.urls[b.id] : `/breeds/${b.id}/`);
+  const aboutTitle = (b) => tx(`About the ${b.dname}`, `${b.dname}: Rasseporträt`);
+  const infoLink = (b, cls = "info") => b.custom ? "" : `<a class="${cls}" href="${breedUrl(b)}" title="${esc(tx(`About the ${b.dname}: sizes, facts and comparisons`, `${b.dname}: Größe, Fakten und Vergleiche`))}" aria-label="${esc(aboutTitle(b))}">i</a>`;
+  const sizeName = (s) => (DE ? I.sizes[s] : s);
+  const groupName = (g) => (DE ? I.groups[g] || g : g);
+  const originName = (o) => (DE ? I.origins[o] || o : o);
   const SIZES = ["Toy", "Small", "Medium", "Large", "Giant"];
   const GROUPS = [...new Set(BREEDS.map((b) => b.group))].sort();
   const COLORS = ["#c2562b", "#2f6db5", "#3d8b5a", "#8a4fbf", "#c9962a", "#1f8a8a", "#c2457a", "#6b6f2a", "#5b5bd6", "#8c5a3c"];
@@ -38,24 +51,30 @@
   const imageShape = (id) => {
     const [aspect, wy, wx] = DOG_IMAGES[id];
     const h = 1 / wy, w = aspect * h;
-    return { img: `img/dogs/web/${id}.webp`, minX: 0, maxX: w, maxY: h, withersX: wx * w };
+    return { img: `/img/dogs/web/${id}.webp`, minX: 0, maxX: w, maxY: h, withersX: wx * w };
   };
   const shapeCache = {};
 
   // ---------- your own dog ----------
   const MY_ID = "my-dog";
-  const MY_TYPES = [
+  const MY_TYPES = DE ? [
+    ["retriever", "Retriever / Labrador"], ["shepherd", "Schäferhund"], ["terrier", "Terrier"], ["spitz", "Spitz / Zwergspitz"],
+    ["toy", "Zwerghund / Chihuahua"], ["longcoat", "Langhaar / Shih Tzu"], ["poodle", "Pudel / Doodle"], ["spaniel", "Spaniel"],
+    ["scenthound", "Laufhund / Beagle"], ["sighthound", "Windhund / Whippet"], ["bully", "Bullrasse / Staffordshire"], ["brachy", "Mops / Französische Bulldogge"],
+    ["longlow", "Dackel"], ["corgi", "Corgi"], ["nordic", "Husky"], ["mountain", "Sennenhund"], ["mastiff", "Mastiff / Dogge"], ["shaggy", "Zottelig / Hütehund"],
+  ] : [
     ["retriever", "Retriever / Labrador"], ["shepherd", "Shepherd"], ["terrier", "Terrier"], ["spitz", "Spitz / Pomeranian"],
     ["toy", "Toy / Chihuahua"], ["longcoat", "Long coat / Shih Tzu"], ["poodle", "Poodle / doodle"], ["spaniel", "Spaniel"],
     ["scenthound", "Hound / Beagle"], ["sighthound", "Greyhound / Whippet"], ["bully", "Bull breed / Staffie"], ["brachy", "Pug / French Bulldog"],
     ["longlow", "Dachshund"], ["corgi", "Corgi"], ["nordic", "Husky"], ["mountain", "Mountain dog"], ["mastiff", "Mastiff"], ["shaggy", "Shaggy / sheepdog"],
   ];
+  const MY_DEFAULT = tx("My dog", "Mein Hund");
   function setMyDog(my) {
     delete shapeCache[MY_ID];
     if (!my) { delete BY_ID[MY_ID]; return; }
     const w = my.w;
     BY_ID[MY_ID] = {
-      id: MY_ID, name: my.name || "My dog", group: "Your dog", origin: "—", type: my.type, custom: true,
+      id: MY_ID, name: my.name || MY_DEFAULT, dname: my.name || MY_DEFAULT, group: tx("Your dog", "Dein Hund"), origin: "—", type: my.type, custom: true,
       m: { h: [my.h, my.h], w: [w, w] }, f: { h: [my.h, my.h], w: [w, w] }, life: null, ov: null,
       size: w < 5 ? "Toy" : w < 10 ? "Small" : w < 25 ? "Medium" : w < 45 ? "Large" : "Giant", hAvg: my.h, wAvg: w,
     };
@@ -76,28 +95,30 @@
   };
 
   const PRESETS = [
-    { label: "Smallest vs largest", ids: ["chihuahua", "irish-wolfhound", "mastiff-english", "dachshund-miniature"] },
-    { label: "Family favourites", ids: ["labrador-retriever", "golden-retriever", "french-bulldog", "beagle", "german-shepherd-dog"] },
-    { label: "Giants", ids: ["great-dane", "irish-wolfhound", "mastiff-english", "saint-bernard", "leonberger", "newfoundland"] },
-    { label: "Poodles & doodles", ids: ["toy-poodle", "miniature-poodle", "standard-poodle", "cockapoo", "labradoodle-standard", "bernedoodle-standard"] },
+    { label: tx("Smallest vs largest", "Klein gegen groß"), ids: ["chihuahua", "irish-wolfhound", "mastiff-english", "dachshund-miniature"] },
+    { label: tx("Family favourites", "Familienhunde"), ids: ["labrador-retriever", "golden-retriever", "french-bulldog", "beagle", "german-shepherd-dog"] },
+    { label: tx("Giants", "Riesen"), ids: ["great-dane", "irish-wolfhound", "mastiff-english", "saint-bernard", "leonberger", "newfoundland"] },
+    { label: tx("Poodles & doodles", "Pudel & Doodles"), ids: ["toy-poodle", "miniature-poodle", "standard-poodle", "cockapoo", "labradoodle-standard", "bernedoodle-standard"] },
   ];
 
   // ---------- units ----------
   const cm2in = (v) => v / 2.54;
   const kg2lb = (v) => v * 2.20462;
   const round = (v, d) => { const p = 10 ** d; return Math.round(v * p) / p; };
+  const nf = (v) => (DE ? String(v).replace(".", ",") : String(v));
   function fmtH(cm, withUnit = true) {
     const v = state.units === "metric" ? round(cm, cm < 20 ? 1 : 0) : round(cm2in(cm), 1);
-    return withUnit ? `${v} ${state.units === "metric" ? "cm" : "in"}` : `${v}`;
+    return withUnit ? `${nf(v)} ${state.units === "metric" ? "cm" : "in"}` : nf(v);
   }
   function fmtW(kg, withUnit = true) {
     const raw = state.units === "metric" ? kg : kg2lb(kg);
     const v = round(raw, raw < 10 ? 1 : 0);
-    return withUnit ? `${v} ${state.units === "metric" ? "kg" : "lb"}` : `${v}`;
+    return withUnit ? `${nf(v)} ${state.units === "metric" ? "kg" : "lb"}` : nf(v);
   }
   const fmtHR = (r) => (fmtH(r[0]) === fmtH(r[1]) ? fmtH(r[0]) : `${fmtH(r[0], false)}–${fmtH(r[1])}`);
   const fmtWR = (r) => (fmtW(r[0]) === fmtW(r[1]) ? fmtW(r[0]) : `${fmtW(r[0], false)}–${fmtW(r[1])}`);
-  const fmtLife = (r) => (!r ? "—" : r[0] === r[1] ? `${r[0]} yrs` : `${r[0]}–${r[1]} yrs`);
+  const yrs = tx("yrs", "J.");
+  const fmtLife = (r) => (!r ? "—" : r[0] === r[1] ? `${r[0]} ${yrs}` : `${r[0]}–${r[1]} ${yrs}`);
 
   // ---------- airplane cabin ----------
   // Strictest common airline rule: dog + carrier ≤ 8 kg (Lufthansa, KLM, Air France, Turkish Airlines).
@@ -112,26 +133,31 @@
     return m === "yes" && f === "yes" ? "yes" : m === "no" && f === "no" ? "no" : "some";
   }
   const CABIN_TEXT = {
-    yes: "✈ Cabin",
-    some: "✈ Some",
-    no: "Hold only",
+    yes: tx("✈ Cabin", "✈ Kabine"),
+    some: tx("✈ Some", "✈ Teils"),
+    no: tx("Hold only", "Nur Frachtraum"),
   };
-  const cabinTitle = (s) => ({
+  const cabinTitle = (s) => (DE ? {
+    yes: `Erfüllt die strenge Kabinenregel: Hund + Tasche ≤ ${CABIN.limitKg} kg (Hund bis etwa ${nf(CABIN_MAX_DOG)} kg).`,
+    some: `Nur leichtere Hunde passen unter die Kabinengrenze von ${CABIN.limitKg} kg (Hund + Tasche); schwerere fliegen im Frachtraum.`,
+    no: `Zu schwer für die Kabinengrenze von ${CABIN.limitKg} kg (Hund + Tasche); fliegt im Frachtraum.`,
+  } : {
     yes: `Fits the strict airline cabin rule: dog + carrier ≤ ${CABIN.limitKg} kg (dog up to about ${CABIN_MAX_DOG} kg).`,
     some: `Only lighter dogs fit the ${CABIN.limitKg} kg cabin limit (dog + carrier); heavier ones travel in the hold.`,
     no: `Too heavy for the ${CABIN.limitKg} kg cabin limit (dog + carrier); travels in the hold.`,
-  }[s]);
+  })[s];
 
   // ---------- sources ----------
   const SOURCES = window.BREED_SOURCES || {};
-  const SRC_LABEL = { AKC: "AKC", FCI: "FCI", UKC: "UKC", PTCA: "PTCA", RSCE: "RSCE (Spain)", Typical: "Typical (no standard)" };
+  const SRC_LABEL = { AKC: "AKC", FCI: "FCI", UKC: "UKC", PTCA: "PTCA", RSCE: tx("RSCE (Spain)", "RSCE (Spanien)"), Typical: tx("Typical (no standard)", "Typisch (kein Standard)") };
+  const FLAG_DE = { male: "Rüde", female: "Hündin", height: "Größe", weight: "Gewicht", min: "min.", max: "max." };
   function sourceInfo(b, sex) {
-    if (b.custom) return { label: "Your measurements", warn: false, notes: "" };
+    if (b.custom) return { label: tx("Your measurements", "Deine Maße"), warn: false, notes: "" };
     const s = SOURCES[b.name] || { src: "Unverified" };
     const flagged = (s.unverified || []).filter((f) => f.startsWith(sex === "m" ? "male" : "female"));
     const notes = [];
-    if (flagged.length) notes.push(`No official figure for: ${flagged.join(", ")} — typical value shown.`);
-    if (s.note) notes.push(s.note);
+    if (flagged.length) notes.push(DE ? `Kein offizieller Wert für: ${flagged.map((f) => f.split(" ").map((w) => FLAG_DE[w] || w).join(" ")).join(", ")}; typischer Wert angezeigt.` : `No official figure for: ${flagged.join(", ")} — typical value shown.`);
+    if (s.note) notes.push(DE ? `Hinweis der Quelle (englisch): ${s.note}` : s.note);
     return { label: SRC_LABEL[s.src] || s.src, warn: flagged.length > 0 || !!s.note || s.src === "Typical" || s.src === "Unverified", notes: notes.join(" ") };
   }
   const pick = (r) => (state.sizeMode === "min" ? r[0] : state.sizeMode === "max" ? r[1] : avg(r));
@@ -140,7 +166,7 @@
   const $ = (s) => document.querySelector(s);
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const sexSym = { m: "♂", f: "♀" };
-  const sexWord = { m: "Male", f: "Female" };
+  const sexWord = DE ? { m: "Rüde", f: "Hündin" } : { m: "Male", f: "Female" };
 
   function colorFor(i) { return COLORS[i % COLORS.length]; }
 
@@ -159,7 +185,7 @@
   function addBreed(id) {
     if (!BY_ID[id]) return;
     if (state.entries.some((e) => e.id === id)) return;
-    if (state.entries.length >= MAX) { toast(`You can compare up to ${MAX} breeds`); return; }
+    if (state.entries.length >= MAX) { toast(tx(`You can compare up to ${MAX} breeds`, `Du kannst bis zu ${MAX} Rassen vergleichen`)); return; }
     state.entries.push({ id, sex: state.defaultSex });
     update();
   }
@@ -198,7 +224,7 @@
     const its = items();
 
     if (!its.length && !state.human) {
-      el.innerHTML = `<svg viewBox="0 0 ${Wpx} ${Hpx}"><text class="empty-msg" x="${Wpx / 2}" y="${Hpx / 2}" text-anchor="middle">Add a breed to start comparing</text></svg>`;
+      el.innerHTML = `<svg viewBox="0 0 ${Wpx} ${Hpx}"><text class="empty-msg" x="${Wpx / 2}" y="${Hpx / 2}" text-anchor="middle">${tx("Add a breed to start comparing", "Füge eine Rasse hinzu, um zu vergleichen")}</text></svg>`;
       return;
     }
 
@@ -239,7 +265,7 @@
       const y = groundY - v * unitCm * k;
       const isTop = v + step > visibleUnits;
       if (v > 0) grid += `<line class="grid-line" x1="${padL - 6}" x2="${Wpx - padR}" y1="${y}" y2="${y}"/>`;
-      grid += `<text class="grid-label" x="${padL - 10}" y="${y + 4}" text-anchor="end">${round(v, 1)}</text>`;
+      grid += `<text class="grid-label" x="${padL - 10}" y="${y + 4}" text-anchor="end">${nf(round(v, 1))}</text>`;
       if (isTop) grid += `<text class="grid-label" x="${padL - 4}" y="${y - 6}" text-anchor="start">${metric ? "cm" : "in"}</text>`;
     }
 
@@ -253,14 +279,14 @@
       const centerX = x + o.wCm * k / 2;
       if (o.kind === "human") {
         body += `<g class="human" transform="translate(${ox} ${groundY}) scale(${s} ${-s})">${o.shape.markup}</g>`;
-        labels += `<text class="label-sub" x="${centerX}" y="${groundY + 18}" text-anchor="middle">Human · ${fmtH(o.hCm)}</text>`;
+        labels += `<text class="label-sub" x="${centerX}" y="${groundY + 18}" text-anchor="middle">${tx("Human", "Mensch")} · ${fmtH(o.hCm)}</text>`;
         labelSlots.push({ x: centerX, w: 100, row: 0 });
       } else {
         const it = o.it;
         const cls = `dog ${it.sex === "f" ? "female" : "male"}`;
         if (o.shape.img) {
           const iw = o.shape.maxX * s, ih = o.shape.maxY * s;
-          body += `<image class="${cls} dog-img" href="${o.shape.img}" x="${ox}" y="${groundY - ih}" width="${iw}" height="${ih}" preserveAspectRatio="none"><title>${esc(it.b.name)}</title></image>`;
+          body += `<image class="${cls} dog-img" href="${o.shape.img}" x="${ox}" y="${groundY - ih}" width="${iw}" height="${ih}" preserveAspectRatio="none"><title>${esc(it.b.dname)}</title></image>`;
           // colour key under the paws, matching the numbered badge
           body += `<line class="dog-key${it.sex === "f" ? " female" : ""}" x1="${ox + iw * 0.12}" x2="${ox + iw * 0.88}" y1="${groundY + 3}" y2="${groundY + 3}" stroke="${it.color}"/>`;
         } else {
@@ -284,7 +310,7 @@
         labels += `<circle cx="${centerX}" cy="${by}" r="9" fill="${it.color}"/><text class="badge-text" x="${centerX}" y="${by + 4}" text-anchor="middle">${it.idx + 1}</text>`;
 
         // ground labels, staggered when crowded
-        const name = it.b.name.length > 22 ? it.b.name.slice(0, 20) + "…" : it.b.name;
+        const name = it.b.dname.length > 22 ? it.b.dname.slice(0, 20) + "…" : it.b.dname;
         const estW = Math.max(name.length * 7.2 + 14, 80);
         const lx = Math.min(Math.max(centerX, estW / 2 + 4), Wpx - estW / 2 - 4);
         let row = 0;
@@ -292,7 +318,7 @@
         labelSlots.push({ x: lx, w: estW, row });
         const ly = groundY + 17 + row * 30;
         const nameText = `<text class="label-name" x="${lx}" y="${ly}" text-anchor="middle">${esc(name)}${it.b.custom ? "" : ` <tspan fill="${it.sex === "m" ? "var(--male)" : "var(--female)"}">${sexSym[it.sex]}</tspan>`}</text>`;
-        labels += it.b.custom ? nameText : `<a class="label-link" href="${breedUrl(it.b)}"><title>About the ${esc(it.b.name)}</title>${nameText}</a>`;
+        labels += it.b.custom ? nameText : `<a class="label-link" href="${breedUrl(it.b)}"><title>${esc(aboutTitle(it.b))}</title>${nameText}</a>`;
         labels += `<text class="label-sub" x="${lx}" y="${ly + 13}" text-anchor="middle">${fmtH(o.hCm)} · ${fmtW(pick(it.w))}</text>`;
       }
       x += o.wCm * k;
@@ -301,7 +327,7 @@
     const rows = labelSlots.length ? Math.max(...labelSlots.map((s) => s.row)) + 1 : 1;
     const totalH = groundY + 14 + rows * 30;
     el.innerHTML =
-      `<svg viewBox="0 0 ${Wpx} ${totalH}" role="img" aria-label="Dog size comparison drawn to scale">` +
+      `<svg viewBox="0 0 ${Wpx} ${totalH}" role="img" aria-label="${tx("Dog size comparison drawn to scale", "Hundegrößen maßstabsgetreu im Vergleich")}">` +
       grid +
       `<line class="ground" x1="${padL - 6}" x2="${Wpx - padR}" y1="${groundY}" y2="${groundY}"/>` +
       body + labels +
@@ -314,7 +340,7 @@
     const its = items();
     const hb = $("#height-bars"), wb = $("#weight-bars");
     if (!its.length) {
-      hb.innerHTML = wb.innerHTML = `<div class="empty">No breeds selected yet.</div>`;
+      hb.innerHTML = wb.innerHTML = `<div class="empty">${tx("No breeds selected yet.", "Noch keine Rassen ausgewählt.")}</div>`;
       return;
     }
     const maxH = Math.max(...its.map((i) => i.h[1])) * 1.28;
@@ -322,8 +348,8 @@
     const row = (it, r, max, fmt) => {
       const l = (r[0] / max) * 100, w = ((r[1] - r[0]) / max) * 100, a = (avg(r) / max) * 100;
       return `<div class="bar-row">
-        <div class="lbl"><span class="dot" style="background:${it.color}"></span><span>${esc(it.b.name)}${it.b.custom ? "" : ` <span class="sex-${it.sex}">${sexSym[it.sex]}</span>`}</span></div>
-        <div class="bar-track" title="${esc(it.b.name)} ${sexWord[it.sex]}: ${fmt(r)}">
+        <div class="lbl"><span class="dot" style="background:${it.color}"></span><span>${esc(it.b.dname)}${it.b.custom ? "" : ` <span class="sex-${it.sex}">${sexSym[it.sex]}</span>`}</span></div>
+        <div class="bar-track" title="${esc(it.b.dname)} ${sexWord[it.sex]}: ${fmt(r)}">
           <div class="bar-range" style="left:${l}%;width:${Math.max(w, 0.6)}%;background:${it.color}"></div>
           <div class="bar-avg" style="left:${a}%;background:${it.color}"></div>
           <div class="bar-val" style="left:${l + w}%">${fmt(r)}</div>
@@ -337,11 +363,15 @@
   function renderTable() {
     const its = items();
     const t = $("#data-table");
-    if (!its.length) { t.innerHTML = `<tbody><tr><td class="muted">Add breeds to see their measurements.</td></tr></tbody>`; return; }
+    if (!its.length) { t.innerHTML = `<tbody><tr><td class="muted">${tx("Add breeds to see their measurements.", "Füge Rassen hinzu, um ihre Maße zu sehen.")}</td></tr></tbody>`; return; }
     const ref = its[0];
     const hU = state.units === "metric" ? "cm" : "in";
     const wU = state.units === "metric" ? "kg" : "lb";
-    const head = `<thead><tr>
+    const head = DE ? `<thead><tr>
+      <th>#</th><th>Rasse</th><th>Geschlecht</th>
+      <th>Größe (Bereich)</th><th>Ø Größe</th><th>Gewicht (Bereich)</th><th>Ø Gewicht</th>
+      <th>Größe vs. Nr. 1</th><th>Gewicht vs. Nr. 1</th>
+      <th>Flugzeugkabine</th><th>Größenklasse</th><th>Gruppe</th><th>Herkunft</th><th>Lebenserwartung</th><th>Quelle</th></tr></thead>` : `<thead><tr>
       <th>#</th><th>Breed</th><th>Sex</th>
       <th>Height range</th><th>Avg height</th><th>Weight range</th><th>Avg weight</th>
       <th>Height vs #1</th><th>Weight vs #1</th>
@@ -352,21 +382,21 @@
       const same = it === ref;
       const tr = `<tr class="${it.idx !== prev && prev !== -1 ? "group-start" : ""}">
         <td><span class="dot" style="background:${it.color};display:inline-block"></span> ${it.idx + 1}</td>
-        <td class="breed">${it.b.custom ? esc(it.b.name) : `<a href="/breeds/${it.b.id}/">${esc(it.b.name)}</a>`}</td>
+        <td class="breed">${it.b.custom ? esc(it.b.dname) : `<a href="${breedUrl(it.b)}">${esc(it.b.dname)}</a>`}</td>
         <td class="sex-${it.sex}">${it.b.custom ? "—" : `${sexSym[it.sex]} ${sexWord[it.sex]}`}</td>
         <td>${fmtHR(it.h)}</td><td>${fmtH(avg(it.h))}</td>
         <td>${fmtWR(it.w)}</td><td>${fmtW(avg(it.w))}</td>
-        <td class="rel">${same ? "—" : round(hRel, 2) + "×"}</td>
-        <td class="rel">${same ? "—" : round(wRel, 2) + "×"}</td>
-        ${(() => { const c = cabinFor(it.w); return `<td><span class="cabin cabin-${c}" title="${esc(cabinTitle(c))}">${c === "yes" ? "✈ Yes" : c === "some" ? "✈ Lighter dogs" : "No (hold)"}</span></td>`; })()}
-        <td>${it.b.size}</td><td>${esc(it.b.group)}</td><td>${esc(it.b.origin)}</td>
+        <td class="rel">${same ? "—" : nf(round(hRel, 2)) + "×"}</td>
+        <td class="rel">${same ? "—" : nf(round(wRel, 2)) + "×"}</td>
+        ${(() => { const c = cabinFor(it.w); return `<td><span class="cabin cabin-${c}" title="${esc(cabinTitle(c))}">${c === "yes" ? tx("✈ Yes", "✈ Ja") : c === "some" ? tx("✈ Lighter dogs", "✈ Leichtere Hunde") : tx("No (hold)", "Nein (Frachtraum)")}</span></td>`; })()}
+        <td>${sizeName(it.b.size)}</td><td>${esc(groupName(it.b.group))}</td><td>${esc(originName(it.b.origin))}</td>
         <td>${fmtLife(it.b.life)}</td>
         ${(() => { const s = sourceInfo(it.b, it.sex); return `<td class="src${s.warn ? " warn" : ""}"${s.notes ? ` title="${esc(s.notes)}"` : ""}>${esc(s.label)}${s.warn ? " ⚠" : ""}</td>`; })()}</tr>`;
       prev = it.idx;
       return tr;
     }).join("");
     t.innerHTML = head + `<tbody>${rows}</tbody>` +
-      `<caption style="caption-side:bottom;text-align:left;padding-top:10px;color:var(--ink-3);font-size:12px">Heights in ${hU} at the withers, weights in ${wU}. “vs #1” compares averages to the first row. ⚠ = the source gives no exact figure for part of this row; hover for details.</caption>`;
+      `<caption style="caption-side:bottom;text-align:left;padding-top:10px;color:var(--ink-3);font-size:12px">${DE ? `Größen in ${hU} am Widerrist, Gewichte in ${wU}. „vs. Nr. 1“ vergleicht die Durchschnittswerte mit der ersten Zeile. ⚠ = die Quelle nennt für einen Teil dieser Zeile keinen genauen Wert; Details beim Darüberfahren.` : `Heights in ${hU} at the withers, weights in ${wU}. “vs #1” compares averages to the first row. ⚠ = the source gives no exact figure for part of this row; hover for details.`}</caption>`;
   }
 
   // ---------- insight ----------
@@ -378,30 +408,35 @@
     const big = byH[0], small = byH[byH.length - 1];
     const hx = avg(big.h) / avg(small.h);
     const wx = avg(big.w) / avg(small.w);
-    const n = (it) => `<strong>${it.b.custom ? esc(it.b.name) : `<a href="${breedUrl(it.b)}">${esc(it.b.name)}</a>`}</strong>${state.entries.length !== its.length || its.filter((x) => x.b === it.b).length > 1 ? ` (${sexWord[it.sex].toLowerCase()})` : ""}`;
-    el.innerHTML = `<span class="pill">An average ${n(big)} stands <strong>${round(hx, 1)}×</strong> as tall and weighs about <strong>${round(wx, 1)}×</strong> as much as an average ${n(small)}.</span>`;
+    const sexNote = (it) => (state.entries.length !== its.length || its.filter((x) => x.b === it.b).length > 1 ? ` (${DE ? sexWord[it.sex] : sexWord[it.sex].toLowerCase()})` : "");
+    const n = (it) => `<strong>${it.b.custom ? esc(it.b.dname) : `<a href="${breedUrl(it.b)}">${esc(it.b.dname)}</a>`}</strong>${sexNote(it)}`;
+    // German: "Der <a>Deutsche Schäferhund</a> ist im Schnitt …" (article + weak adjective form from i18n-de.js)
+    const nDe = (it, cap) => { if (it.b.custom) return n(it); const [art, weak] = I.der[it.b.id]; return `${cap ? art[0].toUpperCase() + art.slice(1) : art} <strong><a href="${breedUrl(it.b)}">${esc(weak)}</a></strong>${sexNote(it)}`; };
+    el.innerHTML = DE
+      ? `<span class="pill">${nDe(big, true)} ist im Schnitt <strong>${nf(round(hx, 1))}-mal</strong> so groß und etwa <strong>${nf(round(wx, 1))}-mal</strong> so schwer wie ${nDe(small, false)}.</span>`
+      : `<span class="pill">An average ${n(big)} stands <strong>${round(hx, 1)}×</strong> as tall and weighs about <strong>${round(wx, 1)}×</strong> as much as an average ${n(small)}.</span>`;
   }
 
   // ---------- chips ----------
   function renderChips() {
     const ul = $("#chips");
-    if (!state.entries.length) { ul.innerHTML = `<li class="empty">No breeds yet — search above, pick a preset, or browse the library below.</li>`; return; }
+    if (!state.entries.length) { ul.innerHTML = `<li class="empty">${tx("No breeds yet — search above, pick a preset, or browse the library below.", "Noch keine Rassen: Suche oben, wähle eine Vorauswahl oder stöbere unten in der Rassenliste.")}</li>`; return; }
     ul.innerHTML = state.entries.map((e, i) => {
       const b = BY_ID[e.id];
       const btn = (v, lbl, title) => `<button data-sex="${v}" aria-pressed="${e.sex === v}" title="${title}">${lbl}</button>`;
       return `<li class="chip" data-id="${e.id}">
         <span class="num" style="background:${colorFor(i)}">${i + 1}</span>
-        <span class="name" title="${esc(b.name)}">${esc(b.name)}</span>
+        <span class="name" title="${esc(b.dname)}">${esc(b.dname)}</span>
         ${infoLink(b)}
-        ${b.custom ? "" : `<span class="mini-seg">${btn("m", "♂", "Male")}${btn("f", "♀", "Female")}${btn("both", "♂♀", "Male and female")}</span>`}
-        <button class="x" aria-label="Remove ${esc(b.name)}">×</button></li>`;
+        ${b.custom ? "" : `<span class="mini-seg">${btn("m", "♂", sexWord.m)}${btn("f", "♀", sexWord.f)}${btn("both", "♂♀", tx("Male and female", "Rüde und Hündin"))}</span>`}
+        <button class="x" aria-label="${esc(tx(`Remove ${b.dname}`, `${b.dname} entfernen`))}">×</button></li>`;
     }).join("");
   }
 
   // ---------- library ----------
   function miniSvg(b) {
     const s = shapeOf(b);
-    if (s.img) return `<img class="lib-thumb" src="${s.img.replace("/web/", "/thumb/")}" alt="${esc(b.name)}" loading="lazy" decoding="async" width="64" height="44">`;
+    if (s.img) return `<img class="lib-thumb" src="${s.img.replace("/web/", "/thumb/")}" alt="${esc(b.dname)}" loading="lazy" decoding="async" width="64" height="44">`;
     const w = s.maxX - s.minX, h = s.maxY;
     return `<svg viewBox="${s.minX} ${-h} ${w} ${h}" preserveAspectRatio="xMidYMax meet" aria-hidden="true"><g transform="scale(1 -1)">${s.markup}</g></svg>`;
   }
@@ -409,25 +444,27 @@
   function renderLibrary() {
     const { q, group, size, sort, cabin } = state.lib;
     const qq = slug(q);
-    let list = BREEDS.filter((b) => (!qq || matches(b, qq) || slug(b.origin).includes(qq)) && (!group || b.group === group) && (!size || b.size === size)
+    let list = BREEDS.filter((b) => (!qq || matches(b, qq) || slug(b.origin).includes(qq) || (DE && slug(originName(b.origin)).includes(qq))) && (!group || b.group === group) && (!size || b.size === size)
       && (!cabin || (cabin === "yes" ? cabinBreed(b) === "yes" : cabinBreed(b) !== "no")));
     const cmp = {
-      name: (a, b) => a.name.localeCompare(b.name),
+      name: (a, b) => a.dname.localeCompare(b.dname, DE ? "de" : "en"),
       "h-desc": (a, b) => b.hAvg - a.hAvg, "h-asc": (a, b) => a.hAvg - b.hAvg,
       "w-desc": (a, b) => b.wAvg - a.wAvg, "w-asc": (a, b) => a.wAvg - b.wAvg,
     }[sort];
     list.sort(cmp);
-    $("#lib-count").textContent = `· ${list.length} of ${BREEDS.length}`;
+    $("#lib-count").textContent = `· ${list.length} ${tx("of", "von")} ${BREEDS.length}`;
     const sel = new Set(state.entries.map((e) => e.id));
     $("#lib-list").innerHTML = list.map((b) => `<div class="lib-cell">
       <button class="lib-item${sel.has(b.id) ? " selected" : ""}" data-id="${b.id}" aria-pressed="${sel.has(b.id)}">
         ${miniSvg(b)}
-        <span class="meta"><span class="nm" style="display:block">${esc(b.name)}${cabinBreed(b) !== "no" ? ` <span class="cabin cabin-${cabinBreed(b)}" title="${esc(cabinTitle(cabinBreed(b)))}">${CABIN_TEXT[cabinBreed(b)]}</span>` : ""}</span>
+        <span class="meta"><span class="nm" style="display:block">${esc(b.dname)}${cabinBreed(b) !== "no" ? ` <span class="cabin cabin-${cabinBreed(b)}" title="${esc(cabinTitle(cabinBreed(b)))}">${CABIN_TEXT[cabinBreed(b)]}</span>` : ""}</span>
         <span class="st" style="display:block">♂ ${fmtHR(b.m.h)} · ${fmtWR(b.m.w)}</span>
         <span class="st" style="display:block">♀ ${fmtHR(b.f.h)} · ${fmtWR(b.f.w)}</span></span>
         <span class="add">${sel.has(b.id) ? "✓" : "+"}</span>
-      </button>${infoLink(b, "info lib-info")}</div>`).join("") || `<p class="muted">No breeds match. <a href="/suggest-a-breed/${qq ? `?breed=${encodeURIComponent(q)}` : ""}">Suggest a breed →</a></p>`;
+      </button>${infoLink(b, "info lib-info")}</div>`).join("") || `<p class="muted">${tx("No breeds match.", "Keine Rasse gefunden.")} <a href="${SUGGEST_URL}${qq ? `?breed=${encodeURIComponent(q)}` : ""}">${tx("Suggest a breed →", "Rasse vorschlagen →")}</a></p>`;
   }
+
+  const SUGGEST_URL = tx("/suggest-a-breed/", "/de/rasse-vorschlagen/");
 
   // ---------- controls ----------
   function syncSeg(sel, val) {
@@ -461,7 +498,7 @@
     const p = new URLSearchParams(location.hash.slice(1));
     if (p.has("my")) {
       const [name, h, w, type] = p.get("my").split("~");
-      if (+h > 0 && +w > 0) { state.my = { name: (name || "My dog").slice(0, 24), h: Math.min(120, +h), w: Math.min(120, +w), type: MY_TYPES.some((t) => t[0] === type) ? type : "retriever" }; setMyDog(state.my); }
+      if (+h > 0 && +w > 0) { state.my = { name: (name || MY_DEFAULT).slice(0, 24), h: Math.min(120, +h), w: Math.min(120, +w), type: MY_TYPES.some((t) => t[0] === type) ? type : "retriever" }; setMyDog(state.my); }
     }
     if (p.has("b")) {
       state.entries = p.get("b").split(",").map((s) => { const [id, sex] = s.split(":"); return { id, sex: ["m", "f", "both"].includes(sex) ? sex : "m" }; })
@@ -493,8 +530,8 @@
     const close = () => { list.hidden = true; input.setAttribute("aria-expanded", "false"); };
     const draw = () => {
       const q = input.value.trim();
-      if (!results.length && q) { list.innerHTML = `<li class="no-match"><a href="/suggest-a-breed/?breed=${encodeURIComponent(q)}">No breed found. Suggest “${esc(q)}” →</a></li>`; list.hidden = false; return; }
-      list.innerHTML = results.map((b, i) => `<li role="option" data-id="${b.id}" aria-selected="${i === active}"><span>${esc(b.name)}${aliasHit(b, slug(input.value)) ? ` <em class="aka">(${esc(aliasHit(b, slug(input.value)))})</em>` : ""}</span><small>${b.size} · ${fmtHR([Math.min(b.m.h[0], b.f.h[0]), Math.max(b.m.h[1], b.f.h[1])])}</small></li>`).join("");
+      if (!results.length && q) { list.innerHTML = `<li class="no-match"><a href="${SUGGEST_URL}?breed=${encodeURIComponent(q)}">${DE ? `Keine Rasse gefunden. „${esc(q)}“ vorschlagen →` : `No breed found. Suggest “${esc(q)}” →`}</a></li>`; list.hidden = false; return; }
+      list.innerHTML = results.map((b, i) => `<li role="option" data-id="${b.id}" aria-selected="${i === active}"><span>${esc(b.dname)}${aliasHit(b, slug(input.value)) ? ` <em class="aka">(${esc(aliasHit(b, slug(input.value)))})</em>` : ""}</span><small>${sizeName(b.size)} · ${fmtHR([Math.min(b.m.h[0], b.f.h[0]), Math.max(b.m.h[1], b.f.h[1])])}</small></li>`).join("");
       list.hidden = !results.length;
     };
     input.addEventListener("input", () => {
@@ -502,7 +539,7 @@
       if (!q) { close(); return; }
       const starts = (b) => (b.keys.some((k) => k.startsWith(q)) ? 0 : 1);
       results = BREEDS.filter((b) => matches(b, q))
-        .sort((a, b) => starts(a) - starts(b) || a.name.localeCompare(b.name))
+        .sort((a, b) => starts(a) - starts(b) || a.dname.localeCompare(b.dname, DE ? "de" : "en"))
         .slice(0, 12);
       active = 0; draw();
     });
@@ -545,7 +582,7 @@
       const metric = state.units === "metric";
       const h = +form.elements.h.value, w = +form.elements.w.value;
       if (!(h > 0) || !(w > 0)) return;
-      state.my = { name: form.elements.name.value.trim().slice(0, 24) || "My dog", h: metric ? h : h * 2.54, w: metric ? w : w / 2.20462, type: form.elements.type.value };
+      state.my = { name: form.elements.name.value.trim().slice(0, 24) || MY_DEFAULT, h: metric ? h : h * 2.54, w: metric ? w : w / 2.20462, type: form.elements.type.value };
       setMyDog(state.my);
       if (!state.entries.some((x) => x.id === MY_ID)) {
         if (state.entries.length >= MAX) state.entries.pop();
@@ -591,17 +628,17 @@
     const ctx = canvas.getContext("2d");
     ctx.scale(scale, scale);
     ctx.fillStyle = v("--surface"); ctx.fillRect(0, 0, W, H + head + foot);
-    const names = [...new Set(items().map((it) => it.b.name))];
-    let title = names.join(" vs ");
-    if (title.length > 70) title = `${names.length} dog breeds compared`;
+    const names = [...new Set(items().map((it) => it.b.dname))];
+    let title = names.join(tx(" vs ", " vs. "));
+    if (title.length > 70) title = tx(`${names.length} dog breeds compared`, `${names.length} Hunderassen im Vergleich`);
     ctx.fillStyle = v("--ink"); ctx.font = `700 22px Fraunces, Georgia, serif`; ctx.fillText(title, 20, 36);
-    ctx.fillStyle = v("--ink-3"); ctx.font = `13px ${font}`; ctx.fillText(`Drawn to scale by height at the shoulder · ${state.units === "metric" ? "cm / kg" : "in / lb"}`, 20, 56);
+    ctx.fillStyle = v("--ink-3"); ctx.font = `13px ${font}`; ctx.fillText(`${tx("Drawn to scale by height at the shoulder", "Maßstabsgetreu nach Schulterhöhe")} · ${state.units === "metric" ? "cm / kg" : "in / lb"}`, 20, 56);
     ctx.drawImage(img, 0, head, W, H);
     ctx.fillStyle = v("--accent"); ctx.font = `600 13px ${font}`; ctx.textAlign = "right"; ctx.fillText("dogsizecomparison.com", W - 18, H + head + 22);
     URL.revokeObjectURL(url);
     return new Promise((res) => canvas.toBlob(res, "image/png"));
   }
-  const fileName = () => `dog-size-comparison-${state.entries.slice(0, 3).map((e) => e.id).join("-") || "chart"}.png`;
+  const fileName = () => `${tx("dog-size-comparison", "hundegroessen-vergleich")}-${state.entries.slice(0, 3).map((e) => e.id).join("-") || "chart"}.png`;
   function setupExport() {
     $("#dl-png").addEventListener("click", async () => {
       try {
@@ -610,24 +647,24 @@
         a.href = URL.createObjectURL(blob); a.download = fileName();
         document.body.appendChild(a); a.click(); a.remove();
         setTimeout(() => URL.revokeObjectURL(a.href), 2000);
-      } catch (err) { console.error(err); toast("Couldn't create the image"); }
+      } catch (err) { console.error(err); toast(tx("Couldn't create the image", "Bild konnte nicht erstellt werden")); }
     });
     const share = $("#share-png");
     try { share.hidden = !(navigator.canShare && navigator.canShare({ files: [new File([""], "a.png", { type: "image/png" })] })); } catch { share.hidden = true; }
     share.addEventListener("click", async () => {
       try {
         const blob = await renderPng();
-        await navigator.share({ files: [new File([blob], fileName(), { type: "image/png" })], title: "Dog size comparison", url: location.href });
-      } catch (err) { if (err.name !== "AbortError") toast("Sharing isn't available here"); }
+        await navigator.share({ files: [new File([blob], fileName(), { type: "image/png" })], title: tx("Dog size comparison", "Hundegrößen-Vergleich"), url: location.href });
+      } catch (err) { if (err.name !== "AbortError") toast(tx("Sharing isn't available here", "Teilen ist hier nicht verfügbar")); }
     });
   }
 
   // ---------- wire up ----------
   function init() {
     // filters
-    $("#lib-group").innerHTML = `<option value="">All groups</option>` + GROUPS.map((g) => `<option>${esc(g)}</option>`).join("");
-    $("#lib-size").innerHTML = [`<button data-v="" aria-pressed="true">All sizes</button>`, ...SIZES.map((s) => `<button data-v="${s}" aria-pressed="false">${s}</button>`)].join("");
-    $("#presets").innerHTML = PRESETS.map((p, i) => `<button data-i="${i}">${p.label}</button>`).join("") + `<button data-clear>Clear</button>`;
+    $("#lib-group").innerHTML = `<option value="">${tx("All groups", "Alle Gruppen")}</option>` + [...GROUPS].sort((a, b) => groupName(a).localeCompare(groupName(b), DE ? "de" : "en")).map((g) => `<option value="${esc(g)}">${esc(groupName(g))}</option>`).join("");
+    $("#lib-size").innerHTML = [`<button data-v="" aria-pressed="true">${tx("All sizes", "Alle Größen")}</button>`, ...SIZES.map((s) => `<button data-v="${s}" aria-pressed="false">${sizeName(s)}</button>`)].join("");
+    $("#presets").innerHTML = PRESETS.map((p, i) => `<button data-i="${i}">${p.label}</button>`).join("") + `<button data-clear>${tx("Clear", "Leeren")}</button>`;
 
     $("#presets").addEventListener("click", (e) => {
       const btn = e.target.closest("button"); if (!btn) return;
@@ -667,7 +704,9 @@
     $("#lib-group").addEventListener("change", (e) => { state.lib.group = e.target.value; renderLibrary(); });
     $("#lib-sort").addEventListener("change", (e) => { state.lib.sort = e.target.value; renderLibrary(); });
     $("#lib-cabin").addEventListener("change", (e) => { state.lib.cabin = e.target.value; renderLibrary(); });
-    $("#cabin-rule").textContent = `✈ Airplane friendly = dog + carrier within ${CABIN.limitKg} kg, the strictest common cabin limit (Lufthansa, KLM, Air France, Turkish Airlines). That leaves about ${CABIN_MAX_DOG} kg for the dog. “Some” means only lighter dogs of the breed fit. Rules vary by airline and route, so always check with yours.`;
+    $("#cabin-rule").textContent = DE
+      ? `✈ Flugzeugtauglich = Hund + Tasche höchstens ${CABIN.limitKg} kg, die strengste übliche Kabinengrenze (Lufthansa, KLM, Air France, Turkish Airlines). Für den Hund bleiben damit etwa ${nf(CABIN_MAX_DOG)} kg. „Teils“ heißt: Nur leichtere Hunde der Rasse passen. Die Regeln unterscheiden sich je nach Airline und Strecke, frag also immer bei deiner nach.`
+      : `✈ Airplane friendly = dog + carrier within ${CABIN.limitKg} kg, the strictest common cabin limit (Lufthansa, KLM, Air France, Turkish Airlines). That leaves about ${CABIN_MAX_DOG} kg for the dog. “Some” means only lighter dogs of the breed fit. Rules vary by airline and route, so always check with yours.`;
     $("#lib-size").addEventListener("click", (e) => {
       const b = e.target.closest("button"); if (!b) return;
       state.lib.size = b.dataset.v;
@@ -679,8 +718,8 @@
     });
 
     $("#copy-link").addEventListener("click", async () => {
-      try { await navigator.clipboard.writeText(location.href); toast("Link copied"); }
-      catch { toast("Copy the address bar to share"); }
+      try { await navigator.clipboard.writeText(location.href); toast(tx("Link copied", "Link kopiert")); }
+      catch { toast(tx("Copy the address bar to share", "Kopiere zum Teilen die Adresszeile")); }
     });
 
     setupQuickSearch();

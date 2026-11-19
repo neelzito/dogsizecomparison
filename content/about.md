@@ -45,6 +45,8 @@ Breed names are used for identification only. This site is not affiliated with o
 
 © MILIVON. All rights reserved. The text, the compiled data tables and the breed illustrations on this site are protected by copyright and may not be copied, republished or used to train or build other products without written permission. You're welcome to link to any page and to share images exported from the comparison tool with a link back to dogsizecomparison.com.
 
+This does not apply to the breed photos. They are by Wikimedia Commons contributors and remain under their own licences (CC BY, CC BY-SA, CC0 or public domain), so you may reuse them under those terms. Authors, licences and sources for every photo are listed on the [photo credits](/photo-credits/) page.
+
 ## Corrections
 
 Spotted a figure that doesn't match the current breed standard? Please let us know, with a link to the standard, and we'll update it.

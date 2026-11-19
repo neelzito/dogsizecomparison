@@ -1,13 +1,13 @@
 {
  "affenpinscher": {
-  "file": "File:Affenpinscher.jpg",
-  "artist": "Unknown author",
-  "license": "GPL",
-  "licenseUrl": "http://www.gnu.org/licenses/gpl.html",
-  "source": "https://commons.wikimedia.org/wiki/File:Affenpinscher.jpg",
-  "width": 537,
-  "height": 414,
-  "article": "Affenpinscher"
+  "file": "File:Affenmonkeyterrier1.jpg",
+  "artist": "Canarian",
+  "license": "CC BY-SA 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Affenmonkeyterrier1.jpg",
+  "width": 800,
+  "height": 763,
+  "article": null
  },
  "afghan-hound": {
   "file": "File:Afghan dog - cropped.jpg",
@@ -20,14 +20,14 @@
   "article": "Afghan Hound"
  },
  "airedale-terrier": {
-  "file": "File:Airedale Terrier.jpg",
-  "artist": "Unknown author",
-  "license": "Copyrighted free use",
-  "licenseUrl": "",
-  "source": "https://commons.wikimedia.org/wiki/File:Airedale_Terrier.jpg",
-  "width": 250,
-  "height": 205,
-  "article": "Airedale Terrier"
+  "file": "File:Airedale Terrier in stand.JPG",
+  "artist": "Томасина",
+  "license": "CC BY-SA 3.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Airedale_Terrier_in_stand.JPG",
+  "width": 800,
+  "height": 640,
+  "article": null
  },
  "akita-american": {
   "file": "File:Akita Americano v3.jpg",
@@ -80,14 +80,14 @@
   "article": "American Cocker Spaniel"
  },
  "american-english-coonhound": {
-  "file": "File:English Coonhound.jpg",
-  "artist": "Unknown author",
-  "license": "Public domain",
-  "licenseUrl": "",
-  "source": "https://commons.wikimedia.org/wiki/File:English_Coonhound.jpg",
-  "width": 267,
-  "height": 148,
-  "article": "American English Coonhound"
+  "file": "File:Stacked English Coonhound.jpg",
+  "artist": "Dchounds",
+  "license": "CC BY-SA 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Stacked_English_Coonhound.jpg",
+  "width": 800,
+  "height": 649,
+  "article": null
  },
  "american-eskimo-dog": {
   "file": "File:American Eskimo Dog 1.jpg",
@@ -220,14 +220,14 @@
   "article": "Azawakh"
  },
  "barbet": {
-  "file": "File:Chien de race Barbet.jpg",
-  "artist": "Unknown author",
-  "license": "Public domain",
-  "licenseUrl": "",
-  "source": "https://commons.wikimedia.org/wiki/File:Chien_de_race_Barbet.jpg",
-  "width": 312,
-  "height": 258,
-  "article": "Barbet (dog breed)"
+  "file": "File:Barbet suka 2009 pl.jpg",
+  "artist": "Pleple2000",
+  "license": "CC BY-SA 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Barbet_suka_2009_pl.jpg",
+  "width": 800,
+  "height": 578,
+  "article": null
  },
  "basenji": {
   "file": "File:Basenji Profile (loosercrop).jpg",
@@ -240,14 +240,14 @@
   "article": "Basenji"
  },
  "basset-fauve-de-bretagne": {
-  "file": "File:Basset Fauve de Bretagne 600.jpg",
-  "artist": "Unknown author",
-  "license": "CC BY-SA 3.0",
-  "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
-  "source": "https://commons.wikimedia.org/wiki/File:Basset_Fauve_de_Bretagne_600.jpg",
-  "width": 600,
-  "height": 400,
-  "article": "Basset Fauve de Bretagne"
+  "file": "File:Basset Fauve de Bretagne portrait.jpg",
+  "artist": "pc.david",
+  "license": "CC BY 2.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Basset_Fauve_de_Bretagne_portrait.jpg",
+  "width": 800,
+  "height": 600,
+  "article": null
  },
  "basset-hound": {
   "file": "File:BassetHound profil.jpg",
@@ -270,24 +270,24 @@
   "article": null
  },
  "beagle": {
-  "file": "File:Beagle 600.jpg",
-  "artist": "Unknown author",
-  "license": "CC BY-SA 3.0",
-  "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
-  "source": "https://commons.wikimedia.org/wiki/File:Beagle_600.jpg",
-  "width": 600,
-  "height": 480,
-  "article": "Beagle"
+  "file": "File:Beagle on a leash.jpg",
+  "artist": "Daniel Flathagen",
+  "license": "CC BY-SA 2.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Beagle_on_a_leash.jpg",
+  "width": 800,
+  "height": 548,
+  "article": null
  },
  "bearded-collie": {
-  "file": "File:Bearded Collie 600.jpg",
-  "artist": "Unknown author",
-  "license": "CC BY-SA 3.0",
-  "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
-  "source": "https://commons.wikimedia.org/wiki/File:Bearded_Collie_600.jpg",
-  "width": 500,
-  "height": 450,
-  "article": "Bearded Collie"
+  "file": "File:Bearded Collie portrait.jpg",
+  "artist": "John Haslam",
+  "license": "CC BY 2.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Bearded_Collie_portrait.jpg",
+  "width": 800,
+  "height": 533,
+  "article": null
  },
  "beauceron": {
   "file": "File:BeauceronStand.jpg",
@@ -310,13 +310,13 @@
   "article": "Bedlington Terrier"
  },
  "belgian-laekenois": {
-  "file": "File:Belgian Laekenois 600.jpg",
-  "artist": "Unknown author",
-  "license": "CC BY-SA 3.0",
-  "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
-  "source": "https://commons.wikimedia.org/wiki/File:Belgian_Laekenois_600.jpg",
-  "width": 500,
-  "height": 642,
+  "file": "File:Grupp1, BELGISK VALLHUND 7 LAEKEONIS, DK UCH EUW-15 NO UCH SE V-14 SE V-15 Roughrags Dazzling Delilah (23923778869).jpg",
+  "artist": "Svenska Mässan from Sweden",
+  "license": "CC BY 2.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Grupp1,_BELGISK_VALLHUND_7_LAEKEONIS,_DK_UCH_EUW-15_NO_UCH_SE_V-14_SE_V-15_Roughrags_Dazzling_Delilah_(23923778869).jpg",
+  "width": 800,
+  "height": 533,
   "article": null
  },
  "belgian-malinois": {
@@ -341,7 +341,7 @@
  },
  "belgian-tervuren": {
   "file": "File:Belgian Shepherd Tervuren.JPG",
-  "artist": "Original uploader was Kona at cs.wikipedia",
+  "artist": "Kona at cs.wikipedia",
   "license": "CC BY-SA 3.0",
   "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
   "source": "https://commons.wikimedia.org/wiki/File:Belgian_Shepherd_Tervuren.JPG",
@@ -431,7 +431,7 @@
  },
  "bloodhound": {
   "file": "File:Bloodhound Erland22.jpg",
-  "artist": "User:Erland22",
+  "artist": "Erland22",
   "license": "CC BY-SA 4.0",
   "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
   "source": "https://commons.wikimedia.org/wiki/File:Bloodhound_Erland22.jpg",
@@ -440,14 +440,14 @@
   "article": "Bloodhound"
  },
  "bluetick-coonhound": {
-  "file": "File:BluetickCoonhound.jpg",
-  "artist": "Unknown author",
-  "license": "Public domain",
-  "licenseUrl": "",
-  "source": "https://commons.wikimedia.org/wiki/File:BluetickCoonhound.jpg",
-  "width": 731,
-  "height": 599,
-  "article": "Bluetick Coonhound"
+  "file": "File:Bluetick Coonhound.jpg",
+  "artist": "bark",
+  "license": "CC BY 2.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Bluetick_Coonhound.jpg",
+  "width": 800,
+  "height": 536,
+  "article": null
  },
  "boerboel": {
   "file": "File:Boerboelmusta3.jpg",
@@ -470,24 +470,24 @@
   "article": "Bolognese (dog breed)"
  },
  "border-collie": {
-  "file": "File:Border Collie 600.jpg",
-  "artist": "Unknown author",
-  "license": "CC BY-SA 3.0",
-  "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
-  "source": "https://commons.wikimedia.org/wiki/File:Border_Collie_600.jpg",
-  "width": 600,
-  "height": 491,
-  "article": "Border Collie"
+  "file": "File:Border Collie Griff.jpg",
+  "artist": "Beth Loft, Sanday, Orkney, Scotland",
+  "license": "CC BY 2.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Border_Collie_Griff.jpg",
+  "width": 800,
+  "height": 534,
+  "article": null
  },
  "border-terrier": {
-  "file": "File:Border Terrier.jpg",
-  "artist": "Unknown author",
-  "license": "GPL",
-  "licenseUrl": "http://www.gnu.org/licenses/gpl.html",
-  "source": "https://commons.wikimedia.org/wiki/File:Border_Terrier.jpg",
-  "width": 573,
-  "height": 465,
-  "article": "Border Terrier"
+  "file": "File:Border Terrier Kamu.jpg",
+  "artist": "Petteri Sulonen from Helsinki, Finland",
+  "license": "CC BY 2.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Border_Terrier_Kamu.jpg",
+  "width": 800,
+  "height": 533,
+  "article": null
  },
  "borzoi": {
   "file": "File:Chart rosyjski borzoj rybnik-kamien pl.jpg",
@@ -590,14 +590,14 @@
   "article": "Bull Terrier"
  },
  "bulldog-english": {
-  "file": "File:Whitebulldog.jpg",
-  "artist": "Av3553 at English Wikipedia.",
-  "license": "GFDL",
-  "licenseUrl": "http://www.gnu.org/copyleft/fdl.html",
-  "source": "https://commons.wikimedia.org/wiki/File:Whitebulldog.jpg",
-  "width": 604,
-  "height": 453,
-  "article": "Bulldog"
+  "file": "File:AKC English Bulldog Great Falls June 2011.jpg",
+  "artist": "SheltieBoy",
+  "license": "CC BY 2.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:AKC_English_Bulldog_Great_Falls_June_2011.jpg",
+  "width": 800,
+  "height": 676,
+  "article": null
  },
  "bullmastiff": {
   "file": "File:Bullmastiff edited.JPG",
@@ -731,7 +731,7 @@
  },
  "chihuahua": {
   "file": "File:Chihuahua1 bvdb.jpg",
-  "artist": "Bonnie van den Born, http://www.bonfoto.nl. The original uploader was Cwazi a…",
+  "artist": "Bonnie van den Born, http://www.bonfoto.nl",
   "license": "CC BY-SA 3.0",
   "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
   "source": "https://commons.wikimedia.org/wiki/File:Chihuahua1_bvdb.jpg",
@@ -760,14 +760,14 @@
   "article": "Shar Pei"
  },
  "chinook": {
-  "file": "File:Mountan Laurel Ajax the Chinook dog.jpg",
-  "artist": "Unknown author",
-  "license": "Copyrighted free use",
-  "licenseUrl": "",
-  "source": "https://commons.wikimedia.org/wiki/File:Mountan_Laurel_Ajax_the_Chinook_dog.jpg",
-  "width": 250,
-  "height": 171,
-  "article": "Chinook (dog breed)"
+  "file": "File:Chinook Olympics 07 020.jpg",
+  "artist": "jude",
+  "license": "CC BY 2.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Chinook_Olympics_07_020.jpg",
+  "width": 800,
+  "height": 699,
+  "article": null
  },
  "chiweenie": {
   "file": "File:Chihuachshund.jpg",
@@ -810,14 +810,14 @@
   "article": "Clumber Spaniel"
  },
  "cockapoo": {
-  "file": "File:Cockapoo apricot standing.jpg",
-  "artist": "No machine-readable author provided. BetacommandBot assumed (based on copyrig…",
+  "file": "File:A 2-years-old Cockapoo.jpg",
+  "artist": "LinkIII",
   "license": "CC BY 2.5",
   "licenseUrl": "https://creativecommons.org/licenses/by/2.5",
-  "source": "https://commons.wikimedia.org/wiki/File:Cockapoo_apricot_standing.jpg",
-  "width": 512,
-  "height": 447,
-  "article": "Cockapoo"
+  "source": "https://commons.wikimedia.org/wiki/File:A_2-years-old_Cockapoo.jpg",
+  "width": 800,
+  "height": 594,
+  "article": null
  },
  "coton-de-tulear": {
   "file": "File:Coton de Tular 1.jpg",
@@ -830,14 +830,14 @@
   "article": "Coton de Tulear"
  },
  "curly-coated-retriever": {
-  "file": "File:Curly Coated Retriever.jpg",
-  "artist": "Unknown author",
-  "license": "CC BY-SA 3.0",
-  "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
-  "source": "https://commons.wikimedia.org/wiki/File:Curly_Coated_Retriever.jpg",
-  "width": 617,
-  "height": 439,
-  "article": "Curly-coated Retriever"
+  "file": "File:Curly coated retriever 4.jpg",
+  "artist": "Mattias Agar",
+  "license": "CC BY-SA 2.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Curly_coated_retriever_4.jpg",
+  "width": 800,
+  "height": 533,
+  "article": null
  },
  "czechoslovakian-wolfdog": {
   "file": "File:Czechoslovakian-wolfdog-profile big.jpg",
@@ -900,14 +900,14 @@
   "article": "Danish–Swedish Farmdog"
  },
  "doberman-pinscher": {
-  "file": "File:Dobermann handling.jpg",
-  "artist": "Miroslav Cacik",
-  "license": "Copyrighted free use",
-  "licenseUrl": "",
-  "source": "https://commons.wikimedia.org/wiki/File:Dobermann_handling.jpg",
+  "file": "File:Dobermann in Tallinn 2.JPG",
+  "artist": "Томасина",
+  "license": "CC BY-SA 3.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Dobermann_in_Tallinn_2.JPG",
   "width": 800,
-  "height": 533,
-  "article": "Dobermann"
+  "height": 578,
+  "article": null
  },
  "dogo-argentino": {
   "file": "File:Argentine Dogo (535032632) (cropped).jpg",
@@ -1040,14 +1040,14 @@
   "article": "Finnish Lapphund"
  },
  "finnish-spitz": {
-  "file": "File:Finnish Spitz 600.jpg",
-  "artist": "Unknown author",
+  "file": "File:FSpitz dogshow.jpg",
+  "artist": "Karelka-layka",
   "license": "CC BY-SA 3.0",
-  "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
-  "source": "https://commons.wikimedia.org/wiki/File:Finnish_Spitz_600.jpg",
-  "width": 600,
-  "height": 600,
-  "article": "Finnish Spitz"
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:FSpitz_dogshow.jpg",
+  "width": 800,
+  "height": 728,
+  "article": null
  },
  "flat-coated-retriever": {
   "file": "File:Flat Coated Retriever - black.jpg",
@@ -1100,14 +1100,14 @@
   "article": "German Shorthaired Pointer"
  },
  "german-spitz-mittel": {
-  "file": "File:Goldilocks.gif",
-  "artist": "Diane Armstrong",
-  "license": "FAL",
-  "licenseUrl": "http://artlibre.org/licence/lal/en",
-  "source": "https://commons.wikimedia.org/wiki/File:Goldilocks.gif",
-  "width": 352,
-  "height": 316,
-  "article": "German Spitz"
+  "file": "File:German spitz (Mittel).jpg",
+  "artist": "Balano",
+  "license": "CC BY-SA 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:German_spitz_(Mittel).jpg",
+  "width": 800,
+  "height": 642,
+  "article": null
  },
  "german-wirehaired-pointer": {
   "file": "File:Dan vom hardenberg (cropped).jpg",
@@ -1160,14 +1160,14 @@
   "article": "Goldendoodle"
  },
  "gordon-setter": {
-  "file": "File:Orrvilas enska w800px.jpg",
-  "artist": "Unknown author",
-  "license": "CC BY-SA 3.0",
-  "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
-  "source": "https://commons.wikimedia.org/wiki/File:Orrvilas_enska_w800px.jpg",
+  "file": "File:Seter szkocki 1.jpg",
+  "artist": "Radosław Drożdżewski (Zwiadowca21)",
+  "license": "CC BY 3.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Seter_szkocki_1.jpg",
   "width": 800,
-  "height": 642,
-  "article": "Gordon Setter"
+  "height": 593,
+  "article": null
  },
  "grand-basset-griffon-vendeen": {
   "file": "File:GrandBassettGriffonVendéen.jpg",
@@ -1420,14 +1420,14 @@
   "article": "Korean Jindo"
  },
  "kromfohrlander": {
-  "file": "File:Kromfohrlaender glatt.jpg",
-  "artist": "Unknown author",
-  "license": "CC BY-SA 3.0",
-  "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
-  "source": "https://commons.wikimedia.org/wiki/File:Kromfohrlaender_glatt.jpg",
-  "width": 700,
-  "height": 492,
-  "article": "Kromfohrländer"
+  "file": "File:Kromfohrländer Glatthaar (cropped).jpg",
+  "artist": "Krominchen",
+  "license": "CC BY-SA 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Kromfohrl%C3%A4nder_Glatthaar_(cropped).jpg",
+  "width": 800,
+  "height": 600,
+  "article": null
  },
  "kuvasz": {
   "file": "File:Kuvasz named Kan.jpg",
@@ -1490,14 +1490,14 @@
   "article": "Lancashire Heeler"
  },
  "landseer-european": {
-  "file": "File:Landseer.jpg",
-  "artist": "Unknown author",
+  "file": "File:Al25102008.jpg",
+  "artist": "Sven Mildner, Freiberg",
   "license": "CC BY-SA 3.0",
   "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
-  "source": "https://commons.wikimedia.org/wiki/File:Landseer.jpg",
+  "source": "https://commons.wikimedia.org/wiki/File:Al25102008.jpg",
   "width": 800,
-  "height": 600,
-  "article": "Landseer (dog breed)"
+  "height": 534,
+  "article": null
  },
  "large-munsterlander": {
   "file": "File:GrosserMuensterlaender.jpg",
@@ -1560,14 +1560,14 @@
   "article": null
  },
  "manchester-terrier": {
-  "file": "File:Mancherster Terrier.jpg",
-  "artist": "Unknown author",
-  "license": "GPL",
-  "licenseUrl": "http://www.gnu.org/licenses/gpl.html",
-  "source": "https://commons.wikimedia.org/wiki/File:Mancherster_Terrier.jpg",
-  "width": 600,
-  "height": 522,
-  "article": "Manchester Terrier"
+  "file": "File:Anchor, the Manchester Terrier0.jpg",
+  "artist": "Roger Ahlbrand",
+  "license": "CC BY 2.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Anchor,_the_Manchester_Terrier0.jpg",
+  "width": 800,
+  "height": 539,
+  "article": null
  },
  "maneto": {
   "file": "File:Maneto1.jpg",
@@ -1660,14 +1660,14 @@
   "article": "Neapolitan Mastiff"
  },
  "nederlandse-kooikerhondje": {
-  "file": "File:Kooiker03.jpg",
-  "artist": "Unknown author",
-  "license": "CC BY 2.5",
-  "licenseUrl": "https://creativecommons.org/licenses/by/2.5",
-  "source": "https://commons.wikimedia.org/wiki/File:Kooiker03.jpg",
-  "width": 740,
-  "height": 586,
-  "article": "Kooikerhondje"
+  "file": "File:Płochacz holenderski (kooikerhondje) 6.jpg",
+  "artist": "Pleple2000",
+  "license": "CC BY-SA 3.0",
+  "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
+  "source": "https://commons.wikimedia.org/wiki/File:P%C5%82ochacz_holenderski_(kooikerhondje)_6.jpg",
+  "width": 800,
+  "height": 722,
+  "article": null
  },
  "newfoundland": {
   "file": "File:Newfoundland dog Smoky.jpg",
@@ -1690,14 +1690,14 @@
   "article": "Norfolk Terrier"
  },
  "norwegian-buhund": {
-  "file": "File:Norwegian Buhund 600.jpg",
-  "artist": "Unknown author",
-  "license": "CC BY-SA 3.0",
-  "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
-  "source": "https://commons.wikimedia.org/wiki/File:Norwegian_Buhund_600.jpg",
-  "width": 600,
-  "height": 600,
-  "article": "Norwegian Buhund"
+  "file": "File:Grupp 5NORSK BUHUND, C.I.B. JWW-08 NORD UCH SE V-10 VDH CH Gnipagrottans Gullan Lilltösen (23661375943).jpg",
+  "artist": "Svenska Mässan from Sweden",
+  "license": "CC BY 2.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Grupp_5NORSK_BUHUND,_C.I.B._JWW-08_NORD_UCH_SE_V-10_VDH_CH_Gnipagrottans_Gullan_Lillt%C3%B6sen_(23661375943).jpg",
+  "width": 800,
+  "height": 533,
+  "article": null
  },
  "norwegian-elkhound": {
   "file": "File:Elkhound2020 (cropped).jpg",
@@ -1751,7 +1751,7 @@
  },
  "otterhound": {
   "file": "File:Two otterhounds.jpg",
-  "artist": "No machine-readable author provided. Machinecha~commonswiki assumed (based on…",
+  "artist": "Machinecha",
   "license": "Public domain",
   "licenseUrl": "",
   "source": "https://commons.wikimedia.org/wiki/File:Two_otterhounds.jpg",
@@ -1861,7 +1861,7 @@
  },
  "podenco-andaluz-small": {
   "file": "File:Podenco chico resized.jpg",
-  "artist": "User:Brindis320, User:Cú Faoil",
+  "artist": "Brindis320, Cú Faoil",
   "license": "Public domain",
   "licenseUrl": "",
   "source": "https://commons.wikimedia.org/wiki/File:Podenco_chico_resized.jpg",
@@ -1991,7 +1991,7 @@
  },
  "puli": {
   "file": "File:PuliBlack wb.jpg",
-  "artist": "Original uploader was Elf at en.wikipedia",
+  "artist": "Elf at en.wikipedia",
   "license": "CC BY-SA 3.0",
   "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
   "source": "https://commons.wikimedia.org/wiki/File:PuliBlack_wb.jpg",
@@ -2001,7 +2001,7 @@
  },
  "pumi": {
   "file": "File:Pumi 2.jpg",
-  "artist": "No machine-readable author provided. Caronna assumed (based on copyright clai…",
+  "artist": "Caronna",
   "license": "CC BY-SA 3.0",
   "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
   "source": "https://commons.wikimedia.org/wiki/File:Pumi_2.jpg",
@@ -2021,7 +2021,7 @@
  },
  "pyrenean-shepherd": {
   "file": "File:Berger-des-Pyrenees Ellea 800x600.jpg",
-  "artist": "No machine-readable author provided. KeJa~commonswiki assumed (based on copyr…",
+  "artist": "KeJa",
   "license": "CC BY-SA 3.0",
   "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
   "source": "https://commons.wikimedia.org/wiki/File:Berger-des-Pyrenees_Ellea_800x600.jpg",
@@ -2081,7 +2081,7 @@
  },
  "russell-terrier": {
   "file": "File:FCI JRT.jpg",
-  "artist": "The original uploader was Russellsterrier at English Wikipedia.",
+  "artist": "Russellsterrier at English Wikipedia",
   "license": "Public domain",
   "licenseUrl": "",
   "source": "https://commons.wikimedia.org/wiki/File:FCI_JRT.jpg",
@@ -2090,14 +2090,14 @@
   "article": "Russell Terrier"
  },
  "russian-toy": {
-  "file": "File:RusskiyToyWelpe9Mon.JPG",
-  "artist": "Unknown author",
-  "license": "Public domain",
-  "licenseUrl": "",
-  "source": "https://commons.wikimedia.org/wiki/File:RusskiyToyWelpe9Mon.JPG",
-  "width": 766,
-  "height": 747,
-  "article": "Russian Toy"
+  "file": "File:Grupp 9, RUSSKIY TOY, KORTHÅRIG, Superroyal Super Star (24014622830).jpg",
+  "artist": "Svenska Mässan from Sweden",
+  "license": "CC BY 2.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Grupp_9,_RUSSKIY_TOY,_KORTH%C3%85RIG,_Superroyal_Super_Star_(24014622830).jpg",
+  "width": 800,
+  "height": 533,
+  "article": null
  },
  "russian-tsvetnaya-bolonka": {
   "file": "File:RUSSKAYA TSVETNAYA BOLONKA, Rayskoe Sotsvetie Tsevtik (24264726856).jpg",
@@ -2141,7 +2141,7 @@
  },
  "samoyed": {
   "file": "File:Samojed00.jpg",
-  "artist": "No machine-readable author provided. Pleple2000 assumed (based on copyright c…",
+  "artist": "Pleple2000",
   "license": "CC BY-SA 3.0",
   "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
   "source": "https://commons.wikimedia.org/wiki/File:Samojed00.jpg",
@@ -2151,7 +2151,7 @@
  },
  "schipperke": {
   "file": "File:Schipperke0001.jpg",
-  "artist": "No machine-readable author provided. 鏑木對馬守 assumed (based on copyright claims).",
+  "artist": "鏑木對馬守",
   "license": "Public domain",
   "licenseUrl": "",
   "source": "https://commons.wikimedia.org/wiki/File:Schipperke0001.jpg",
@@ -2341,7 +2341,7 @@
  },
  "spanish-water-dog": {
   "file": "File:Perro agua (cropped).jpg",
-  "artist": "No machine-readable author provided. Brindis320~commonswiki assumed (based on…",
+  "artist": "Brindis320",
   "license": "Public domain",
   "licenseUrl": "",
   "source": "https://commons.wikimedia.org/wiki/File:Perro_agua_(cropped).jpg",
@@ -2441,7 +2441,7 @@
  },
  "tibetan-spaniel": {
   "file": "File:Tibetansk spaniel.jpg",
-  "artist": "No machine-readable author provided. Wolfman1 assumed (based on copyright cla…",
+  "artist": "Wolfman1",
   "license": "CC BY-SA 3.0",
   "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
   "source": "https://commons.wikimedia.org/wiki/File:Tibetansk_spaniel.jpg",
