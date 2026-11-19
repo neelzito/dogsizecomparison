@@ -606,7 +606,7 @@ ${L.posterCards(L.GROUP_KEYS.map((k) => k + "De"), "de")}
 <section class="card prose prose-wide"><h2>Teilen und drucken</h2>
 <p>Du darfst die Poster gern für zu Hause, die Schule oder den Verein ausdrucken und in Foren, Gruppen und sozialen Netzwerken teilen. Bitte lass den Hinweis auf dem Poster stehen und verlinke nach Möglichkeit auf dogsizecomparison.com. Für eine kommerzielle Nutzung <a href="https://github.com/${REPO}/issues">frag uns bitte vorher</a>.</p>
 <p>Die Größen sind die Widerristhöhen (höchster Punkt der Schulter) laut Rassestandard. Einzelne Hunde können größer oder kleiner sein. Woher die Zahlen stammen, steht unter <a href="/de/ueber-die-daten/">Über die Daten</a>.</p></section>`;
-    emit(url, page({ url, title: "Hundegrößen-Poster: Podencos, Rassegruppen und AKC-Rassen maßstabsgetreu", description: "Kostenlose Poster zum Ausdrucken: alle Podencos, Terrier, Windhunde, Hütehunde, Jagdhunde und weitere Rassegruppen sowie alle AKC-Rassen, maßstabsgetreu.", body, ld: [cr.ld] }), 0.5, L.POSTERS_URL.en);
+    emit(url, page({ url, current: url, title: "Hundegrößen-Poster: Podencos, Rassegruppen und AKC-Rassen maßstabsgetreu", description: "Kostenlose Poster zum Ausdrucken: alle Podencos, Terrier, Windhunde, Hütehunde, Jagdhunde und weitere Rassegruppen sowie alle AKC-Rassen, maßstabsgetreu.", body, ld: [cr.ld] }), 0.5, L.POSTERS_URL.en);
   }
 
   // ======================================================================
