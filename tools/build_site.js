@@ -626,7 +626,7 @@ ${L.posterCards(L.GROUP_KEYS.map((k) => k + "En"), "en")}
 <section class="card prose prose-wide"><h2>Sharing and printing</h2>
 <p>You're welcome to print these posters for your home, school or club, and to share them in forums, groups and on social media. Please keep the credit line on the poster, and link to dogsizecomparison.com where you can. For commercial use, please <a href="https://github.com/${REPO}/issues">ask us first</a>.</p>
 <p>The heights are the breed-standard heights at the withers (the top of the shoulder). Individual dogs can be bigger or smaller. See <a href="/about/">about the data</a> for where the figures come from.</p></section>`;
-  emit(url, page({ url, title: "Dog Size Posters: AKC Breeds, Breed Groups and Podencos, to Scale", description: "Free printable posters of dog breeds drawn to scale: every AKC-recognised breed, terriers, sighthounds, herding dogs, gun dogs and more, and every podenco.", body, ld: [cr.ld] }), 0.5);
+  emit(url, page({ url, current: url, title: "Dog Size Posters: AKC Breeds, Breed Groups and Podencos, to Scale", description: "Free printable posters of dog breeds drawn to scale: every AKC-recognised breed, terriers, sighthounds, herding dogs, gun dogs and more, and every podenco.", body, ld: [cr.ld] }), 0.5);
 }
 
 // ======================================================================

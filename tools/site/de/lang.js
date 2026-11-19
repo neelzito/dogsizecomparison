@@ -192,6 +192,7 @@ const NAV = [
   ["/de/vergleich/", "Vergleiche"],
   ["/de/rechner/", "Rechner"],
   ["/de/ratgeber/", "Ratgeber"],
+  ["/de/poster/", "Poster"],
 ];
 const BRAND_SVG = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 10a2 2 0 1 1 0-4 2 2 0 0 1 0 4Zm4-3.5a2 2 0 1 1 0-4 2 2 0 0 1 0 4Zm7 0a2 2 0 1 1 0-4 2 2 0 0 1 0 4Zm4 3.5a2 2 0 1 1 0-4 2 2 0 0 1 0 4ZM12 11c2.6 0 6 3.6 6 6.4 0 2-1.5 2.9-3 2.9-1.2 0-1.9-.6-3-.6s-1.8.6-3 .6c-1.5 0-3-.9-3-2.9C6 14.6 9.4 11 12 11Z"/></svg>`;
 function topbar(current = "") {

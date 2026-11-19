@@ -305,6 +305,7 @@ const NAV = [
   ["/compare/", "Comparisons"],
   ["/calculators/", "Calculators"],
   ["/articles/", "Articles"],
+  ["/posters/", "Posters"],
 ];
 function topbar(current = "") {
   return `<header class="topbar"><div class="wrap topbar-in">
