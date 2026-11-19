@@ -16,7 +16,7 @@ tools/withers_overrides.json can set {id: {"y": .., "x": ..}} fractions by hand.
 
 Needs Pillow, numpy and scipy:  python3 tools/process_images.py [id ...]
 """
-import json, os, sys
+import json, os, re, sys
 import numpy as np
 from PIL import Image
 from scipy import ndimage
@@ -112,7 +112,8 @@ def main():
     data = {}
     if os.path.exists(js_path) and [x for x in sys.argv[1:] if not x.startswith("--")]:
         txt = open(js_path).read()
-        data = json.loads(txt[txt.index("{"):txt.rindex("}") + 1])
+        obj = txt[txt.index("{"):txt.rindex("}") + 1]
+        data = json.loads(re.sub(r",\s*}$", "}", obj))  # tolerate a trailing comma (valid JS, not JSON)
     measure_only = "--measure-only" in sys.argv
     ids = [i for i in ids if not i.startswith("--")]
     if measure_only and not sys.argv[2:]:
