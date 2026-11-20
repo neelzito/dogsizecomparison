@@ -124,5 +124,23 @@
    "n": 19,
    "sub": "Vom Basset Hound bis zum Rhodesian Ridgeback. Alle Hunde im selben Maßstab."
   }
+ },
+ "companion": {
+  "en": {
+   "file": "companion-toy-dogs-to-scale",
+   "w": 4800,
+   "h": 3029,
+   "title": "Companion and toy dogs, drawn to scale",
+   "n": 29,
+   "sub": "From the Chihuahua to the Standard Poodle. Every dog is drawn at the same scale."
+  },
+  "de": {
+   "file": "gesellschafts-begleithunde-massstabsgetreu",
+   "w": 4800,
+   "h": 2977,
+   "title": "Gesellschafts- und Begleithunde, maßstabsgetreu",
+   "n": 29,
+   "sub": "Vom Chihuahua bis zum Großpudel. Alle Hunde im selben Maßstab."
+  }
  }
 }
