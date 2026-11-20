@@ -390,6 +390,7 @@ a.info:hover, a.info:focus-visible { border-color: var(--accent); background: va
 .suggest-link { font-family: var(--font); font-size: 13px; font-weight: 500; color: var(--accent); margin-left: 8px; text-decoration: none; }
 .suggest-link:hover { text-decoration: underline; }
 .src-note { font-size: 13px; color: var(--ink-3); }
+.inline-links { font-size: 14px; color: var(--ink-3); line-height: 1.7; }
 .suggest-form { max-width: 560px; }
 .suggest-form textarea { padding: 9px 12px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface-2); width: 100%; font: inherit; resize: vertical; }
 .suggest-form textarea:focus { outline: none; border-color: var(--accent); background: var(--surface); }

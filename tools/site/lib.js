@@ -48,6 +48,9 @@ const H = (r) => `${range(r, cm, "cm")} (${range(r, inch, "in")})`;
 const W = (r) => `${range(r, kg, "kg")} (${range(r, lb, "lb")})`;
 const H1 = (v) => `${cm(v)} cm (${inch(v)} in)`;
 const W1 = (v) => `${kg(v)} kg (${lb(v)} lb)`;
+/** Height in feet and inches, e.g. 2 ft 6 in (or 9 in under a foot). */
+const feetIn = (v) => { const t = Math.round(v / 2.54), f = Math.floor(t / 12), i = t % 12; return f ? `${f} ft${i ? ` ${i} in` : ""}` : `${i} in`; };
+const FT = (r) => (feetIn(r[0]) === feetIn(r[1]) ? feetIn(r[0]) : `${feetIn(r[0])} to ${feetIn(r[1])}`);
 const life = (r) => (r[0] === r[1] ? `${r[0]} years` : `${r[0]}–${r[1]} years`);
 
 // ---------- breeds ----------
@@ -446,6 +449,18 @@ const DOG_YEARS = {
   Giant: [12, 22, 31, 38, 45, 49, 56, 64, 71, 79, 86, 93, 100, 107, 114, 121],
 };
 const dogYears = (size, y) => DOG_YEARS[size][y - 1];
+/** Expected weight range by puppy age: adult min–max weight × typical growth share for the size class.
+ *  Stops after the first age at which the size class is fully grown. */
+const GROWTH_AGES = [8, 12, 16, 26, 39, 52, 78, 104];
+function growthRows(b) {
+  const rows = [];
+  for (const wk of GROWTH_AGES) {
+    const s = growthShare(b.size, wk);
+    rows.push({ wk, s, m: b.m.w.map((w) => w * s), f: b.f.w.map((w) => w * s) });
+    if (s >= 1) break;
+  }
+  return rows;
+}
 /** Common wire crate sizes (outside, inches). */
 const CRATES = [
   { name: "XS", l: 18, w: 12, h: 14, ex: "Chihuahua, Yorkshire Terrier" },
@@ -505,10 +520,10 @@ function posterCards(keys, lang = "en") {
 
 module.exports = {
   analyticsTag, TRAIT_KEYS, TRAIT_INFO,
-  GROWTH, growthShare, DOG_YEARS, dogYears, CRATES,
+  GROWTH, growthShare, GROWTH_AGES, growthRows, DOG_YEARS, dogYears, CRATES,
   ROOT, SITE, SITE_NAME, fs, path,
   slug, esc, avg, round, list, pct, article, aName, place,
-  cm, inch, kg, lb, H, W, H1, W1, life,
+  cm, inch, kg, lb, H, W, H1, W1, feetIn, FT, life,
   SIZES, SIZE_INFO, sizeOf, BREEDS, BY_ID, N, GROUPS, groupUrl, groupSlug, groupLabel, sizeUrl, sizeWord,
   COUNTRIES, COUNTRY_COUNTS, countryUrl,
   CABIN, CABIN_MAX_DOG, cabin, cabinFor,
