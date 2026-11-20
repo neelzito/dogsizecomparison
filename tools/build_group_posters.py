@@ -89,6 +89,15 @@ GROUPS = {
          "Basset Fauve de Bretagne", "Harrier", "Bavarian Mountain Scent Hound", "English Foxhound", "American Foxhound",
          "Treeing Walker Coonhound", "Plott Hound", "Bluetick Coonhound", "Redbone Coonhound", "American English Coonhound",
          "Black and Tan Coonhound", "Otterhound", "Bloodhound", "Rhodesian Ridgeback", "Dalmatian"]),
+    "companion": (
+        "Companion and toy dogs, drawn to scale", "Gesellschafts- und Begleithunde, maßstabsgetreu",
+        "companion-toy-dogs-to-scale", "gesellschafts-begleithunde-massstabsgetreu",
+        "From the Chihuahua to the Standard Poodle.", "Vom Chihuahua bis zum Großpudel.",
+        ["Chihuahua", "Russian Toy", "Papillon", "Chinese Crested", "Miniature Pinscher", "Toy Poodle", "Maltese",
+         "Shih Tzu", "Havanese", "Pekingese", "Japanese Chin", "Coton de Tulear", "Bolognese", "Löwchen",
+         "Russian Tsvetnaya Bolonka", "Lhasa Apso", "Tibetan Spaniel", "Pug", "Brussels Griffon", "Affenpinscher",
+         "Boston Terrier", "French Bulldog", "Cavalier King Charles Spaniel", "English Toy Spaniel", "Bichon Frise",
+         "Miniature Poodle", "Standard Poodle", "Kromfohrländer", "Tibetan Terrier"]),
 }
 
 COMMON = {
