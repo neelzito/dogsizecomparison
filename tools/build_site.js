@@ -12,10 +12,10 @@
  */
 const L = require("./site/lib");
 const { place } = L;
-const { fs, path, ROOT, esc, avg, round, list, pct, aName, H, W, H1, W1, cm, inch, kg, lb, life, BREEDS, BY_ID, N, TRAIT_KEYS, TRAIT_INFO,
+const { fs, path, ROOT, esc, avg, round, list, pct, aName, H, W, H1, W1, FT, cm, inch, kg, lb, life, BREEDS, BY_ID, N, TRAIT_KEYS, TRAIT_INFO,
   SIZES, SIZE_INFO, GROUPS, groupUrl, groupLabel, sizeUrl, sizeWord, COUNTRIES, countryUrl, cabin, CABIN, CABIN_MAX_DOG,
   share, nearest, bodyLandmark, bodyUnits, MALE, FEMALE, COLORS, scene, markdown, frontMatter, crumbs, page,
-  breedCard, breedGrid, toolLink, spanH, spanW, faqBlock, slug } = L;
+  breedCard, breedGrid, toolLink, spanH, spanW, faqBlock, slug, growthRows } = L;
 const { PAIRS_CURATED, PAIRS_KEEP, GROUP_TEXT, COUNTRY_ADJ } = require("./site/content-data");
 const AIRLINES = require(path.join(ROOT, "content/airlines.json"));
 
@@ -112,7 +112,6 @@ function breedIntro(b) {
     const heavy = wi <= 10 ? `it is ${wi === 1 ? "the heaviest" : `the ${ordinal(wi)} heaviest`} breed` : wj <= 10 ? `it is ${wj === 1 ? "the lightest" : `the ${ordinal(wj)} lightest`} breed` : `it is heavier than ${pct(wS)}`;
     s.push(`On average it is taller than ${pct(hS)} of the ${N} breeds on this site, and ${heavy}.`);
   }
-  s.push(`At the shoulder, an average ${b.sameSexes ? "" : "male "}${b.name} reaches ${bodyLandmark(avg(b.m.h))} on a 175 cm (5′9″) adult.`);
   return s.join(" ");
 }
 function lifeText(b) {
@@ -134,6 +133,26 @@ function sexText(b) {
   const hPart = Math.abs(dh) < 0.5 ? "about the same height as" : `${round(Math.abs(dh), 1)} cm (${inch(Math.abs(dh))} in) ${dh >= 0 ? "taller than" : "shorter than"}`;
   const wPart = Math.abs(dw) < 0.03 ? "weighs about the same" : `is ${pct(Math.abs(dw))} ${dw >= 0 ? "heavier" : "lighter"}`;
   return `An average male is ${hPart} an average female and ${wPart}.`;
+}
+
+const cmR = (r) => H(r).split(" (")[0];
+// "Compared to a human": share of a 175 cm adult's height, body landmark, feet, and a 120 cm child.
+function humanText(b) {
+  const hm = avg(b.m.h), hf = avg(b.f.h);
+  const s = [];
+  s.push(`Next to a 175 cm (5′9″) adult, an average ${b.sameSexes ? "" : "male "}${b.name} stands ${H1(hm)} at the shoulder: ${pct(hm / 175)} of the person's height, reaching ${bodyLandmark(hm)}.`);
+  if (!b.sameSexes) s.push(`An average female, at ${H1(hf)}, reaches ${bodyLandmark(hf)}.`);
+  s.push(`In feet, ${b.sameSexes ? "adults stand" : "males stand"} ${FT(b.m.h)} tall at the shoulder${b.sameSexes ? "" : ` and females ${FT(b.f.h)}`}.`);
+  s.push(`Next to a 120 cm (3′11″) child, about seven years old, the shoulder comes to ${bodyLandmark(hm, 120)}. The head sits higher than the shoulder, so the dog looks taller than these numbers suggest.`);
+  return s.join(" ");
+}
+// Puppy weight-by-age table from the growth curve of the breed's size class.
+function growthTable(b) {
+  const age = (wk) => (wk < 16 ? `${wk} weeks` : wk === 104 ? "2 years" : `${Math.round(wk / 4.345)} months`);
+  const rows = growthRows(b);
+  const head = b.sameSexes ? `<th>Weight</th>` : `<th class="sex-m">♂ Male</th><th class="sex-f">♀ Female</th>`;
+  const body = rows.map((r) => `<tr><td>${age(r.wk)}${r.s >= 1 ? " (adult)" : ""}</td><td>${W(r.m)}</td>${b.sameSexes ? "" : `<td>${W(r.f)}</td>`}</tr>`).join("");
+  return `<div class="table-scroll"><table class="data-table"><thead><tr><th>Age</th>${head}</tr></thead><tbody>${body}</tbody></table></div>`;
 }
 
 // Real photo from Wikimedia Commons (tools/fetch_photos.py), with the credit the licence requires.
@@ -191,6 +210,9 @@ function breedPage(b) {
     [`How big does ${aName(b)} get?`, b.sameSexes
       ? `An adult ${b.name} stands ${H(b.m.h)} tall at the shoulder (withers) and weighs ${W(b.m.w)}.`
       : `A fully grown male ${b.name} stands ${H(b.m.h)} at the shoulder (withers) and weighs ${W(b.m.w)}. Females stand ${H(b.f.h)} and weigh ${W(b.f.w)}.`],
+    [`How tall is ${aName(b)} in feet?`, b.sameSexes
+      ? `An adult ${b.name} stands ${FT(b.m.h)} tall at the shoulder (${cmR(b.m.h)}). Next to a 5′9″ adult, that reaches ${bodyLandmark(avg(b.m.h))}.`
+      : `A male ${b.name} stands ${FT(b.m.h)} tall at the shoulder (${cmR(b.m.h)}) and a female ${FT(b.f.h)} (${cmR(b.f.h)}). Next to a 5′9″ adult, an average male reaches ${bodyLandmark(avg(b.m.h))}.`],
     [`Is ${aName(b)} a small, medium or large dog?`, `With an average weight of about ${W1(b.wAvg)}, the ${b.name} counts as ${L.article(b.size)} ${b.size.toLowerCase()} dog breed on this site (${b.size.toLowerCase()} = ${SIZE_INFO[b.size].limit} on average). ${heightRank(b) ? `It is ${heightRank(b)} of the ${N} breeds listed.` : `It is taller than ${pct(share(b, "hAvg"))} of the ${N} breeds listed.`}`],
     [`How long does ${aName(b)} live?`, `${lifeText(b)}`],
     [`Can ${aName(b)} fly in the airplane cabin?`, c === "yes" ? `Usually yes. ${cabinText(b)} Check your airline's rules and carrier size limits before booking.`
@@ -217,12 +239,13 @@ function breedPage(b) {
   const sexTable = b.sameSexes ? "" : `<div class="table-scroll"><table class="data-table"><thead><tr><th></th><th class="sex-m">♂ Male</th><th class="sex-f">♀ Female</th></tr></thead><tbody>
     <tr><td>Height (min–max)</td><td>${H(b.m.h)}</td><td>${H(b.f.h)}</td></tr>
     <tr><td>Average height</td><td>${H1(avg(b.m.h))}</td><td>${H1(avg(b.f.h))}</td></tr>
+    <tr><td>Height in feet</td><td>${FT(b.m.h)}</td><td>${FT(b.f.h)}</td></tr>
     <tr><td>Weight (min–max)</td><td>${W(b.m.w)}</td><td>${W(b.f.w)}</td></tr>
     <tr><td>Average weight</td><td>${W1(avg(b.m.w))}</td><td>${W1(avg(b.f.w))}</td></tr></tbody></table></div>`;
 
   const body = `${cr.html}
 <header class="page-head">
-  <h1>${esc(b.name)} size</h1>
+  <h1>${esc(b.name)} size compared to a human</h1>
   <p class="lede">${esc(b.name)}: ${sizeWord(b)} ${esc(b.group === "Designer / Mixed" ? "designer" : b.group.toLowerCase())} dog from ${esc(place(b.origin))}. ${b.aliases.length ? `Also known as ${esc(L.list(b.aliases))}. ` : ""}Height, weight and how it compares, drawn to scale.</p>
 </header>
 <section class="card">
@@ -236,8 +259,15 @@ function breedPage(b) {
   ${photoFigure(b)}
   <h2>How big is ${aName(b)}?</h2>
   <p>${esc(breedIntro(b))}</p>
+  ${pairs.length ? `<p class="inline-links">Head to head: ${pairs.slice(0, 4).map((p) => `<a href="${p.url}">${esc(p.a.name)} vs ${esc(p.b.name)}</a>`).join(" · ")}</p>` : ""}
+  <h2>${esc(b.name)} compared to a human</h2>
+  <p>${esc(humanText(b))}</p>
   <p>${esc([lifeText(b), cabinText(b)].filter(Boolean).join(" "))}</p>
   ${b.sameSexes ? "" : `<h2>Male vs female ${esc(b.name)}</h2><p>${esc(sexText(b))}</p>${sexTable}`}
+  <h2>${esc(b.name)} growth chart: weight by age</h2>
+  <p>How heavy ${aName(b)} puppy typically is as it grows. ${b.size === "Large" || b.size === "Giant" ? `Like most ${b.size.toLowerCase()} breeds, it keeps filling out until about ${b.size === "Giant" ? "two years" : "18 months"}.` : `Like most ${b.size.toLowerCase()} breeds, it is close to adult weight by about ${b.size === "Medium" ? "a year" : "9 to 12 months"}.`}</p>
+  ${growthTable(b)}
+  <p class="muted small">Estimated from typical growth curves for ${b.size.toLowerCase()} breeds and the breed-standard adult weight; individual puppies vary. Enter your puppy's age and weight in the <a href="/calculators/puppy-weight/?breed=${b.id}">${esc(b.name)} puppy weight calculator</a> for a personal estimate.</p>
   ${srcLine ? `<p class="src-note">${esc(srcLine)}</p>` : ""}
   ${handWritten ? `<h2>About the ${esc(b.name)}</h2>${handWritten}` : ""}
 </article>
@@ -257,7 +287,7 @@ ${fq.html}
 <aside class="disclaimer" role="note">Sizes are breed-standard ranges for adult dogs; individual dogs, working lines and dogs from different countries can be bigger or smaller. Airline notes are a general guide only. Check with your airline and your vet. <a href="/about/#disclaimer">Disclaimer</a>.</aside>`;
   emit(url, page({
     url, current: "/breeds/",
-    title: `${b.name} Size: Height & Weight${b.sameSexes ? "" : ", Male vs Female"}`,
+    title: `${b.name} Size Compared to a Human: Height & Weight`,
     description: `How big is ${aName(b)}${b.aliases.length ? ` (${b.aliases[0]})` : ""}? ${b.sameSexes ? `Adults stand ${H(b.m.h)} and weigh ${W(b.m.w)}.` : `Males stand ${H(b.m.h)} and weigh ${W(b.m.w)}; females ${H(b.f.h)}, ${W(b.f.w)}.`} Drawn to scale next to a person.`,
     body, ld: [cr.ld, fq.ld, photoLd(b)].filter(Boolean), ogImage: breedOg(b, ref), ogAlt: `${b.name} drawn to scale next to a ${ref.name}`,
   }), 0.7);

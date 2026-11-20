@@ -105,8 +105,24 @@ module.exports = function buildDe(ctx) {
       const wr = weightRank(b);
       s.push(`Im Durchschnitt ist ${pron(b)} größer als ${pct(share(b, "hAvg"))} der ${N} Rassen auf dieser Website${wr ? ` und ${wr} Rasse` : ` und schwerer als ${pct(share(b, "wAvg"))}`}.`);
     }
-    s.push(`Mit der Schulter reicht ${b.sameSexes ? "ein durchschnittlicher Hund" : "ein durchschnittlicher Rüde"} dieser Rasse einem 175 cm großen Erwachsenen ${bodyLandmark(avg(b.m.h))}.`);
     return s.join(" ");
+  }
+  // "Im Vergleich zum Menschen": Anteil an 175 cm, Körperstelle, und ein 120 cm großes Kind.
+  function humanText(b) {
+    const hm = avg(b.m.h), hf = avg(b.f.h);
+    const s = [];
+    s.push(`Neben einem 175 cm großen Erwachsenen misst ${b.sameSexes ? "ein durchschnittlicher Hund" : "ein durchschnittlicher Rüde"} der Rasse ${n(b)} ${H1(hm)} an der Schulter, also ${pct(hm / 175)} der Körpergröße des Menschen, und reicht ihm ${bodyLandmark(hm)}.`);
+    if (!b.sameSexes) s.push(`Eine durchschnittliche Hündin mit ${H1(hf)} reicht ${bodyLandmark(hf)}.`);
+    s.push(`Einem 120 cm großen Kind, etwa sieben Jahre alt, reicht die Schulter ${bodyLandmark(hm, 120)}. Der Kopf liegt höher als die Schulter, deshalb wirkt der Hund größer, als die Zahlen vermuten lassen.`);
+    return s.join(" ");
+  }
+  // Gewichtstabelle für Welpen aus der Wachstumskurve der Größenklasse.
+  function growthTable(b) {
+    const age = (wk) => (wk < 16 ? `${wk} Wochen` : wk === 104 ? "2 Jahre" : `${Math.round(wk / 4.345)} Monate`);
+    const rows = L.growthRows(b);
+    const head = b.sameSexes ? `<th>Gewicht</th>` : `<th class="sex-m">♂ Rüde</th><th class="sex-f">♀ Hündin</th>`;
+    const body = rows.map((r) => `<tr><td>${age(r.wk)}${r.s >= 1 ? " (ausgewachsen)" : ""}</td><td>${W(r.m)}</td>${b.sameSexes ? "" : `<td>${W(r.f)}</td>`}</tr>`).join("");
+    return `<div class="table-scroll"><table class="data-table"><thead><tr><th>Alter</th>${head}</tr></thead><tbody>${body}</tbody></table></div>`;
   }
   function lifeText(b) {
     const d = b.lifeAvg - sizeLifeAvg[b.size];
@@ -189,7 +205,7 @@ module.exports = function buildDe(ctx) {
 
     const body = `${cr.html}
 <header class="page-head">
-  <h1>${esc(n(b))}: Größe und Gewicht</h1>
+  <h1>${esc(n(b))}: Größe und Gewicht im Vergleich zum Menschen</h1>
   <p class="lede">${esc(n(b))}: ${sizeAdj(b)} Hunderasse ${esc(ausOrigin(b.origin))}${b.group === "Designer / Mixed" ? "" : `, ${esc(GROUP_DE[b.group].one)}`}. ${enAlias ? `Englisch: ${esc(enAlias)}. ` : ""}${b.aliases.length ? `Auch bekannt als ${esc(listDe(b.aliases))}. ` : ""}Größe, Gewicht und Vergleich, maßstabsgetreu gezeichnet.</p>
 </header>
 <section class="card">
@@ -203,8 +219,15 @@ module.exports = function buildDe(ctx) {
   ${photoFigure(b)}
   <h2>Wie groß wird ${esc(name.ein(b))}?</h2>
   <p>${esc(breedIntro(b))}</p>
+  ${bPairs.length ? `<p class="inline-links">Direkter Vergleich: ${bPairs.slice(0, 4).map((p) => `<a href="${deCompareUrl(p)}">${esc(n(p.a))} vs. ${esc(n(p.b))}</a>`).join(" · ")}</p>` : ""}
+  <h2>${esc(n(b))} im Größenvergleich mit dem Menschen</h2>
+  <p>${esc(humanText(b))}</p>
   <p>${esc([lifeText(b), cabinText(b)].filter(Boolean).join(" "))}</p>
   ${b.sameSexes ? "" : `<h2>${esc(n(b))}: Rüde und Hündin im Vergleich</h2><p>${esc(sexText(b))}</p>${sexTable}`}
+  <h2>${esc(n(b))}-Welpe: Gewichtstabelle nach Alter</h2>
+  <p>So viel wiegt ${name.ein(b)} typischerweise im Wachstum. ${b.size === "Large" || b.size === "Giant" ? `Wie die meisten ${SIZE_DE[b.size].dat} legt ${pron(b)} noch bis etwa ${b.size === "Giant" ? "zwei Jahre" : "18 Monate"} zu.` : `Wie die meisten ${SIZE_DE[b.size].dat} hat ${pron(b)} mit etwa ${b.size === "Medium" ? "einem Jahr" : "9 bis 12 Monaten"} fast das Endgewicht erreicht.`}</p>
+  ${growthTable(b)}
+  <p class="muted small">Geschätzt aus typischen Wachstumskurven der Größenklasse und dem Gewicht laut Rassestandard; einzelne Welpen weichen ab. Mit dem <a href="/de/rechner/welpengewicht/?breed=${b.id}">Welpengewicht-Rechner</a> bekommst du eine Schätzung für deinen Welpen.</p>
   ${srcLine ? `<p class="src-note">${esc(srcLine)}</p>` : ""}
   ${handWritten ? `<h2>Über ${esc(name.den(b))}</h2>${handWritten}` : ""}
 </article>
