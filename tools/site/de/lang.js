@@ -4,8 +4,9 @@
  * URLs and the German page layout. German pages show metric units only.
  */
 const L = require("../lib");
-const NAMES = require("./names");
-const { esc, round, BREEDS, BY_ID, GROUPS, SIZES, COUNTRIES } = L;
+const { esc, round, BREEDS, BY_ID, GROUPS, SIZES, COUNTRIES, WILD } = L;
+// breed names, plus wolves and wild canids from content/wild.json
+const NAMES = { ...require("./names"), ...Object.fromEntries(WILD.map((w) => [w.id, w.info.de])) };
 
 for (const b of BREEDS) if (!NAMES[b.id]) throw new Error(`tools/site/de/names.js: no German name for ${b.id}`);
 
@@ -27,7 +28,8 @@ const ARTICLE = {
 };
 const raw = (b) => NAMES[b.id || b][0];
 const gender = (b) => NAMES[b.id || b][1];
-const inflect = (b, table) => raw(b).replace(/~/g, ENDINGS[table][gender(b)]);
+// optional third entry: oblique form of a weak noun ("Kojote" → "dem Kojoten")
+const inflect = (b, table) => (NAMES[b.id || b][2] && ["defAcc", "dat", "indefAcc"].includes(table) ? NAMES[b.id || b][2] : raw(b).replace(/~/g, ENDINGS[table][gender(b)]));
 /** Name as a heading or list entry: "Deutscher Schäferhund". */
 const n = (b) => inflect(b, "bare");
 const withArt = (b, art, table) => `${ARTICLE[art][gender(b)]} ${inflect(b, table)}`;
@@ -181,7 +183,10 @@ const BREED_SLUG = {};
     seen[s] = b.id; BREED_SLUG[b.id] = s;
   }
 }
-const breedUrl = (b) => `/de/rassen/${BREED_SLUG[b.id]}/`;
+const WILD_SLUG = {};
+for (const w of WILD) WILD_SLUG[w.id] = deSlug(n(w));
+/** German page of a breed, or of a wolf / wild canid. */
+const breedUrl = (b) => (b.wild ? `/de/woelfe/${WILD_SLUG[b.id]}/` : `/de/rassen/${BREED_SLUG[b.id]}/`);
 const toolLink = (entries) => `/de/#b=${entries.map(([id, sex]) => `${id}:${sex || "m"}`).join(",")}`;
 
 // ---------- layout ----------
@@ -213,7 +218,7 @@ function siteFooter() {
     ${col("Nach Größe", SIZES.map((s) => [sizeUrl(s), SIZE_DE[s].list]))}
     ${col("Nach Gruppe", GROUPS.map((g) => [groupUrl(g), groupName(g)]))}
     ${col("Rechner", CALC_NAV)}
-    ${col("Ratgeber", [["/de/rassefinder/", "Rassefinder"], ["/de/ratgeber/hund-richtig-messen/", "Hund richtig messen"], ["/de/ratgeber/groessenklassen-bei-hunden/", "Größenklassen bei Hunden"], ["/de/ratgeber/mit-hund-in-der-flugzeugkabine/", "Mit Hund fliegen"], ["/de/ueber-die-daten/", "Über die Daten"], ["/de/poster/", "Poster"], ["/de/bildnachweise/", "Bildnachweise"], ["/de/rasse-vorschlagen/", "Rasse vorschlagen"]])}
+    ${col("Ratgeber", [["/de/rassefinder/", "Rassefinder"], ["/de/woelfe/", "Wolf und Hund"], ["/de/ratgeber/hund-richtig-messen/", "Hund richtig messen"], ["/de/ratgeber/groessenklassen-bei-hunden/", "Größenklassen bei Hunden"], ["/de/ratgeber/mit-hund-in-der-flugzeugkabine/", "Mit Hund fliegen"], ["/de/ueber-die-daten/", "Über die Daten"], ["/de/poster/", "Poster"], ["/de/bildnachweise/", "Bildnachweise"], ["/de/rasse-vorschlagen/", "Rasse vorschlagen"]])}
   </div><div class="wrap foot-note"><p>Größen und Gewichte folgen den Rassestandards der Zuchtverbände (AKC, FCI, The Kennel Club, UKC, RSCE). Einzelne Hunde können außerhalb aller angegebenen Bereiche liegen. <a href="/de/ueber-die-daten/">So stellen wir die Zahlen zusammen</a>.</p>
     <p>Alle Angaben auf dieser Website sind allgemeine Orientierung. Sie sind keine tierärztliche, medizinische oder Reiseberatung, und Airline-Regeln, Rassestandards und andere Details können sich ändern. Sprich vor Entscheidungen immer mit deiner Tierarztpraxis, deiner Airline oder dem Züchter. <a href="/de/ueber-die-daten/#haftungsausschluss">Vollständiger Haftungsausschluss</a>.</p>
     <p class="copyright">© ${new Date().getFullYear()} <a href="https://milivon.com">MILIVON</a>. Alle Rechte vorbehalten. Texte, Datenzusammenstellung und Illustrationen dürfen nicht ohne Erlaubnis vervielfältigt werden. Die Rassefotos stammen von Mitwirkenden auf Wikimedia Commons und stehen weiter unter ihren eigenen Lizenzen (CC BY, CC BY-SA, CC0 oder gemeinfrei); die Vorschaubilder sind zugeschnitten. <a href="/de/bildnachweise/">Bildnachweise</a>.</p></div></footer>`;
@@ -244,6 +249,6 @@ module.exports = {
   num, cm, kg, H, W, H1, W1, life, lifeDat, pct, times,
   SIZE_DE, sizeUrl, GROUP_DE, groupUrl, groupName, GROUP_NOTE,
   COUNTRY_DE, country, originName, ausOrigin, countryUrl, countryAdjList,
-  TRAIT_DE, BREED_SLUG, breedUrl, toolLink,
+  TRAIT_DE, BREED_SLUG, WILD_SLUG, breedUrl, toolLink,
   SITE_NAME_DE, topbar, siteFooter, page, breedCard, breedGrid, sortDe, CALC_NAV,
 };

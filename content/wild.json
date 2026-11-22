@@ -1,0 +1,296 @@
+{
+ "_readme": "Details for the wild canids in js/wild.js, keyed by id. de: [German name, grammatical gender] with ~ marking an inflected adjective (as in tools/site/de/names.js). English aliases live in js/wild.js (WILD_ALIASES) so the comparison tool can search them. wiki/wikiDe: Wikipedia article titles used as sources. note: shown when a figure is a typical range rather than a measured study value. vsBreeds: dog breeds that get a '<breed> vs wolf' page (compared with the Eurasian and Northwestern wolf).",
+ "vsBreeds": [
+  "german-shepherd-dog",
+  "kangal-shepherd-dog",
+  "great-dane",
+  "alaskan-malamute",
+  "siberian-husky",
+  "irish-wolfhound",
+  "caucasian-shepherd-dog",
+  "tibetan-mastiff",
+  "czechoslovakian-wolfdog",
+  "saarloos-wolfdog",
+  "belgian-malinois",
+  "mastiff-english",
+  "anatolian-shepherd-dog",
+  "cane-corso",
+  "rottweiler",
+  "labrador-retriever",
+  "saint-bernard",
+  "akita-american",
+  "dogo-argentino",
+  "american-pit-bull-terrier",
+  "doberman-pinscher",
+  "boerboel",
+  "central-asian-shepherd-dog",
+  "leonberger"
+ ],
+ "animals": {
+  "northwestern-wolf": {
+   "latin": "Canis lupus occidentalis",
+   "de": [
+    "Mackenzie-Wolf",
+    "m"
+   ],
+   "kind": "gray",
+   "range": "Western Canada, Alaska and the northern Rocky Mountains",
+   "rangeDe": "Westkanada, Alaska und die nördlichen Rocky Mountains",
+   "aliasesDe": [
+    "Nordwestlicher Wolf",
+    "Timberwolf",
+    "Grauwolf"
+   ],
+   "wiki": "Northwestern wolf",
+   "wikiDe": "Mackenzie-Wolf",
+   "facts": "One of the largest gray wolf subspecies. Wolves of this subspecies were brought from Canada to Yellowstone National Park in 1995, where adult males average about 50 kg and females about 40 kg.",
+   "factsDe": "Eine der größten Unterarten des Grauwolfs. Wölfe dieser Unterart wurden 1995 aus Kanada in den Yellowstone-Nationalpark gebracht; erwachsene Rüden wiegen dort im Schnitt etwa 50 kg, Fähen etwa 40 kg.",
+   "originDe": "Kanada/Alaska"
+  },
+  "eurasian-wolf": {
+   "latin": "Canis lupus lupus",
+   "de": [
+    "Eurasisch~ Wolf",
+    "m"
+   ],
+   "kind": "gray",
+   "range": "Europe, Russia and Central Asia",
+   "rangeDe": "Europa, Russland und Zentralasien",
+   "aliasesDe": [
+    "Europäischer Wolf",
+    "Grauwolf",
+    "Wolf"
+   ],
+   "wiki": "Eurasian wolf",
+   "wikiDe": "Eurasischer Wolf",
+   "facts": "The most widespread gray wolf and the largest in the Old World, averaging about 39 kg in Europe. It is the wolf that has returned to Germany, Poland, France and the Alps.",
+   "factsDe": "Der am weitesten verbreitete Grauwolf und der größte der Alten Welt, in Europa im Schnitt etwa 39 kg schwer. Es ist der Wolf, der nach Deutschland, Polen, Frankreich und in die Alpen zurückgekehrt ist.",
+   "originDe": "Europa/Asien"
+  },
+  "arctic-wolf": {
+   "latin": "Canis lupus arctos",
+   "de": [
+    "Polarwolf",
+    "m"
+   ],
+   "kind": "gray",
+   "range": "Canadian Arctic islands and northern Greenland",
+   "rangeDe": "Arktische Inseln Kanadas und Nordgrönland",
+   "aliasesDe": [
+    "Arktischer Wolf",
+    "Weißer Wolf"
+   ],
+   "wiki": "Arctic wolf",
+   "wikiDe": "Polarwolf",
+   "facts": "A white subspecies of the far north, a little shorter and stockier than wolves further south, with smaller ears and a shorter muzzle that lose less heat.",
+   "factsDe": "Eine weiße Unterart des hohen Nordens, etwas kleiner und kompakter als Wölfe weiter südlich, mit kleineren Ohren und kürzerer Schnauze, über die weniger Wärme verloren geht.",
+   "note": "Shoulder heights for the Arctic wolf are typical published ranges; few measured studies exist.",
+   "originDe": "Kanada (Arktis)"
+  },
+  "mexican-wolf": {
+   "latin": "Canis lupus baileyi",
+   "de": [
+    "Mexikanisch~ Wolf",
+    "m"
+   ],
+   "kind": "gray",
+   "range": "Arizona, New Mexico and northern Mexico",
+   "rangeDe": "Arizona, New Mexico und Nordmexiko",
+   "aliasesDe": [
+    "Mexikanischer Grauwolf"
+   ],
+   "wiki": "Mexican wolf",
+   "wikiDe": "Mexikanischer Wolf",
+   "facts": "The smallest gray wolf in North America. It was almost wiped out in the wild by the 1970s and has been released again from captive breeding since 1998.",
+   "factsDe": "Der kleinste Grauwolf Nordamerikas. In freier Wildbahn war er in den 1970er-Jahren fast ausgerottet und wird seit 1998 aus Gefangenschaftszuchten wieder ausgewildert.",
+   "originDe": "Mexiko/USA"
+  },
+  "iberian-wolf": {
+   "latin": "Canis lupus signatus",
+   "de": [
+    "Iberisch~ Wolf",
+    "m"
+   ],
+   "kind": "gray",
+   "range": "Northwestern Spain and northern Portugal",
+   "rangeDe": "Nordwestspanien und Nordportugal",
+   "aliasesDe": [
+    "Spanischer Wolf"
+   ],
+   "wiki": "Iberian wolf",
+   "wikiDe": "Iberischer Wolf",
+   "facts": "Named signatus (\"marked\") for the dark stripes on the front of its forelegs; it also has white marks on the upper lips. Medium-sized by gray wolf standards.",
+   "factsDe": "Benannt nach den dunklen Streifen vorn an den Vorderbeinen (signatus = gezeichnet); typisch sind auch helle Abzeichen an den Lefzen. Für einen Grauwolf mittelgroß.",
+   "originDe": "Spanien/Portugal"
+  },
+  "indian-wolf": {
+   "latin": "Canis lupus pallipes",
+   "de": [
+    "Indisch~ Wolf",
+    "m"
+   ],
+   "kind": "gray",
+   "range": "India, Pakistan, Iran and parts of the Middle East",
+   "rangeDe": "Indien, Pakistan, Iran und Teile des Nahen Ostens",
+   "aliasesDe": [
+    "Indischer Grauwolf"
+   ],
+   "wiki": "Indian wolf",
+   "wikiDe": "Indischer Wolf",
+   "facts": "A small, slender wolf with a short coat suited to hot grassland and scrub. Males weigh about 19–25 kg, about as much as a male Siberian Husky.",
+   "factsDe": "Ein kleiner, schlanker Wolf mit kurzem Fell, angepasst an heißes Gras- und Buschland. Rüden wiegen etwa 19–25 kg, etwa so viel wie ein Siberian-Husky-Rüde.",
+   "originDe": "Indien"
+  },
+  "arabian-wolf": {
+   "latin": "Canis lupus arabs",
+   "de": [
+    "Arabisch~ Wolf",
+    "m"
+   ],
+   "kind": "gray",
+   "range": "Arabian Peninsula, Sinai and the Negev",
+   "rangeDe": "Arabische Halbinsel, Sinai und Negev",
+   "aliasesDe": [
+    "Wüstenwolf"
+   ],
+   "wiki": "Arabian wolf",
+   "wikiDe": "Arabischer Wolf",
+   "facts": "The smallest gray wolf, at about 20 kg. Its large ears and thin coat help it shed heat in the desert.",
+   "factsDe": "Der kleinste Grauwolf, mit etwa 20 kg. Große Ohren und dünnes Fell helfen ihm, in der Wüste Wärme abzugeben.",
+   "originDe": "Arabische Halbinsel"
+  },
+  "ethiopian-wolf": {
+   "latin": "Canis simensis",
+   "de": [
+    "Äthiopisch~ Wolf",
+    "m"
+   ],
+   "kind": "wolf",
+   "range": "Ethiopian Highlands, mostly above 3,000 m",
+   "rangeDe": "Äthiopisches Hochland, meist über 3.000 m",
+   "aliasesDe": [
+    "Abessinischer Fuchs",
+    "Simienfuchs"
+   ],
+   "wiki": "Ethiopian wolf",
+   "wikiDe": "Äthiopischer Wolf",
+   "facts": "A separate wolf species and Africa's most endangered carnivore, with only a few hundred adults left. It lives mainly on mountain rodents.",
+   "factsDe": "Eine eigene Wolfsart und das am stärksten bedrohte Raubtier Afrikas, mit nur noch einigen hundert erwachsenen Tieren. Er ernährt sich vor allem von Nagetieren im Hochgebirge.",
+   "originDe": "Äthiopien"
+  },
+  "red-wolf": {
+   "latin": "Canis rufus",
+   "de": [
+    "Rotwolf",
+    "m"
+   ],
+   "kind": "wolf",
+   "range": "Eastern North Carolina, USA",
+   "rangeDe": "Östliches North Carolina, USA",
+   "aliasesDe": [],
+   "wiki": "Red wolf",
+   "wikiDe": "Rotwolf",
+   "facts": "A critically endangered wolf of the eastern United States, between a coyote and a gray wolf in size. Only a few dozen live in the wild, all in North Carolina.",
+   "factsDe": "Ein vom Aussterben bedrohter Wolf aus dem Osten der USA, in der Größe zwischen Kojote und Grauwolf. In freier Wildbahn leben nur einige Dutzend Tiere, alle in North Carolina.",
+   "note": "Shoulder heights for the red wolf are typical published ranges; weights follow measured averages (males about 29 kg, females about 25 kg).",
+   "originDe": "USA"
+  },
+  "african-golden-wolf": {
+   "latin": "Canis lupaster",
+   "de": [
+    "Afrikanisch~ Goldwolf",
+    "m"
+   ],
+   "kind": "wolf",
+   "range": "North and East Africa",
+   "rangeDe": "Nord- und Ostafrika",
+   "aliasesDe": [
+    "Afrikanischer Wolf",
+    "Ägyptischer Schakal"
+   ],
+   "wiki": "African wolf",
+   "wikiDe": "Afrikanischer Goldwolf",
+   "facts": "Long thought to be a golden jackal until DNA studies in 2015 showed it is a wolf-like species of its own. It is the smallest animal on this page that is called a wolf.",
+   "factsDe": "Lange für einen Goldschakal gehalten, bis DNA-Studien 2015 zeigten, dass er eine eigene wolfsähnliche Art ist. Er ist das kleinste Tier auf dieser Seite, das Wolf genannt wird.",
+   "note": "Published shoulder heights for the African golden wolf are given as about 40 cm.",
+   "originDe": "Nord- & Ostafrika"
+  },
+  "coyote": {
+   "latin": "Canis latrans",
+   "de": [
+    "Kojote",
+    "m",
+    "Kojoten"
+   ],
+   "kind": "relative",
+   "range": "North and Central America",
+   "rangeDe": "Nord- und Mittelamerika",
+   "aliasesDe": [
+    "Präriewolf",
+    "Steppenwolf"
+   ],
+   "wiki": "Coyote",
+   "wikiDe": "Kojote",
+   "facts": "A smaller, lighter cousin of the wolf that has spread across almost all of North America and now lives in many cities. Size varies a lot by region; eastern coyotes are the largest.",
+   "factsDe": "Ein kleinerer, leichterer Verwandter des Wolfs, der sich über fast ganz Nordamerika ausgebreitet hat und heute auch in vielen Städten lebt. Die Größe schwankt stark je nach Region; Kojoten im Osten sind am größten.",
+   "note": "Coyote shoulder heights are typical published ranges.",
+   "originDe": "Nordamerika"
+  },
+  "dingo": {
+   "latin": "Canis familiaris dingo",
+   "de": [
+    "Dingo",
+    "m"
+   ],
+   "kind": "relative",
+   "range": "Australia",
+   "rangeDe": "Australien",
+   "aliasesDe": [
+    "Australischer Wildhund"
+   ],
+   "wiki": "Dingo",
+   "wikiDe": "Dingo",
+   "facts": "Australia's wild dog, descended from domestic dogs that arrived at least 3,500 years ago. Wild males average about 59 cm and 16 kg; captive dingoes are often heavier.",
+   "factsDe": "Australiens Wildhund, der von Haushunden abstammt, die vor mindestens 3.500 Jahren dorthin kamen. Wilde Rüden messen im Schnitt etwa 59 cm und wiegen 16 kg; Dingos in Gehegen sind oft schwerer.",
+   "originDe": "Australien"
+  },
+  "dhole": {
+   "latin": "Cuon alpinus",
+   "de": [
+    "Rothund",
+    "m"
+   ],
+   "kind": "relative",
+   "range": "South, East and Southeast Asia",
+   "rangeDe": "Süd-, Ost- und Südostasien",
+   "aliasesDe": [
+    "Asiatischer Wildhund",
+    "Dhole"
+   ],
+   "wiki": "Dhole",
+   "wikiDe": "Rothund",
+   "facts": "An endangered pack hunter that communicates with whistles. Dholes are compact and short-legged, a little taller than a Beagle and about as heavy as a Border Collie.",
+   "factsDe": "Ein stark gefährdeter Rudeljäger, der sich mit Pfeiflauten verständigt. Rothunde sind kompakt und kurzbeinig, etwas höher als ein Beagle und etwa so schwer wie ein Border Collie.",
+   "originDe": "Asien"
+  },
+  "maned-wolf": {
+   "latin": "Chrysocyon brachyurus",
+   "de": [
+    "Mähnenwolf",
+    "m"
+   ],
+   "kind": "relative",
+   "range": "Grasslands of Brazil, Paraguay, Bolivia and Argentina",
+   "rangeDe": "Grasland in Brasilien, Paraguay, Bolivien und Argentinien",
+   "aliasesDe": [
+    "Guará"
+   ],
+   "wiki": "Maned wolf",
+   "wikiDe": "Mähnenwolf",
+   "facts": "Neither a wolf nor a fox but the only member of its own genus. Its very long legs make it the tallest wild canid, yet it weighs only about 23 kg and eats a lot of fruit.",
+   "factsDe": "Weder Wolf noch Fuchs, sondern der einzige Vertreter seiner eigenen Gattung. Seine sehr langen Beine machen ihn zum größten wilden Hundeartigen, trotzdem wiegt er nur etwa 23 kg und frisst viel Obst.",
+   "note": "Maned wolf shoulder heights are given as about 90 cm, with some sources citing up to 110 cm.",
+   "originDe": "Südamerika"
+  }
+ }
+}

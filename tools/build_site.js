@@ -18,8 +18,9 @@ const { fs, path, ROOT, esc, avg, round, list, pct, aName, H, W, H1, W1, FT, cm,
   breedCard, breedGrid, toolLink, spanH, spanW, faqBlock, slug, growthRows } = L;
 const { PAIRS_CURATED, PAIRS_KEEP, GROUP_TEXT, COUNTRY_ADJ } = require("./site/content-data");
 const AIRLINES = require(path.join(ROOT, "content/airlines.json"));
+const { vsWolf } = require("./site/wild");
 
-const OUT_DIRS = ["breeds", "compare", "sizes", "groups", "origins", "articles", "calculators", "about", "suggest-a-breed", "breed-finder", "photo-credits", "posters", "de"];
+const OUT_DIRS = ["breeds", "compare", "sizes", "groups", "origins", "articles", "calculators", "about", "suggest-a-breed", "breed-finder", "photo-credits", "posters", "wolves", "de"];
 const REPO = "neelzito/dogsizecomparison";
 const pages = []; // { url, html, priority }
 const emit = (url, html, priority = 0.6) => pages.push({ url, html, priority });
@@ -273,7 +274,7 @@ function breedPage(b) {
 </article>
 <aside class="side">
   ${traitsCard(b)}
-  ${pairs.length ? `<div class="card"><h2>${esc(b.name)} comparisons</h2><ul class="link-list">${pairs.map((p) => `<li><a href="${p.url}">${esc(p.a.name)} vs ${esc(p.b.name)}</a></li>`).join("")}</ul></div>` : ""}
+  ${pairs.length || vsWolf.en(b) ? `<div class="card"><h2>${esc(b.name)} comparisons</h2><ul class="link-list">${vsWolf.en(b) ? `<li><a href="${vsWolf.en(b)}">${esc(b.name)} vs wolf</a></li>` : ""}${pairs.map((p) => `<li><a href="${p.url}">${esc(p.a.name)} vs ${esc(p.b.name)}</a></li>`).join("")}</ul></div>` : ""}
   <div class="card"><h2>${esc(b.name)} calculators</h2><ul class="link-list"><li><a href="/calculators/puppy-weight/?breed=${b.id}">How big will my ${esc(b.name)} puppy get?</a></li><li><a href="/calculators/crate-size/?breed=${b.id}">Crate size for ${aName(b)}</a></li>${b.size === "Toy" || b.size === "Small" ? `<li><a href="/calculators/airline-cabin/?breed=${b.id}">Can ${aName(b)} fly in the cabin?</a></li>` : ""}<li><a href="/calculators/dog-years/?breed=${b.id}">${esc(b.name)} age in human years</a></li></ul></div>
   <div class="card"><h2>More ${esc(b.group === "Designer / Mixed" ? "designer breeds" : `${b.group} breeds`)}</h2><ul class="link-list">${sameGroup.map((x) => `<li><a href="${x.url}">${esc(x.name)}</a></li>`).join("")}</ul><p><a href="${groupUrl(b.group)}">All ${esc(b.group === "Designer / Mixed" ? "designer & mixed" : b.group)} breeds →</a></p></div>
 </aside>
@@ -384,6 +385,7 @@ function compareIndex() {
 <header class="page-head"><h1>Dog breed size comparisons</h1>
 <p class="lede">${PAIRS.length} head-to-head comparisons of popular and look-alike breeds, each drawn to scale. Want a different pair? <a href="/">Build your own comparison</a> with up to 10 breeds.</p></header>
 <section class="card"><h2>Popular comparisons</h2><ul class="link-cols">${PAIRS.filter((p) => p.curated).map(li).join("")}</ul></section>
+<section class="card"><h2>Dog breeds vs wolf</h2><ul class="link-cols">${L.WILD_VS.map((b) => `<li><a href="${vsWolf.en(b)}">${esc(b.name)} vs wolf</a></li>`).join("")}</ul><p><a href="/wolves/">All wolves and wild canids compared with dogs →</a></p></section>
 ${byGroup.map(([g, ps]) => `<section class="card"><h2>${esc(g === "Designer / Mixed" ? "Designer & mixed breeds" : `${g} group`)}</h2><ul class="link-cols">${ps.map(li).join("")}</ul></section>`).join("\n")}`;
   emit(url, page({ url, current: url, title: "Dog Breed Size Comparisons: Which Breed Is Bigger?", description: `${PAIRS.length} side-by-side dog breed size comparisons, drawn to scale, with heights and weights for males and females.`, body, ld: [cr.ld] }), 0.8);
 }
@@ -882,6 +884,8 @@ finderPage();
 
 // German pages (/de/…), built from the same data; returns its pages and the EN → DE URL pairs
 const DE = require("./site/de/build")({ PAIRS, PAIRS_BY_BREED, ogJob, ogDog, refFor, today, REPO, AIRLINES, spread, sizeLifeAvg });
+// wolves and wild canids (/wolves/, /de/woelfe/, "<breed> vs wolf"), EN and DE
+require("./site/wild")({ emit, emitDe: (url, html, priority, enUrl) => { DE.pages.push({ url, html, priority }); if (enUrl) DE.pairs[enUrl] = url; }, ogJob, ogDog });
 const allPages = [...pages, ...DE.pages];
 for (const p of allPages) {
   const file = path.join(ROOT, p.url, "index.html");
