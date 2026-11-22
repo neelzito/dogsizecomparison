@@ -66,6 +66,8 @@ const SIZE_INFO = {
 const sizeOf = (w) => (w < 5 ? "Toy" : w < 10 ? "Small" : w < 25 ? "Medium" : w < 45 ? "Large" : "Giant");
 const originKey = (o) => o.replace(/\s*\(.*\)\s*/, "").split("/")[0].trim();
 
+// Public-domain photos have no licence URL on Commons; link the Creative Commons Public Domain Mark (Google asks for a licence URL in image structured data).
+const PD_MARK = "https://creativecommons.org/publicdomain/mark/1.0/";
 const BREEDS = window.BREED_ROWS.map((r) => {
   const b = {
     name: r[0], group: r[1], origin: r[2], type: r[3],
@@ -87,7 +89,7 @@ const BREEDS = window.BREED_ROWS.map((r) => {
   const t = TRAITS[b.id];
   if (!t) throw new Error(`content/traits.json: no entry for ${b.id}`);
   b.traits = Object.fromEntries(TRAIT_KEYS.map((k, i) => [k, t[i]]));
-  b.photo = PHOTOS[b.id] ? { ...PHOTOS[b.id], src: `/img/photos/${b.id}.webp`, thumb: `/img/photos/thumb/${b.id}.webp` } : null;
+  b.photo = PHOTOS[b.id] ? { ...PHOTOS[b.id], licenseUrl: PHOTOS[b.id].licenseUrl || (PHOTOS[b.id].license === "Public domain" ? PD_MARK : undefined), src: `/img/photos/${b.id}.webp`, thumb: `/img/photos/thumb/${b.id}.webp` } : null;
   return b;
 }).sort((a, b) => a.name.localeCompare(b.name));
 const BY_ID = Object.fromEntries(BREEDS.map((b) => [b.id, b]));
