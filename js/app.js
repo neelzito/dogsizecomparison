@@ -12,7 +12,9 @@
   const slug = (s) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
   const avg = (r) => (r[0] + r[1]) / 2;
 
-  const BREEDS = window.BREED_ROWS.map((r) => {
+  // Dog breeds plus wolves and other wild canids (js/wild.js, group "Wild Canids").
+  const ROWS = [...window.BREED_ROWS, ...(window.WILD_ROWS || [])];
+  const BREEDS = ROWS.map((r) => {
     const b = {
       name: r[0], group: r[1], origin: r[2], type: r[3],
       m: { h: [r[4], r[5]], w: [r[8], r[9]] },
@@ -22,7 +24,8 @@
     };
     b.id = slug(b.name);
     b.dname = DE ? I.names[b.id] || b.name : b.name; // display name
-    b.aliases = (window.BREED_ALIASES || {})[b.name] || [];
+    b.wild = b.group === "Wild Canids";
+    b.aliases = (b.wild ? window.WILD_ALIASES : window.BREED_ALIASES || {})?.[b.name] || [];
     if (DE && b.dname !== b.name) b.aliases = [b.name, ...b.aliases];
     b.keys = [slug(b.dname), ...(DE ? [slug(b.dname.toLowerCase().replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").replace(/ß/g, "ss"))] : []), b.id, ...b.aliases.map(slug)];
     const w = (avg(b.m.w) + avg(b.f.w)) / 2;
@@ -34,8 +37,8 @@
   const BY_ID = Object.fromEntries(BREEDS.map((b) => [b.id, b]));
   const matches = (b, q) => b.keys.some((k) => k.includes(q));
   const aliasHit = (b, q) => (b.keys.slice(0, DE ? 2 : 1).some((k) => k.includes(q)) ? "" : b.aliases.find((a) => slug(a).includes(q)) || "");
-  const breedUrl = (b) => (DE ? I.urls[b.id] : `/breeds/${b.id}/`);
-  const aboutTitle = (b) => tx(`About the ${b.dname}`, `${b.dname}: Rasseporträt`);
+  const breedUrl = (b) => (DE ? I.urls[b.id] : b.wild ? `/wolves/${b.id}/` : `/breeds/${b.id}/`);
+  const aboutTitle = (b) => (b.wild ? tx(`About the ${b.dname}`, `${b.dname}: Größe und Steckbrief`) : tx(`About the ${b.dname}`, `${b.dname}: Rasseporträt`));
   const infoLink = (b, cls = "info") => b.custom ? "" : `<a class="${cls}" href="${breedUrl(b)}" title="${esc(tx(`About the ${b.dname}: sizes, facts and comparisons`, `${b.dname}: Größe, Fakten und Vergleiche`))}" aria-label="${esc(aboutTitle(b))}">i</a>`;
   const sizeName = (s) => (DE ? I.sizes[s] : s);
   const groupName = (g) => (DE ? I.groups[g] || g : g);

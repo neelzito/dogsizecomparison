@@ -16,6 +16,7 @@ const { n, name, cap, pron, listDe, H, W, H1, W1, cm, kg, num, life, pct, SIZE_D
 
 const SC = { lang: "de", nameOf: n };
 const CONTENT = path.join(ROOT, "content/de");
+const { vsWolf } = require("../wild");
 
 module.exports = function buildDe(ctx) {
   const { PAIRS, PAIRS_BY_BREED, ogJob, ogDog, refFor, today, REPO, AIRLINES, spread, sizeLifeAvg } = ctx;
@@ -233,7 +234,7 @@ module.exports = function buildDe(ctx) {
 </article>
 <aside class="side">
   ${traitsCard(b)}
-  ${bPairs.length ? `<div class="card"><h2>${esc(n(b))} im Vergleich</h2><ul class="link-list">${bPairs.map((p) => `<li><a href="${deCompareUrl(p)}">${esc(n(p.a))} vs. ${esc(n(p.b))}</a></li>`).join("")}</ul></div>` : ""}
+  ${bPairs.length || vsWolf.de(b) ? `<div class="card"><h2>${esc(n(b))} im Vergleich</h2><ul class="link-list">${vsWolf.de(b) ? `<li><a href="${vsWolf.de(b)}">${esc(n(b))} vs. Wolf</a></li>` : ""}${bPairs.map((p) => `<li><a href="${deCompareUrl(p)}">${esc(n(p.a))} vs. ${esc(n(p.b))}</a></li>`).join("")}</ul></div>` : ""}
   <div class="card"><h2>Rechner für ${esc(name.den(b))}</h2><ul class="link-list">${calcLinks}<li><a href="/de/rechner/hundebox-groesse/?breed=${b.id}">Passende Hundebox</a></li>${b.size === "Toy" || b.size === "Small" ? `<li><a href="/de/rechner/flugzeugkabine/?breed=${b.id}">Darf ${esc(pron(b))} in die Kabine?</a></li>` : ""}<li><a href="/de/rechner/hundejahre/?breed=${b.id}">Alter in Menschenjahren</a></li></ul></div>
   <div class="card"><h2>Weitere ${esc(groupName(b.group))}</h2><ul class="link-list">${sameGroup.map((x) => `<li><a href="${breedUrl(x)}">${esc(n(x))}</a></li>`).join("")}</ul><p><a href="${groupUrl(b.group)}">Alle ${esc(groupName(b.group))} →</a></p></div>
 </aside>
@@ -344,6 +345,7 @@ ${faq.html}`;
 <header class="page-head"><h1>Hunderassen im Größenvergleich</h1>
 <p class="lede">${PAIRS.length} direkte Vergleiche beliebter und ähnlicher Rassen, jeweils maßstabsgetreu gezeichnet. Du suchst ein anderes Paar? <a href="/de/">Stell deinen eigenen Vergleich zusammen</a>, mit bis zu 10 Rassen.</p></header>
 <section class="card"><h2>Beliebte Vergleiche</h2><ul class="link-cols">${PAIRS.filter((p) => p.curated).map(li).join("")}</ul></section>
+<section class="card"><h2>Hunderassen vs. Wolf</h2><ul class="link-cols">${L.WILD_VS.map((b) => `<li><a href="${vsWolf.de(b)}">${esc(n(b))} vs. Wolf</a></li>`).join("")}</ul><p><a href="/de/woelfe/">Alle Wölfe und Wildhunde im Vergleich mit Hunden →</a></p></section>
 ${byGroup.map(([g, ps]) => `<section class="card"><h2>${esc(groupName(g))}</h2><ul class="link-cols">${ps.map(li).join("")}</ul></section>`).join("\n")}`;
     emit(url, page({ url, current: url, title: "Hunderassen im Größenvergleich: Wer ist größer?", description: `${PAIRS.length} Größenvergleiche von Hunderassen, maßstabsgetreu, mit Größe und Gewicht von Rüden und Hündinnen.`, body, ld: [cr.ld] }), 0.8, "/compare/");
   }

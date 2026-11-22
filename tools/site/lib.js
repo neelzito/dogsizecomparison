@@ -12,6 +12,7 @@ const SITE_NAME = "Dog Size Comparison";
 
 global.window = global.window || {};
 require(path.join(ROOT, "js/breeds.js"));
+require(path.join(ROOT, "js/wild.js"));
 require(path.join(ROOT, "js/dog-images.js"));
 require(path.join(ROOT, "js/dog-renderer.js"));
 const IMAGES = window.DOG_IMAGES || {};
@@ -90,6 +91,27 @@ const BREEDS = window.BREED_ROWS.map((r) => {
   return b;
 }).sort((a, b) => a.name.localeCompare(b.name));
 const BY_ID = Object.fromEntries(BREEDS.map((b) => [b.id, b]));
+
+// ---------- wolves and other wild canids (js/wild.js + content/wild.json) ----------
+// Same shape as a breed, plus wild: true. Never part of BREEDS, so counts and ranks stay breeds-only.
+const WILD_DATA = JSON.parse(fs.readFileSync(path.join(ROOT, "content/wild.json"), "utf8"));
+const WILD = window.WILD_ROWS.map((r) => {
+  const b = { name: r[0], group: r[1], origin: r[2], type: r[3], m: { h: [r[4], r[5]], w: [r[8], r[9]] }, f: { h: [r[6], r[7]], w: [r[10], r[11]] }, life: null, ov: null, wild: true };
+  b.id = slug(b.name);
+  const info = WILD_DATA.animals[b.id];
+  if (!info) throw new Error(`content/wild.json: no entry for ${b.id}`);
+  Object.assign(b, { info, latin: info.latin, kind: info.kind, aliases: (window.WILD_ALIASES || {})[b.name] || [] });
+  b.hAvg = (avg(b.m.h) + avg(b.f.h)) / 2;
+  b.wAvg = (avg(b.m.w) + avg(b.f.w)) / 2;
+  b.size = sizeOf(b.wAvg);
+  b.sameSexes = b.m.h[0] === b.f.h[0] && b.m.h[1] === b.f.h[1] && b.m.w[0] === b.f.w[0] && b.m.w[1] === b.f.w[1];
+  b.url = `/wolves/${b.id}/`;
+  b.img = `/img/dogs/web/${b.id}.webp`;
+  b.photo = null; b.country = null; b.source = null;
+  return b;
+});
+const WILD_BY_ID = Object.fromEntries(WILD.map((b) => [b.id, b]));
+const WILD_VS = WILD_DATA.vsBreeds.map((id) => { if (!BY_ID[id]) throw new Error(`content/wild.json vsBreeds: unknown breed ${id}`); return BY_ID[id]; });
 const N = BREEDS.length;
 const GROUPS = [...new Set(BREEDS.map((b) => b.group))].sort();
 const groupSlug = (g) => slug(g === "Designer / Mixed" ? "designer-mixed" : g);
@@ -322,7 +344,7 @@ function siteFooter() {
     ${col("By size", SIZES.map((s) => [sizeUrl(s), `${s} dog breeds`]))}
     ${col("By group", GROUPS.map((g) => [groupUrl(g), g === "Designer / Mixed" ? "Designer & mixed" : `${g} group`]))}
     ${col("Calculators", [["/calculators/puppy-weight/", "Puppy adult weight"], ["/calculators/crate-size/", "Crate size"], ["/calculators/airline-cabin/", "Airline cabin check"], ["/calculators/dog-years/", "Dog years to human years"]])}
-    ${col("Guides", [["/breed-finder/", "Breed finder"], ["/articles/how-to-measure-your-dog/", "How to measure your dog"], ["/articles/dog-size-classes-explained/", "Dog size classes explained"], ["/articles/flying-with-a-dog-in-the-cabin/", "Flying with a dog"], ["/about/", "About the data"], ["/posters/", "Posters"], ["/photo-credits/", "Photo credits"], ["/suggest-a-breed/", "Suggest a breed"]])}
+    ${col("Guides", [["/breed-finder/", "Breed finder"], ["/wolves/", "Wolves vs dogs"], ["/articles/how-to-measure-your-dog/", "How to measure your dog"], ["/articles/dog-size-classes-explained/", "Dog size classes explained"], ["/articles/flying-with-a-dog-in-the-cabin/", "Flying with a dog"], ["/about/", "About the data"], ["/posters/", "Posters"], ["/photo-credits/", "Photo credits"], ["/suggest-a-breed/", "Suggest a breed"]])}
   </div><div class="wrap foot-note"><p>Heights and weights follow kennel-club breed standards (AKC, FCI, The Kennel Club, UKC, RSCE). Individual dogs can fall outside every range shown. <a href="/about/">How we compile the figures</a>.</p>
     <p>All information on this site is general guidance only. It is not veterinary, medical or travel advice, and airline rules, breed standards and other details can change. Always check with your vet, airline or breeder before making decisions. <a href="/about/#disclaimer">Full disclaimer</a>.</p>
     <p class="copyright">© ${new Date().getFullYear()} <a href="https://milivon.com">MILIVON</a>. All rights reserved. Text, data compilation and illustrations may not be reproduced without permission. Breed photos are by Wikimedia Commons contributors and remain under their own licences (CC BY, CC BY-SA, CC0 or public domain); card thumbnails are cropped. <a href="/photo-credits/">Photo credits</a>.</p></div></footer>`;
@@ -524,7 +546,7 @@ module.exports = {
   ROOT, SITE, SITE_NAME, fs, path,
   slug, esc, avg, round, list, pct, article, aName, place,
   cm, inch, kg, lb, H, W, H1, W1, feetIn, FT, life,
-  SIZES, SIZE_INFO, sizeOf, BREEDS, BY_ID, N, GROUPS, groupUrl, groupSlug, groupLabel, sizeUrl, sizeWord,
+  SIZES, SIZE_INFO, sizeOf, BREEDS, BY_ID, N, WILD, WILD_BY_ID, WILD_VS, GROUPS, groupUrl, groupSlug, groupLabel, sizeUrl, sizeWord,
   COUNTRIES, COUNTRY_COUNTS, countryUrl,
   CABIN, CABIN_MAX_DOG, cabin, cabinFor,
   shapeOf, bodyUnits, share, distance, nearest, bodyLandmark,
