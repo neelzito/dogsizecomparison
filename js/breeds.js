@@ -129,6 +129,7 @@ window.BREED_ROWS = [
   ["Bloodhound", "Hound", "Belgium/France", "coonhound", 63.5, 68.5, 58.5, 63.5, 41, 50, 36.5, 45.5, 10, 12, { headR: 0.24, muzzleH: 0.17 }],
   ["Greyhound", "Hound", "England", "sighthound", 71, 76, 68.5, 71, 29.5, 32, 27, 29.5, 10, 13],
   ["Whippet", "Hound", "England", "sighthound", 48.5, 56, 45.5, 53.5, 11.5, 18, 11.5, 18, 12, 15],
+  ["Silken Windhound", "Hound", "United States", "afghan", 47, 59.5, 47, 59.5, 15, 25, 10, 20, 14, 18, { fluff: 0.05, ear: "rose" }],
   ["Afghan Hound", "Hound", "Afghanistan", "afghan", 63.5, 68.5, 63.5, 68.5, 22.5, 27, 22.5, 27, 12, 18],
   ["Borzoi", "Hound", "Russia", "afghan", 71, 85, 66, 78, 34, 47.5, 27, 38.5, 9, 14, { fluff: 0.06, ear: "rose" }],
   ["Saluki", "Hound", "Middle East", "sighthound", 58.5, 71, 56, 66, 18, 29.5, 18, 29.5, 10, 17, { ear: "drop" }],
@@ -418,6 +419,7 @@ window.BREED_SOURCES = {
   "Bloodhound": {"src":"AKC"},
   "Greyhound": {"src":"AKC"},
   "Whippet": {"src":"AKC"},
+  "Silken Windhound": {"src":"UKC","unverified":["male weight min","male weight max","female weight min","female weight max","life min","life max"],"note":"UKC and ISWS standard: 18½–23½ in (47–59.5 cm) at the withers for both sexes. The standard gives no weight; the weights shown are typical published ranges, as is the life span."},
   "Afghan Hound": {"src":"AKC"},
   "Borzoi": {"src":"AKC","unverified":["male height max","female height max"]},
   "Saluki": {"src":"AKC","unverified":["female height min","female height max"]},
@@ -579,6 +581,7 @@ window.BREED_SOURCES = {
  * Other names people search for. Shown on breed pages and matched by every search box.
  */
 window.BREED_ALIASES = {
+  "Silken Windhound": ["Silken", "Silky Windhound"],
   "Russian Tsvetnaya Bolonka": ["Bolonka", "Tsvetnaya Bolonka", "Russian Colored Lapdog"],
   "Toy Manchester Terrier": ["Manchester Terrier (Toy)"],
   "Cesky Terrier": ["Bohemian Terrier", "Český teriér"],

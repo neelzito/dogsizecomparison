@@ -119,6 +119,7 @@ module.exports = {
   "bloodhound": ["Bloodhound", "m"],
   "greyhound": ["Greyhound", "m"],
   "whippet": ["Whippet", "m"],
+  "silken-windhound": ["Silken Windhound", "m"],
   "afghan-hound": ["Afghanisch~ Windhund", "m"],
   "borzoi": ["Barsoi", "m"],
   "saluki": ["Saluki", "m"],
