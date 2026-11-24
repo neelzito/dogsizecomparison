@@ -373,6 +373,8 @@ ${faq.html}`;
     title: `${A.name} vs ${B.name} Size Comparison`,
     description: `${A.name} vs ${B.name}: ${sentences[0]} See both breeds to scale with male and female heights and weights.`.slice(0, 300),
     body, ld: [cr.ld, faq.ld, photoLd(A), photoLd(B)].filter(Boolean), ogImage: compareOg(A, B, url), ogAlt: `${A.name} and ${B.name} drawn to scale side by side`,
+    // only the hand-picked pairs people search for go to Google; the automatic ones stay live and linked
+    noindex: !p.curated,
   }), p.curated ? 0.6 : 0.5);
 }
 
@@ -887,10 +889,28 @@ const DE = require("./site/de/build")({ PAIRS, PAIRS_BY_BREED, ogJob, ogDog, ref
 // wolves and wild canids (/wolves/, /de/woelfe/, "<breed> vs wolf"), EN and DE
 require("./site/wild")({ emit, emitDe: (url, html, priority, enUrl) => { DE.pages.push({ url, html, priority }); if (enUrl) DE.pairs[enUrl] = url; }, ogJob, ogDog });
 const allPages = [...pages, ...DE.pages];
+
+// Last-modified dates: tools/site/lastmod.json keeps a hash of every page's HTML (with today's date taken
+// out) and the date that hash last changed. A page's date, in the sitemap and in its dateModified, only moves
+// when its content changes, not on every build.
+const LASTMOD_FILE = path.join(ROOT, "tools", "site", "lastmod.json");
+const lastmod = fs.existsSync(LASTMOD_FILE) ? JSON.parse(fs.readFileSync(LASTMOD_FILE, "utf8")) : {};
+const seenUrls = new Set();
+function stamp(url, html) {
+  const h = require("crypto").createHash("sha1").update(html.split(today).join("")).digest("hex").slice(0, 16);
+  if (!lastmod[url] || lastmod[url][0] !== h) lastmod[url] = [h, today];
+  seenUrls.add(url);
+  return html.split(today).join(lastmod[url][1]);
+}
+const isNoindex = (html) => /<meta name="robots" content="noindex"/.test(html);
+const noindexUrls = new Set();
+
 for (const p of allPages) {
   const file = path.join(ROOT, p.url, "index.html");
   fs.mkdirSync(path.dirname(file), { recursive: true });
-  fs.writeFileSync(file, L.finalizeHtml(p.html, p.url, DE.pairs));
+  const html = stamp(p.url, L.finalizeHtml(p.html, p.url, DE.pairs));
+  if (isNoindex(html)) noindexUrls.add(p.url);
+  fs.writeFileSync(file, html);
 }
 
 // social preview images
@@ -915,16 +935,23 @@ put("topbar", L.topbar("/#"));
 put("footer", L.siteFooter());
 put("analytics", L.analyticsTag());
 put("hreflang", L.HREFLANG);
-fs.writeFileSync(indexFile, L.finalizeHtml(index, "/", DE.pairs));
+fs.writeFileSync(indexFile, stamp("/", L.finalizeHtml(index, "/", DE.pairs)));
 // German comparison tool: /de/index.html, translated from index.html
 require("./site/de/tool")(index, DE.pairs);
+{
+  const deIndex = path.join(ROOT, "de", "index.html");
+  fs.writeFileSync(deIndex, stamp("/de/", fs.readFileSync(deIndex, "utf8")));
+}
+for (const u of Object.keys(lastmod)) if (!seenUrls.has(u)) delete lastmod[u]; // pages that no longer exist
+fs.writeFileSync(LASTMOD_FILE, JSON.stringify(Object.fromEntries(Object.entries(lastmod).sort()), null, 0).replace(/\],"/g, '],\n"') + "\n");
 
 // sitemap
-const urls = [{ url: "/", priority: 1 }, { url: "/de/", priority: 1 }, ...allPages];
+const urls = [{ url: "/", priority: 1 }, { url: "/de/", priority: 1 }, ...allPages.filter((p) => !noindexUrls.has(p.url))];
 fs.writeFileSync(path.join(ROOT, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls.map((p) => `  <url><loc>${L.SITE}${p.url}</loc><lastmod>${today}</lastmod><priority>${p.priority.toFixed(1)}</priority></url>`).join("\n")}
+${urls.map((p) => `  <url><loc>${L.SITE}${p.url}</loc><lastmod>${lastmod[p.url][1]}</lastmod><priority>${p.priority.toFixed(1)}</priority></url>`).join("\n")}
 </urlset>
 `);
 const count = (pre) => pages.filter((p) => p.url.startsWith(pre)).length;
+console.log(`sitemap: ${urls.length} URLs (${noindexUrls.size} noindex pages left out)`);
 console.log(`site: ${allPages.length} pages, ${DE.pages.length + 1} of them German (breeds ${count("/breeds/")}, compare ${count("/compare/")}, sizes ${count("/sizes/")}, groups ${count("/groups/")}, origins ${count("/origins/")}, articles ${count("/articles/")}, calculators ${count("/calculators/")}) + sitemap`);
