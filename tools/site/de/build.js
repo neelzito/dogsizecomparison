@@ -333,6 +333,7 @@ ${faq.html}`;
       title: `${n(A)} vs. ${n(B)}: Größenvergleich`,
       description: `${n(A)} vs. ${n(B)}: ${sentences[0]} Beide Rassen maßstabsgetreu, mit Größe und Gewicht von Rüde und Hündin.`.slice(0, 300),
       body, ld: [cr.ld, faq.ld, photoLd(A), photoLd(B)].filter(Boolean), ogImage: compareOg(A, B, url), ogAlt: `${n(A)} und ${n(B)} maßstabsgetreu nebeneinander`,
+      noindex: !p.curated, // wie im Englischen: nur die handverlesenen Paare für Google
     }), p.curated ? 0.6 : 0.5, p.url);
   }
 
